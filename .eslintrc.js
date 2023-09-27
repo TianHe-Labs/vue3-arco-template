@@ -34,6 +34,7 @@ module.exports = {
         project: path.resolve(__dirname, './tsconfig.json'),
       },
     },
+    'import/core-modules': ['virtual:uno.css'],
   },
   rules: {
     'prettier/prettier': 1,
