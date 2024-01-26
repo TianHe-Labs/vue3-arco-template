@@ -4,67 +4,61 @@ import setupMock, {
   failResponseWrap,
 } from '@/utils/setup-mock';
 
-import { MockParams } from '@/types/mock';
+import { PostData } from '@/types/global';
 import { isLogin } from '@/utils/auth';
 
 setupMock({
   setup() {
     // Mock.XHR.prototype.withCredentials = true;
 
-    // 用户信息
-    Mock.mock(new RegExp('/api/user/info'), () => {
-      if (isLogin()) {
-        const role = window.localStorage.getItem('userRole') || 'admin';
-        return successResponseWrap({
-          name: '王立群',
-          avatar:
-            '//lf1-xgcdn-tos.pstatp.com/obj/vcloud/vadmin/start.8e0e4855ee346a46ccff8ff3e24db27b.png',
-          email: 'wangliqun@email.com',
-          job: 'frontend',
-          jobName: '前端艺术家',
-          organization: 'Frontend',
-          organizationName: '前端',
-          location: 'beijing',
-          locationName: '北京',
-          introduction: '人潇洒，性温存',
-          personalWebsite: 'https://www.arco.design',
-          phone: '150****0000',
-          registrationDate: '2013-05-10 12:10:00',
-          accountId: '15012312300',
-          certification: 1,
-          role,
-        });
-      }
-      return failResponseWrap(null, '未登录', 50008);
-    });
-
     // 登录
-    Mock.mock(new RegExp('/api/user/login'), (params: MockParams) => {
+    Mock.mock(new RegExp('/api/user/login'), (params: PostData) => {
       const { username, password } = JSON.parse(params.body);
       if (!username) {
-        return failResponseWrap(null, '用户名不能为空', 50000);
+        return failResponseWrap('用户名不能为空', 50000);
       }
       if (!password) {
-        return failResponseWrap(null, '密码不能为空', 50000);
+        return failResponseWrap('密码不能为空', 50000);
       }
-      if (username === 'admin' && password === 'admin') {
+      if (username === 'admin' && password === 'nslab321') {
         window.localStorage.setItem('userRole', 'admin');
         return successResponseWrap({
-          token: '12345',
+          access_token: '12345',
+          refresh_token: '12345',
         });
       }
       if (username === 'user' && password === 'user') {
         window.localStorage.setItem('userRole', 'user');
         return successResponseWrap({
-          token: '54321',
+          access_token: '54321',
+          refresh_token: '54321',
         });
       }
-      return failResponseWrap(null, '账号或者密码错误', 50000);
+      return failResponseWrap('账号或者密码错误', 50000);
     });
 
-    // 登出
-    Mock.mock(new RegExp('/api/user/logout'), () => {
-      return successResponseWrap(null);
+    // 用户信息
+    Mock.mock(new RegExp('/api/user/info'), () => {
+      if (isLogin()) {
+        const role = window.localStorage.getItem('userRole') || 'admin';
+        return successResponseWrap({
+          id: '15012312300',
+          username: 'admin',
+          name: '王立群',
+          role,
+          email: 'wangliqun@email.com',
+          phone: '150****0000',
+          avatar: '',
+          sector: 'Frontend',
+          job: 'frontend',
+          location: 'beijing',
+          certification: '',
+          lastActiveAt: '2023-05-10 12:10:00',
+          createdAt: '2023-01-10 12:10:00',
+          updatedAt: '2023-04-10 12:10:00',
+        });
+      }
+      return failResponseWrap('未登录', 50008);
     });
 
     // 用户的服务端菜单
@@ -72,7 +66,7 @@ setupMock({
       const menuList = [
         {
           path: '/dashboard',
-          name: 'dashboard',
+          name: 'Dashboard',
           meta: {
             locale: 'menu.server.dashboard',
             requiresAuth: true,
@@ -85,14 +79,6 @@ setupMock({
               name: 'Workplace',
               meta: {
                 locale: 'menu.server.workplace',
-                requiresAuth: true,
-              },
-            },
-            {
-              path: 'https://arco.design',
-              name: 'arcoWebsite',
-              meta: {
-                locale: 'menu.arcoWebsite',
                 requiresAuth: true,
               },
             },

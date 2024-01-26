@@ -5,7 +5,7 @@ export const DEFAULT_LAYOUT = () => import('@/layout/default-layout.vue');
 
 export const REDIRECT_MAIN: RouteRecordRaw = {
   path: '/redirect',
-  name: 'redirectWrapper',
+  name: 'RedirectWrapper',
   component: DEFAULT_LAYOUT,
   meta: {
     requiresAuth: true,
@@ -26,6 +26,6 @@ export const REDIRECT_MAIN: RouteRecordRaw = {
 
 export const NOT_FOUND_ROUTE: RouteRecordRaw = {
   path: '/:pathMatch(.*)*',
-  name: 'notFound',
+  name: 'NotFound',
   component: () => import('@/views/not-found/index.vue'),
 };

@@ -2,15 +2,33 @@ import { resolve } from 'path';
 import { defineConfig } from 'vite';
 import vue from '@vitejs/plugin-vue';
 import vueJsx from '@vitejs/plugin-vue-jsx';
+import UnoCSS from 'unocss/vite';
 import svgLoader from 'vite-svg-loader';
+import AutoImport from 'unplugin-auto-import/vite';
 import configArcoStyleImportPlugin from './plugin/arcoStyleImport';
+import configHtmlPlugin from './plugin/html';
 
 export default defineConfig({
   plugins: [
     vue(),
     vueJsx(),
+    UnoCSS(),
     svgLoader({ svgoConfig: {} }),
+    AutoImport({
+      imports: [
+        'vue',
+        'vue-router',
+        '@vueuse/core',
+        {
+          axios: [
+            // default imports
+            ['default', 'axios'], // import { default as axios } from 'axios',
+          ],
+        },
+      ],
+    }),
     configArcoStyleImportPlugin(),
+    configHtmlPlugin(),
   ],
   resolve: {
     alias: [

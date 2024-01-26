@@ -1,10 +1,10 @@
 export const WHITE_LIST = [
-  { name: 'notFound', children: [] },
-  { name: 'login', children: [] },
+  { name: 'NotFound', children: [] },
+  { name: 'Login', children: [] },
 ];
 
 export const NOT_FOUND = {
-  name: 'notFound',
+  name: 'NotFound',
 };
 
 export const REDIRECT_ROUTE_NAME = 'Redirect';

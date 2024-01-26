@@ -13,12 +13,12 @@ export default function setupUserLoginInfoGuard(router: Router) {
         next();
       } else {
         try {
-          await userStore.info();
+          await userStore.getUserInfo();
           next();
         } catch (error) {
           await userStore.logout();
           next({
-            name: 'login',
+            name: 'Login',
             query: {
               redirect: to.name,
               ...to.query,
@@ -27,12 +27,12 @@ export default function setupUserLoginInfoGuard(router: Router) {
         }
       }
     } else {
-      if (to.name === 'login') {
+      if (to.name === 'Login') {
         next();
         return;
       }
       next({
-        name: 'login',
+        name: 'Login',
         query: {
           redirect: to.name,
           ...to.query,

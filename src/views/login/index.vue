@@ -1,11 +1,8 @@
 <template>
   <div class="container">
     <div class="logo">
-      <img
-        alt="logo"
-        src="//p3-armor.byteimg.com/tos-cn-i-49unhts6dw/dfdba5317c0c20ce20e64fac803d52bc.svg~tplv-49unhts6dw-image.image"
-      />
-      <div class="logo-text">Arco Design Pro</div>
+      <img alt="logo" width="24" src="~@/assets/logo.svg?url" />
+      <div class="logo-text">Vue3 Template</div>
     </div>
     <LoginBanner />
     <div class="content">
@@ -58,6 +55,7 @@
     left: 22px;
     z-index: 1;
     display: inline-flex;
+    gap: 4px;
     align-items: center;
 
     &-text {

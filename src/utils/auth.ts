@@ -1,19 +1,21 @@
-const TOKEN_KEY = 'token';
+export const ACS_TOKEN_KEY = 'acs-token';
+export const RSH_TOKEN_KEY = 'rsh-token';
 
 const isLogin = () => {
-  return !!localStorage.getItem(TOKEN_KEY);
+  return !!localStorage.getItem(ACS_TOKEN_KEY);
 };
 
-const getToken = () => {
-  return localStorage.getItem(TOKEN_KEY);
+const getToken = (tokenKey = ACS_TOKEN_KEY) => {
+  return localStorage.getItem(tokenKey);
 };
 
-const setToken = (token: string) => {
-  localStorage.setItem(TOKEN_KEY, token);
+const setToken = (token: string, tokenKey = ACS_TOKEN_KEY) => {
+  localStorage.setItem(tokenKey, token);
 };
 
 const clearToken = () => {
-  localStorage.removeItem(TOKEN_KEY);
+  localStorage.removeItem(ACS_TOKEN_KEY);
+  localStorage.removeItem(RSH_TOKEN_KEY);
 };
 
 export { isLogin, getToken, setToken, clearToken };

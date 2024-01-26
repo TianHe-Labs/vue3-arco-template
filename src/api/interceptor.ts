@@ -1,20 +1,26 @@
-import axios from 'axios';
+import axios, { AxiosError } from 'axios';
 import type { AxiosRequestConfig, AxiosResponse } from 'axios';
-import { Message, Modal } from '@arco-design/web-vue';
+import { Message } from '@arco-design/web-vue';
 import { useUserStore } from '@/store';
 import { getToken } from '@/utils/auth';
+import router from '@/router';
 
-export interface HttpResponse<T = unknown> {
-  status: number;
-  msg: string;
+// api 返回结果不要进行多余的封装包裹
+// 要么直接返回结果，要么返回错误信息
+export interface Statement {
   code: number;
-  data: T;
+  message: string;
 }
 
-if (import.meta.env.VITE_API_BASE_URL) {
-  axios.defaults.baseURL = import.meta.env.VITE_API_BASE_URL;
+if (import.meta.env.VITE_API_BASE) {
+  // 自定义环境变量，手动指定 API Base
+  axios.defaults.baseURL = import.meta.env.VITE_API_BASE;
+} else {
+  // vite 内置环境变量，子路径部署适用
+  axios.defaults.baseURL = import.meta.env.BASE_URL;
 }
 
+// add request interceptors(Authorization)
 axios.interceptors.request.use(
   (config: AxiosRequestConfig) => {
     // let each request carry token
@@ -35,41 +41,45 @@ axios.interceptors.request.use(
     return Promise.reject(error);
   }
 );
+
 // add response interceptors
 axios.interceptors.response.use(
-  (response: AxiosResponse<HttpResponse>) => {
-    const res = response.data;
-    // if the custom code is not 20000, it is judged as an error.
-    if (res.code !== 20000) {
+  (response: AxiosResponse) => {
+    return response;
+  },
+  async (error: AxiosError<Statement>) => {
+    const userStore = useUserStore();
+    // 处理 token 过期以及 刷新 token 重发请求问题
+    const status = error.response?.status;
+    if (status === 401) {
       Message.error({
-        content: res.msg || 'Error',
+        content: error?.message || '身份验证不通过，请重新登录！',
         duration: 5 * 1000,
       });
-      // 50008: Illegal token; 50012: Other clients logged in; 50014: Token expired;
-      if (
-        [50008, 50012, 50014].includes(res.code) &&
-        response.config.url !== '/api/user/info'
-      ) {
-        Modal.error({
-          title: 'Confirm logout',
-          content:
-            'You have been logged out, you can cancel to stay on this page, or log in again',
-          okText: 'Re-Login',
-          async onOk() {
-            const userStore = useUserStore();
-
-            await userStore.logout();
-            window.location.reload();
-          },
-        });
-      }
-      return Promise.reject(new Error(res.msg || 'Error'));
+      await userStore.logout();
+      router.push({ name: 'Login' });
+    } else if (status === 460) {
+      // access token 过期
+      // 保存本次未成功的请求，在拿到新的 access token 后重发
+      const { url, method, data } = error.config as AxiosRequestConfig;
+      // 获取新的 access token，重发请求
+      await userStore.refreshToken();
+      return axios.request({ url, method, data });
+    } else if (status === 461) {
+      Message.error({
+        content: error?.message || '身份验证已过期，请重新登录！',
+        duration: 5 * 1000,
+      });
+      await userStore.logout();
+      router.push({ name: 'Login' });
     }
-    return res;
-  },
-  (error) => {
+    /* else if (status === 404) {
+      // 自动切换本地 mock
+      error.config.url = error.config.url?.replace('api', 'mock');
+      return axios.request(error.config);
+    } */
     Message.error({
-      content: error.msg || 'Request Error',
+      content: error?.message || 'Request Error',
       duration: 5 * 1000,
     });
     return Promise.reject(error);

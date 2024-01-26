@@ -1,7 +1,7 @@
 <template>
   <div class="login-form-wrapper">
     <div class="login-form-title">{{ $t('login.form.title') }}</div>
-    <div class="login-form-sub-title">{{ $t('login.form.title') }}</div>
+    <div class="login-form-subtitle">{{ appStore.appName }}</div>
     <div class="login-form-error-msg">{{ errorMessage }}</div>
     <a-form
       ref="loginForm"
@@ -12,13 +12,13 @@
     >
       <a-form-item
         field="username"
-        :rules="[{ required: true, message: $t('login.form.userName.errMsg') }]"
+        :rules="[{ required: true, message: $t('login.form.username.errMsg') }]"
         :validate-trigger="['change', 'blur']"
         hide-label
       >
         <a-input
           v-model="userInfo.username"
-          :placeholder="$t('login.form.userName.placeholder')"
+          :placeholder="$t('login.form.username.placeholder')"
         >
           <template #prefix>
             <icon-user />
@@ -55,9 +55,9 @@
         <a-button type="primary" html-type="submit" long :loading="loading">
           {{ $t('login.form.login') }}
         </a-button>
-        <a-button type="text" long class="login-form-register-btn">
-          {{ $t('login.form.register') }}
-        </a-button>
+        <!-- <a-button type="text" long class="login-form-signup-btn">
+          {{ $t('login.form.signup') }}
+        </a-button> -->
       </a-space>
     </a-form>
   </div>
@@ -70,20 +70,25 @@
   import { ValidatedError } from '@arco-design/web-vue/es/form/interface';
   import { useI18n } from 'vue-i18n';
   import { useStorage } from '@vueuse/core';
-  import { useUserStore } from '@/store';
+  import { useUserStore, useAppStore } from '@/store';
   import useLoading from '@/hooks/loading';
   import type { LoginData } from '@/api/user';
+  import { DEFAULT_ROUTE_NAME } from '@/router/constants';
+
+  const { t } = useI18n();
 
   const router = useRouter();
-  const { t } = useI18n();
-  const errorMessage = ref('');
-  const { loading, setLoading } = useLoading();
+
   const userStore = useUserStore();
+  const appStore = useAppStore();
+
+  const { loading, setLoading } = useLoading();
+  const errorMessage = ref('');
 
   const loginConfig = useStorage('login-config', {
     rememberPassword: true,
     username: 'admin', // 演示默认值
-    password: 'admin', // demo default value
+    password: 'nslab321', // demo default value
   });
   const userInfo = reactive({
     username: loginConfig.value.username,
@@ -104,7 +109,7 @@
         await userStore.login(values as LoginData);
         const { redirect, ...othersQuery } = router.currentRoute.value.query;
         router.push({
-          name: (redirect as string) || 'Workplace',
+          name: (redirect as string) || DEFAULT_ROUTE_NAME,
           query: {
             ...othersQuery,
           },
@@ -141,7 +146,7 @@
       line-height: 32px;
     }
 
-    &-sub-title {
+    &-subtitle {
       color: var(--color-text-3);
       font-size: 16px;
       line-height: 24px;
@@ -158,7 +163,7 @@
       justify-content: space-between;
     }
 
-    &-register-btn {
+    &-signup-btn {
       color: var(--color-text-3) !important;
     }
   }

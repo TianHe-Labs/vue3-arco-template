@@ -5,19 +5,12 @@ export default ({ mock, setup }: { mock?: boolean; setup: () => void }) => {
 };
 
 export const successResponseWrap = (data: unknown) => {
-  return {
-    data,
-    status: 'ok',
-    msg: '请求成功',
-    code: 20000,
-  };
+  return data;
 };
 
-export const failResponseWrap = (data: unknown, msg: string, code = 50000) => {
+export const failResponseWrap = (message: string, code = 50000) => {
   return {
-    data,
-    status: 'fail',
-    msg,
+    message,
     code,
   };
 };

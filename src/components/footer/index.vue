@@ -1,8 +1,14 @@
 <template>
-  <a-layout-footer class="footer">Arco Pro</a-layout-footer>
+  <a-layout-footer class="footer">
+    &copy; {{ new Date().getFullYear() }} {{ appStore.appCopr }}
+  </a-layout-footer>
 </template>
 
-<script lang="ts" setup></script>
+<script lang="ts" setup>
+  import { useAppStore } from '@/store';
+
+  const appStore = useAppStore();
+</script>
 
 <style lang="less" scoped>
   .footer {

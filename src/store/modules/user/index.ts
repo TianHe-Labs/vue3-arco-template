@@ -1,33 +1,36 @@
 import { defineStore } from 'pinia';
 import {
   login as userLogin,
-  logout as userLogout,
-  getUserInfo,
   LoginData,
+  refreshToken,
+  getUserInfo,
 } from '@/api/user';
-import { setToken, clearToken } from '@/utils/auth';
+import {
+  setToken,
+  clearToken,
+  ACS_TOKEN_KEY,
+  RSH_TOKEN_KEY,
+} from '@/utils/auth';
 import { removeRouteListener } from '@/utils/route-listener';
 import { UserState } from './types';
 import useAppStore from '../app';
 
 const useUserStore = defineStore('user', {
   state: (): UserState => ({
-    name: undefined,
-    avatar: undefined,
-    job: undefined,
-    organization: undefined,
-    location: undefined,
+    id: undefined,
+    username: undefined,
+    nickname: undefined,
+    role: undefined,
+
     email: undefined,
-    introduction: undefined,
-    personalWebsite: undefined,
-    jobName: undefined,
-    organizationName: undefined,
-    locationName: undefined,
-    phone: undefined,
-    registrationDate: undefined,
-    accountId: undefined,
-    certification: undefined,
-    role: '',
+    phone: '17800000000',
+
+    avatar:
+      '//lf1-xgcdn-tos.pstatp.com/obj/vcloud/vadmin/start.8e0e4855ee346a46ccff8ff3e24db27b.png',
+    sector: '网络部',
+    job: '网络管理员',
+    location: 'A#302',
+    certification: '张菲岩',
   }),
 
   getters: {
@@ -37,12 +40,6 @@ const useUserStore = defineStore('user', {
   },
 
   actions: {
-    switchRoles() {
-      return new Promise((resolve) => {
-        this.role = this.role === 'user' ? 'admin' : 'user';
-        resolve(this.role);
-      });
-    },
     // Set user's information
     setInfo(partial: Partial<UserState>) {
       this.$patch(partial);
@@ -53,36 +50,34 @@ const useUserStore = defineStore('user', {
       this.$reset();
     },
 
-    // Get user's information
-    async info() {
-      const res = await getUserInfo();
-
-      this.setInfo(res.data);
+    async getUserInfo() {
+      const { data: respData } = await getUserInfo();
+      this.setInfo(respData);
     },
-
-    // Login
-    async login(loginForm: LoginData) {
+    async login(loginData: LoginData) {
       try {
-        const res = await userLogin(loginForm);
-        setToken(res.data.token);
+        const { data: respData } = await userLogin(loginData);
+        setToken(respData.access_token, ACS_TOKEN_KEY);
+        setToken(respData.refresh_token, RSH_TOKEN_KEY);
       } catch (err) {
         clearToken();
         throw err;
       }
     },
-    logoutCallBack() {
+    async logout() {
       const appStore = useAppStore();
       this.resetInfo();
       clearToken();
       removeRouteListener();
       appStore.clearServerMenu();
     },
-    // Logout
-    async logout() {
+    async refreshToken() {
       try {
-        await userLogout();
-      } finally {
-        this.logoutCallBack();
+        const { data: respData } = await refreshToken();
+        setToken(respData?.access_token, ACS_TOKEN_KEY);
+      } catch (err) {
+        clearToken();
+        throw err;
       }
     },
   },

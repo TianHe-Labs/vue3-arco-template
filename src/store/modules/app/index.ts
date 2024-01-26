@@ -7,11 +7,25 @@ import { getMenuList } from '@/api/user';
 import { AppState } from './types';
 
 const useAppStore = defineStore('app', {
-  state: (): AppState => ({ ...defaultSettings }),
+  state: (): AppState => ({
+    ...defaultSettings,
+    name: import.meta.env.VITE_APP_NAME,
+    description: import.meta.env.VITE_APP_DESC,
+    copyright: import.meta.env.VITE_APP_COPR,
+  }),
 
   getters: {
     appCurrentSetting(state: AppState): AppState {
       return { ...state };
+    },
+    appName(state: AppState) {
+      return state.name;
+    },
+    appDesc(state: AppState) {
+      return state.description;
+    },
+    appCopr(state: AppState) {
+      return state.copyright;
     },
     appDevice(state: AppState) {
       return state.device;
