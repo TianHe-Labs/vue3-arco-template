@@ -16,7 +16,7 @@ if (import.meta.env.VITE_API_BASE) {
   // 自定义环境变量，手动指定 API Base
   axios.defaults.baseURL = import.meta.env.VITE_API_BASE;
 } else {
-  // vite 内置环境变量，子路径部署适用
+  // vite 内置环境变量，子路径部署时用到
   axios.defaults.baseURL = import.meta.env.BASE_URL;
 }
 
