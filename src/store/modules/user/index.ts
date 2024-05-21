@@ -1,36 +1,23 @@
 import { defineStore } from 'pinia';
 import {
-  login as userLogin,
-  LoginData,
-  refreshToken,
-  getUserInfo,
+  LoginParams,
+  login as loginApi,
+  queryUserInfo as queryUserInfoApi,
+  updateUserToken as updateUserTokenApi,
 } from '@/api/user';
-import {
-  setToken,
-  clearToken,
-  ACS_TOKEN_KEY,
-  RSH_TOKEN_KEY,
-} from '@/utils/auth';
-import { removeRouteListener } from '@/utils/route-listener';
 import { UserState } from './types';
-import useAppStore from '../app';
 
 const useUserStore = defineStore('user', {
   state: (): UserState => ({
-    id: undefined,
     username: undefined,
-    nickname: undefined,
     role: undefined,
 
-    email: undefined,
+    email: 'example@skyvault.cn',
     phone: '17800000000',
+    sector: '',
 
-    avatar:
-      '//lf1-xgcdn-tos.pstatp.com/obj/vcloud/vadmin/start.8e0e4855ee346a46ccff8ff3e24db27b.png',
-    sector: '网络部',
-    job: '网络管理员',
-    location: 'A#302',
-    certification: '张菲岩',
+    accessToken: undefined,
+    refreshToken: undefined,
   }),
 
   getters: {
@@ -40,46 +27,79 @@ const useUserStore = defineStore('user', {
   },
 
   actions: {
-    // Set user's information
-    setInfo(partial: Partial<UserState>) {
+    // 更新
+    setUserInfo(partial: Partial<UserState>) {
       this.$patch(partial);
     },
 
-    // Reset user's information
-    resetInfo() {
+    // 重置
+    resetUserInfo() {
       this.$reset();
     },
 
-    async getUserInfo() {
-      const { data: respData } = await getUserInfo();
-      this.setInfo(respData);
-    },
-    async login(loginData: LoginData) {
+    // 登录
+    async login(loginData: LoginParams) {
       try {
-        const { data: respData } = await userLogin(loginData);
-        setToken(respData.access_token, ACS_TOKEN_KEY);
-        setToken(respData.refresh_token, RSH_TOKEN_KEY);
+        const { data } = await loginApi(loginData);
+        if (!data?.accessToken || !data?.refreshToken) {
+          throw new Error();
+        }
+        this.setUserInfo({ username: loginData.username, ...data });
       } catch (err) {
-        clearToken();
+        this.resetUserInfo();
         throw err;
       }
     },
+
+    // 信息
+
+    // 有时候业务简单，单用户系统没有身份值等用户信息，甚至没有相关接口
+    // 为了保证业务可用，本地增加一个或者使用本地模拟接口
+    // 或者在路由守卫中不判断身份
+    async queryUserInfo() {
+      try {
+        const { data } = await queryUserInfoApi();
+        this.setUserInfo({ ...data, role: data?.role || 'admin' });
+      } catch (err: any) {
+        if (err?.isAxiosError) {
+          // axios 拦截统一处理了返回结果
+          // 如果该接口 404，则认为是单用户系统，没有用户信息
+          this.setUserInfo({ role: 'admin' });
+        } else {
+          this.resetUserInfo();
+          throw err;
+        }
+      }
+    },
+
+    // 登出
     async logout() {
-      const appStore = useAppStore();
-      this.resetInfo();
-      clearToken();
-      removeRouteListener();
-      appStore.clearServerMenu();
+      this.resetUserInfo();
     },
-    async refreshToken() {
+
+    // 更新令牌
+    async updateUserToken() {
+      if (!this.$state?.refreshToken) {
+        this.resetUserInfo();
+        return;
+      }
+      const params = { refreshToken: this.$state?.refreshToken };
       try {
-        const { data: respData } = await refreshToken();
-        setToken(respData?.access_token, ACS_TOKEN_KEY);
+        const { data } = await updateUserTokenApi(params);
+        if (!data?.accessToken) {
+          throw new Error();
+        }
+        this.setUserInfo(data);
       } catch (err) {
-        clearToken();
+        this.resetUserInfo();
         throw err;
       }
     },
+  },
+  // 自动持久化
+  persist: {
+    key: '__th_ls_usr__',
+    paths: ['accessToken', 'refreshToken'],
   },
 });
 

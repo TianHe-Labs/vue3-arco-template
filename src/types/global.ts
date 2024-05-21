@@ -11,16 +11,11 @@ export interface NodeOptions extends Options {
   children?: NodeOptions[];
 }
 
-export interface GetParams {
-  body: null;
-  type: string;
+export interface MockRequest {
+  headers(headers: any): unknown;
   url: string;
-}
-
-export interface PostData {
-  body: string;
   type: string;
-  url: string;
+  body?: string;
 }
 
 export interface Pagination {

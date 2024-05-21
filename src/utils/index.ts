@@ -22,4 +22,7 @@ export const regexUrl = new RegExp(
   'i'
 );
 
+export const isDevelopment =
+  import.meta.env.DEV || import.meta.env.MODE !== 'production';
+
 export default null;

@@ -3,7 +3,7 @@ import { Notification } from '@arco-design/web-vue';
 import type { NotificationReturn } from '@arco-design/web-vue/es/notification/interface';
 import type { RouteRecordNormalized } from 'vue-router';
 import defaultSettings from '@/config/settings.json';
-import { getMenuList } from '@/api/user';
+import { queryUserMenuList } from '@/api/user';
 import { AppState } from './types';
 
 const useAppStore = defineStore('app', {
@@ -36,13 +36,18 @@ const useAppStore = defineStore('app', {
   },
 
   actions: {
-    // Update app settings
+    // 更新
     updateSettings(partial: Partial<AppState>) {
       // @ts-ignore-next-line
       this.$patch(partial);
     },
 
-    // Change theme color
+    // 重置
+    resetSettings() {
+      this.$reset();
+    },
+
+    // 主题
     toggleTheme(dark: boolean) {
       if (dark) {
         this.theme = 'dark';
@@ -52,12 +57,18 @@ const useAppStore = defineStore('app', {
         document.body.removeAttribute('arco-theme');
       }
     },
+
+    // 设备
     toggleDevice(device: string) {
       this.device = device;
     },
+
+    // 菜单
     toggleMenu(value: boolean) {
       this.hideMenu = value;
     },
+
+    // 服务端路由
     async fetchServerMenuConfig() {
       let notifyInstance: NotificationReturn | null = null;
       try {
@@ -66,7 +77,7 @@ const useAppStore = defineStore('app', {
           content: 'loading',
           closable: true,
         });
-        const { data } = await getMenuList();
+        const { data } = await queryUserMenuList();
         this.serverMenu = data;
         notifyInstance = Notification.success({
           id: 'menuNotice',
@@ -82,6 +93,8 @@ const useAppStore = defineStore('app', {
         });
       }
     },
+
+    // 清空服务端路由
     clearServerMenu() {
       this.serverMenu = [];
     },

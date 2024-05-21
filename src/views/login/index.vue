@@ -1,9 +1,5 @@
 <template>
   <div class="container">
-    <div class="logo">
-      <img alt="logo" width="24" src="~@/assets/logo.svg?url" />
-      <div class="logo-text">Vue3 Template</div>
-    </div>
     <LoginBanner />
     <div class="content">
       <div class="content-inner">
@@ -46,23 +42,6 @@
       right: 0;
       bottom: 0;
       width: 100%;
-    }
-  }
-
-  .logo {
-    position: fixed;
-    top: 24px;
-    left: 22px;
-    z-index: 1;
-    display: inline-flex;
-    gap: 4px;
-    align-items: center;
-
-    &-text {
-      margin-right: 4px;
-      margin-left: 4px;
-      color: var(--color-fill-1);
-      font-size: 20px;
     }
   }
 </style>

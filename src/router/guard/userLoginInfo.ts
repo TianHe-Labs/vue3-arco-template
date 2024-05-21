@@ -1,19 +1,20 @@
 import type { Router, LocationQueryRaw } from 'vue-router';
 import NProgress from 'nprogress'; // progress bar
-
 import { useUserStore } from '@/store';
-import { isLogin } from '@/utils/auth';
+import { DEFAULT_ROUTE_NAME } from '@/router/constants';
 
 export default function setupUserLoginInfoGuard(router: Router) {
   router.beforeEach(async (to, from, next) => {
     NProgress.start();
     const userStore = useUserStore();
-    if (isLogin()) {
+    if (userStore.accessToken) {
       if (userStore.role) {
-        next();
+        // 登录之后就不要跳转到登录了
+        if (to.name === 'Login') next({ name: DEFAULT_ROUTE_NAME });
+        else next();
       } else {
         try {
-          await userStore.getUserInfo();
+          await userStore.queryUserInfo();
           next();
         } catch (error) {
           await userStore.logout();
@@ -29,7 +30,6 @@ export default function setupUserLoginInfoGuard(router: Router) {
     } else {
       if (to.name === 'Login') {
         next();
-        return;
       }
       next({
         name: 'Login',

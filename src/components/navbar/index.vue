@@ -20,6 +20,7 @@
       <Menu v-if="topMenu" />
     </div>
     <ul class="right-side">
+      <!-- 搜索 -->
       <!-- <li>
         <a-tooltip :content="$t('settings.search')">
           <a-button class="nav-btn" type="outline" :shape="'circle'">
@@ -29,6 +30,7 @@
           </a-button>
         </a-tooltip>
       </li> -->
+      <!-- 语言 -->
       <li>
         <a-tooltip :content="$t('settings.language')">
           <a-button
@@ -58,6 +60,7 @@
           </template>
         </a-dropdown>
       </li>
+      <!-- 黑暗主题 -->
       <li>
         <a-tooltip
           :content="
@@ -79,6 +82,7 @@
           </a-button>
         </a-tooltip>
       </li>
+      <!-- 消息 -->
       <li>
         <a-tooltip :content="$t('settings.navbar.alerts')">
           <div class="message-box-trigger">
@@ -106,6 +110,7 @@
           </template>
         </a-popover>
       </li>
+      <!-- 全屏 -->
       <li>
         <a-tooltip
           :content="
@@ -127,7 +132,8 @@
           </a-button>
         </a-tooltip>
       </li>
-      <li>
+      <!-- 设置 -->
+      <li v-if="isDevelopment">
         <a-tooltip :content="$t('settings.title')">
           <a-button
             class="nav-btn"
@@ -141,6 +147,7 @@
           </a-button>
         </a-tooltip>
       </li>
+      <!-- 用户 -->
       <li>
         <a-dropdown trigger="click">
           <a-avatar
@@ -151,18 +158,10 @@
           </a-avatar>
           <template #content>
             <a-doption>
-              <a-space @click="$router.push({ name: 'Info' })">
+              <a-space @click="$router.push({ name: 'UserCenter' })">
                 <icon-user />
                 <span>
                   {{ $t('messageBox.userCenter') }}
-                </span>
-              </a-space>
-            </a-doption>
-            <a-doption>
-              <a-space @click="$router.push({ name: 'Setting' })">
-                <icon-settings />
-                <span>
-                  {{ $t('messageBox.userSettings') }}
                 </span>
               </a-space>
             </a-doption>
@@ -187,12 +186,13 @@
   import { useAppStore } from '@/store';
   import { LOCALE_OPTIONS } from '@/locale';
   import useLocale from '@/hooks/locale';
-  import useUser from '@/hooks/user';
+  import useUserLogout from '@/hooks/user-logout';
   import Menu from '@/components/menu/index.vue';
+  import { isDevelopment } from '@/utils';
   import MessageBox from '../message-box/index.vue';
 
   const appStore = useAppStore();
-  const { logout } = useUser();
+  const { logout } = useUserLogout();
   const { changeLocale, currentLocale } = useLocale();
   const { isFullscreen, toggle: toggleFullScreen } = useFullscreen();
   const locales = [...LOCALE_OPTIONS];
@@ -306,3 +306,4 @@
     }
   }
 </style>
+@/hooks/user-logout

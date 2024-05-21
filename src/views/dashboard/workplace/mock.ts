@@ -1,8 +1,8 @@
 import Mock from 'mockjs';
 import qs from 'query-string';
 import dayjs from 'dayjs';
-import { GetParams } from '@/types/global';
-import setupMock, { successResponseWrap } from '@/utils/setup-mock';
+import { MockRequest } from '@/types/global';
+import setupMock, { successResponseWrap } from '@/plugins/setup-mock';
 
 const textList = [
   {
@@ -115,7 +115,7 @@ setupMock({
       };
       return successResponseWrap([...getLineData()]);
     });
-    Mock.mock(new RegExp('/api/popular/list'), (params: GetParams) => {
+    Mock.mock(new RegExp('/api/popular/list'), (params: MockRequest) => {
       const { type = 'text' } = qs.parseUrl(params.url).query;
       if (type === 'image') {
         return successResponseWrap([...videoList]);

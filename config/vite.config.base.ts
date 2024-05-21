@@ -6,7 +6,6 @@ import UnoCSS from 'unocss/vite';
 import svgLoader from 'vite-svg-loader';
 import AutoImport from 'unplugin-auto-import/vite';
 import configArcoStyleImportPlugin from './plugin/arcoStyleImport';
-import configHtmlPlugin from './plugin/html';
 
 export default defineConfig({
   plugins: [
@@ -28,7 +27,6 @@ export default defineConfig({
       ],
     }),
     configArcoStyleImportPlugin(),
-    configHtmlPlugin(),
   ],
   resolve: {
     alias: [

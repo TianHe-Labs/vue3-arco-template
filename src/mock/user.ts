@@ -1,67 +1,61 @@
 import Mock from 'mockjs';
 import setupMock, {
   successResponseWrap,
-  failResponseWrap,
-} from '@/utils/setup-mock';
+  failureResponseWrap,
+} from '@/plugins/setup-mock';
 
-import { PostData } from '@/types/global';
-import { isLogin } from '@/utils/auth';
+import { MockRequest } from '@/types/global';
+
+const users = [
+  {
+    id: '15012312300',
+    username: 'admin',
+    password: 'nslab321',
+    role: 'admin',
+    accessToken:
+      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Im5pc3QifQ.95aGaCg7ovpUWSpoZdCoam6Mvr-vE374VjMfthTpKPo',
+    refreshToken:
+      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Im5pc3QifQ.95aGaCg7ovpUWSpoZdCoam6Mvr-vE374VjMfthTpKPo',
+    createdAt: '2023-01-10 12:10:00',
+    updatedAt: '2023-04-10 12:10:00',
+  },
+];
 
 setupMock({
   setup() {
-    // Mock.XHR.prototype.withCredentials = true;
-
-    // 登录
-    Mock.mock(new RegExp('/api/user/login'), (params: PostData) => {
-      const { username, password } = JSON.parse(params.body);
+    // 用户登录
+    Mock.mock(new RegExp('/api/user/login'), (req: MockRequest) => {
+      const { username, password } = JSON.parse(req?.body as string);
       if (!username) {
-        return failResponseWrap('用户名不能为空', 50000);
+        return failureResponseWrap('用户名不能为空');
       }
       if (!password) {
-        return failResponseWrap('密码不能为空', 50000);
+        return failureResponseWrap('密码不能为空');
       }
-      if (username === 'admin' && password === 'nslab321') {
-        window.localStorage.setItem('userRole', 'admin');
-        return successResponseWrap({
-          access_token: '12345',
-          refresh_token: '12345',
-        });
+
+      const foundItem = users.find(
+        (u) => u.username === username && u.password === password
+      );
+
+      if (foundItem) {
+        const { accessToken, refreshToken } = foundItem;
+        return successResponseWrap({ accessToken, refreshToken });
       }
-      if (username === 'user' && password === 'user') {
-        window.localStorage.setItem('userRole', 'user');
-        return successResponseWrap({
-          access_token: '54321',
-          refresh_token: '54321',
-        });
-      }
-      return failResponseWrap('账号或者密码错误', 50000);
+      return failureResponseWrap('用户名或密码错误！');
     });
 
     // 用户信息
     Mock.mock(new RegExp('/api/user/info'), () => {
-      if (isLogin()) {
-        const role = window.localStorage.getItem('userRole') || 'admin';
-        return successResponseWrap({
-          id: '15012312300',
-          username: 'admin',
-          name: '王立群',
-          role,
-          email: 'wangliqun@email.com',
-          phone: '150****0000',
-          avatar: '',
-          sector: 'Frontend',
-          job: 'frontend',
-          location: 'beijing',
-          certification: '',
-          lastActiveAt: '2023-05-10 12:10:00',
-          createdAt: '2023-01-10 12:10:00',
-          updatedAt: '2023-04-10 12:10:00',
-        });
+      const foundItem = users[0];
+
+      if (foundItem) {
+        const { username, role } = foundItem;
+        return successResponseWrap({ username, role });
       }
-      return failResponseWrap('未登录', 50008);
+      return failureResponseWrap('用户名或密码错误！');
     });
 
-    // 用户的服务端菜单
+    // 用户服务端菜单
     Mock.mock(new RegExp('/api/user/menu'), () => {
       const menuList = [
         {

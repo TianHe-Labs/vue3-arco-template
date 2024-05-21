@@ -4,7 +4,7 @@
   import { useRoute, useRouter, RouteRecordRaw } from 'vue-router';
   import type { RouteMeta } from 'vue-router';
   import { useAppStore } from '@/store';
-  import { listenerRouteChange } from '@/utils/route-listener';
+  import { listenerRouteChange } from '@/plugins/route-listener';
   import { openWindow, regexUrl } from '@/utils';
   import useMenuTree from './use-menu-tree';
 
@@ -151,6 +151,7 @@
       display: flex;
       align-items: center;
     }
+
     .arco-icon {
       &:not(.arco-icon-down) {
         font-size: 18px;

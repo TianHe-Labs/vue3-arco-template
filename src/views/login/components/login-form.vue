@@ -5,9 +5,9 @@
     <div class="login-form-error-msg">{{ errorMessage }}</div>
     <a-form
       ref="loginForm"
-      :model="userInfo"
-      class="login-form"
       layout="vertical"
+      :model="loginData"
+      class="login-form"
       @submit="handleSubmit"
     >
       <a-form-item
@@ -17,7 +17,7 @@
         hide-label
       >
         <a-input
-          v-model="userInfo.username"
+          v-model="loginData.username"
           :placeholder="$t('login.form.username.placeholder')"
         >
           <template #prefix>
@@ -32,7 +32,7 @@
         hide-label
       >
         <a-input-password
-          v-model="userInfo.password"
+          v-model="loginData.password"
           :placeholder="$t('login.form.password.placeholder')"
           allow-clear
         >
@@ -64,6 +64,7 @@
 </template>
 
 <script lang="ts" setup>
+  import type { LoginParams } from '@/api/user';
   import { ref, reactive } from 'vue';
   import { useRouter } from 'vue-router';
   import { Message } from '@arco-design/web-vue';
@@ -72,28 +73,27 @@
   import { useStorage } from '@vueuse/core';
   import { useUserStore, useAppStore } from '@/store';
   import useLoading from '@/hooks/loading';
-  import type { LoginData } from '@/api/user';
   import { DEFAULT_ROUTE_NAME } from '@/router/constants';
 
   const { t } = useI18n();
-
   const router = useRouter();
+  const { loading, setLoading } = useLoading();
 
   const userStore = useUserStore();
   const appStore = useAppStore();
 
-  const { loading, setLoading } = useLoading();
-  const errorMessage = ref('');
-
   const loginConfig = useStorage('login-config', {
+    username: '',
+    password: '',
     rememberPassword: true,
-    username: 'admin', // 演示默认值
-    password: 'nslab321', // demo default value
   });
-  const userInfo = reactive({
+
+  const loginData = reactive({
     username: loginConfig.value.username,
     password: loginConfig.value.password,
   });
+
+  const errorMessage = ref('');
 
   const handleSubmit = async ({
     errors,
@@ -106,7 +106,7 @@
     if (!errors) {
       setLoading(true);
       try {
-        await userStore.login(values as LoginData);
+        await userStore.login(values as LoginParams);
         const { redirect, ...othersQuery } = router.currentRoute.value.query;
         router.push({
           name: (redirect as string) || DEFAULT_ROUTE_NAME,

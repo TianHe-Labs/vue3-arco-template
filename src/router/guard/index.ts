@@ -1,5 +1,5 @@
 import type { Router } from 'vue-router';
-import { setRouteEmitter } from '@/utils/route-listener';
+import { setRouteEmitter } from '@/plugins/route-listener';
 import setupUserLoginInfoGuard from './userLoginInfo';
 import setupPermissionGuard from './permission';
 
