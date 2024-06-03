@@ -1,129 +1,185 @@
 <template>
-  <a-spin style="display: block" :loading="loading">
-    <a-tabs v-model:activeKey="messageType" type="rounded" destroy-on-hide>
-      <a-tab-pane v-for="item in tabList" :key="item.key">
-        <template #title>
-          <span> {{ item.title }}{{ formatUnreadLength(item.key) }} </span>
+  <!-- 移动端fixed固定在屏幕右下角 -->
+  <a-badge
+    v-if="appStore.device !== 'desktop'"
+    :count="9"
+    dot
+    class="fixed-message"
+  >
+    <a-button
+      class="msg-btn"
+      size="large"
+      shape="circle"
+      @click="setPopoverVisible"
+    >
+      <icon-notification />
+    </a-button>
+  </a-badge>
+  <a-popover
+    :visible="true"
+    trigger="click"
+    :position="appStore.device === 'desktop' ? 'br' : 'tr'"
+    class="w-480px max-w-9/10"
+    content-class="mt-0"
+  >
+    <div ref="triggerRef"></div>
+    <template #content>
+      <a-tabs
+        v-model:activeKey="messageType"
+        justify
+        type="rounded"
+        size="small"
+      >
+        <!-- 清空：标记已读清空列表 -->
+        <template #extra>
+          <a-button type="text" size="small" @click="handleClearData">
+            {{ $t('messageBox.actions.allClear') }}
+          </a-button>
         </template>
-        <a-result v-if="!renderList.length" status="404">
-          <template #subtitle> {{ $t('messageBox.noContent') }} </template>
-        </a-result>
-        <List
-          :render-list="renderList"
-          :unread-count="unreadCount"
-          @item-click="handleItemClick"
-        />
-      </a-tab-pane>
-      <template #extra>
-        <a-button type="text" @click="emptyList">
-          {{ $t('messageBox.tab.button') }}
-        </a-button>
-      </template>
-    </a-tabs>
-  </a-spin>
+        <a-tab-pane v-for="tab in tabList" :key="tab.key">
+          <template #title>
+            <span> {{ tab.title }} </span>
+            <span v-if="renderStats[tab.key]">
+              ({{ renderStats[tab.key] }})
+            </span>
+          </template>
+          <a-list :bordered="false" :loading="loading">
+            <a-list-item
+              v-for="item in renderData"
+              :key="item.id"
+              :style="{
+                opacity: item.readAt ? 0.5 : 1,
+              }"
+            >
+              <div class="item-wrap" @click="handleItemClick(item)">
+                <a-list-item-meta>
+                  <template v-if="item.avatar" #avatar>
+                    <a-avatar shape="circle">
+                      <img
+                        v-if="item.avatar"
+                        width="20px"
+                        height="20px"
+                        :src="item.avatar"
+                      />
+                      <icon-desktop v-else />
+                    </a-avatar>
+                  </template>
+                  <template #title>
+                    <a-space :size="4">
+                      <a-typography-text>
+                        {{ item.title }}
+                      </a-typography-text>
+                      <a-typography-text type="secondary">
+                        {{ item.subTitle }}
+                      </a-typography-text>
+                    </a-space>
+                  </template>
+                  <template #description>
+                    <div>
+                      <a-typography-paragraph :ellipsis="{ rows: 1 }">
+                        {{ item.content }}
+                      </a-typography-paragraph>
+                      <a-typography-text class="time-text">
+                        {{ item.createdAt }}
+                      </a-typography-text>
+                    </div>
+                  </template>
+                </a-list-item-meta>
+              </div>
+            </a-list-item>
+            <!-- 底部 -->
+            <template v-if="renderData && renderData.length" #footer>
+              <a-button
+                type="text"
+                size="small"
+                @click="handleMarkAllRead(messageType)"
+                >{{ $t('messageBox.actions.allRead') }}</a-button
+              >
+            </template>
+          </a-list>
+        </a-tab-pane>
+      </a-tabs>
+    </template>
+  </a-popover>
 </template>
 
 <script lang="ts" setup>
-  import { ref, reactive, toRefs, computed } from 'vue';
-  import { useI18n } from 'vue-i18n';
-  import {
-    queryMessageList,
-    setMessageStatus,
-    MessageRecord,
-    MessageListType,
-  } from '@/api/message';
-  import useLoading from '@/hooks/loading';
-  import List from './list.vue';
+  import { useAppStore } from '@/store';
+  import { MessageRecord } from '@/api/message';
+  import { useMessage } from './hooks';
 
-  interface TabItem {
-    key: string;
-    title: string;
-    avatar?: string;
-  }
-  const { loading, setLoading } = useLoading(true);
-  const messageType = ref('message');
-  const { t } = useI18n();
-  const messageData = reactive<{
-    renderList: MessageRecord[];
-    messageList: MessageRecord[];
-  }>({
-    renderList: [],
-    messageList: [],
-  });
-  toRefs(messageData);
-  const tabList: TabItem[] = [
-    {
-      key: 'message',
-      title: t('messageBox.tab.title.message'),
-    },
-    {
-      key: 'notice',
-      title: t('messageBox.tab.title.notice'),
-    },
-    {
-      key: 'todo',
-      title: t('messageBox.tab.title.todo'),
-    },
-  ];
-  async function fetchSourceData() {
-    setLoading(true);
-    try {
-      const { data } = await queryMessageList();
-      messageData.messageList = data;
-    } catch (err) {
-      // you can report use errorHandler or other
-    } finally {
-      setLoading(false);
+  const appStore = useAppStore();
+
+  const {
+    triggerRef,
+    loading,
+    tabList,
+    messageType,
+    renderData,
+    renderStats,
+    setPopoverVisible,
+    handleMarkRead,
+    handleMarkAllRead,
+    handleClearData,
+  } = useMessage();
+
+  const handleItemClick = (item: MessageRecord) => {
+    if (item) {
+      handleMarkRead([item.id]);
     }
-  }
-  async function readMessage(data: MessageListType) {
-    const ids = data.map((item) => item.id);
-    await setMessageStatus({ ids });
-    fetchSourceData();
-  }
-  const renderList = computed(() => {
-    return messageData.messageList.filter(
-      (item) => messageType.value === item.type
-    );
-  });
-  const unreadCount = computed(() => {
-    return renderList.value.filter((item) => !item.status).length;
-  });
-  const getUnreadList = (type: string) => {
-    const list = messageData.messageList.filter(
-      (item) => item.type === type && !item.status
-    );
-    return list;
   };
-  const formatUnreadLength = (type: string) => {
-    const list = getUnreadList(type);
-    return list.length ? `(${list.length})` : ``;
-  };
-  const handleItemClick = (items: MessageListType) => {
-    if (renderList.value.length) readMessage([...items]);
-  };
-  const emptyList = () => {
-    messageData.messageList = [];
-  };
-  fetchSourceData();
 </script>
 
-<style scoped lang="less">
-  :deep(.arco-popover-popup-content) {
-    padding: 0;
+<style lang="less" scoped>
+  .fixed-message {
+    position: fixed;
+    right: 25px;
+    bottom: 100px;
+    z-index: 999;
+
+    .msg-btn {
+      background: var(--color-bg-5) !important;
+      border: 1px solid var(--color-fill-3) !important;
+      box-shadow: 0 2px 12px #0000001a;
+    }
   }
 
-  :deep(.arco-list-item-meta) {
-    align-items: flex-start;
-  }
   :deep(.arco-tabs-nav) {
-    padding: 14px 0 12px 16px;
-    border-bottom: 1px solid var(--color-neutral-3);
+    padding: 4px 0 12px;
+    border-bottom: 1px solid var(--color-border-2);
   }
-  :deep(.arco-tabs-content) {
-    padding-top: 0;
-    .arco-result-subtitle {
-      color: rgb(var(--gray-6));
+
+  :deep(.arco-list-wrapper) {
+    margin-top: -16px;
+
+    .arco-list-item {
+      min-height: 84px;
+    }
+
+    .arco-list-item-meta {
+      align-items: start;
+    }
+
+    .arco-list-item-meta-content {
+      flex: 1;
+    }
+
+    .item-wrap {
+      cursor: pointer;
+    }
+
+    .time-text {
+      color: var(--color-text-3);
+      font-size: 12px;
+    }
+
+    .arco-list-footer {
+      padding: 12px 0 0;
+      text-align: right;
+    }
+
+    .arco-typography {
+      margin-bottom: 0;
     }
   }
 </style>
