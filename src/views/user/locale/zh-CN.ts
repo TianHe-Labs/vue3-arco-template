@@ -1,14 +1,14 @@
 export default {
-  'menu.userCenter.settings': '用户设置',
+  'menu.user.profile': '用户设置',
 
-  'userSettings.update': '保存',
-  'userSettings.update.message.success': '更新成功',
-  'userSettings.update.message.failure': '更新失败',
-  'userSettings.cancel': '取消',
-  'userSettings.reset': '重置',
+  'UserProfile.update': '保存',
+  'UserProfile.update.message.success': '更新成功',
+  'UserProfile.update.message.failure': '更新失败',
+  'UserProfile.cancel': '取消',
+  'UserProfile.reset': '重置',
 
-  'userSettings.tab.userInformation': '基础信息',
-  'userSettings.tab.userPassword': '安全设置',
+  'UserProfile.tab.userInformation': '基础信息',
+  'UserProfile.tab.userPassword': '安全设置',
 
   'userInformation.form.username.label': '用户名称',
   'userInformation.form.username.placeholder': '请输入用户名称',

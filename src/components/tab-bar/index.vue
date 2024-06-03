@@ -59,7 +59,7 @@
   });
 </script>
 
-<style scoped lang="less">
+<style lang="less" scoped>
   .tab-bar-container {
     position: relative;
     background-color: var(--color-bg-2);

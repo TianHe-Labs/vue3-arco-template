@@ -1,37 +1,21 @@
 import { defineStore } from 'pinia';
-import { Notification } from '@arco-design/web-vue';
-import type { NotificationReturn } from '@arco-design/web-vue/es/notification/interface';
 import type { RouteRecordNormalized } from 'vue-router';
-import defaultSettings from '@/config/settings.json';
-import { queryUserMenuList } from '@/api/user';
+import { type NotificationReturn, Notification } from '@arco-design/web-vue';
+import defaultSettings from '@/settings.json';
+import { queryServerMenuList } from '@/api/user';
 import { AppState } from './types';
 
 const useAppStore = defineStore('app', {
   state: (): AppState => ({
     ...defaultSettings,
-    name: import.meta.env.VITE_APP_NAME,
-    description: import.meta.env.VITE_APP_DESC,
-    copyright: import.meta.env.VITE_APP_COPR,
   }),
 
   getters: {
-    appCurrentSetting(state: AppState): AppState {
-      return { ...state };
-    },
-    appName(state: AppState) {
-      return state.name;
-    },
-    appDesc(state: AppState) {
-      return state.description;
-    },
-    appCopr(state: AppState) {
-      return state.copyright;
-    },
     appDevice(state: AppState) {
       return state.device;
     },
-    appAsyncMenus(state: AppState): RouteRecordNormalized[] {
-      return state.serverMenu as unknown as RouteRecordNormalized[];
+    appServerMenus(state: AppState): RouteRecordNormalized[] {
+      return state.serverMenus as unknown as RouteRecordNormalized[];
     },
   },
 
@@ -69,7 +53,7 @@ const useAppStore = defineStore('app', {
     },
 
     // 服务端路由
-    async fetchServerMenuConfig() {
+    async queryAppServerMenus() {
       let notifyInstance: NotificationReturn | null = null;
       try {
         notifyInstance = Notification.info({
@@ -77,8 +61,8 @@ const useAppStore = defineStore('app', {
           content: 'loading',
           closable: true,
         });
-        const { data } = await queryUserMenuList();
-        this.serverMenu = data;
+        const { data } = await queryServerMenuList();
+        this.serverMenus = data;
         notifyInstance = Notification.success({
           id: 'menuNotice',
           content: 'success',
@@ -95,8 +79,8 @@ const useAppStore = defineStore('app', {
     },
 
     // 清空服务端路由
-    clearServerMenu() {
-      this.serverMenu = [];
+    clearAppServerMenus() {
+      this.serverMenus = [];
     },
   },
 });

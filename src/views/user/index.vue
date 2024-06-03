@@ -1,17 +1,17 @@
 <template>
-  <div class="h-full flex flex-col mb-5 px-5 pb-5">
-    <Breadcrumb :items="['menu.userCenter']" />
+  <div class="h-full flex flex-col gap-4 px-5 py-4">
+    <Breadcrumb :items="['menu.user']" />
     <a-card
       :bordered="false"
       class="flex-auto"
       :body-style="{ height: '100%' }"
     >
       <a-tabs default-active-key="1" type="rounded" justify>
-        <a-tab-pane key="1" :title="$t('userSettings.tab.userInformation')">
-          <UserInformation class="py-10" />
+        <a-tab-pane key="1" :title="$t('UserProfile.tab.userInformation')">
+          <BasicInfo class="py-10" />
         </a-tab-pane>
-        <a-tab-pane key="2" :title="$t('userSettings.tab.userPassword')">
-          <userPassword class="py-10" />
+        <a-tab-pane key="2" :title="$t('UserProfile.tab.userPassword')">
+          <Password class="py-10" />
         </a-tab-pane>
       </a-tabs>
     </a-card>
@@ -19,21 +19,17 @@
 </template>
 
 <script lang="ts" setup>
-  import UserInformation from './components/user-information.vue';
-  import UserPassword from './components/user-password.vue';
+  import BasicInfo from './components/basic-info.vue';
+  import Password from './components/password.vue';
 </script>
 
 <script lang="ts">
   export default {
-    name: 'UserSettings',
+    name: 'UserProfile',
   };
 </script>
 
-<style scoped lang="less">
-  .container {
-    padding: 0 20px 20px;
-  }
-
+<style lang="less" scoped>
   .wrapper {
     flex: 1 1 auto;
     min-height: 580px;

@@ -111,4 +111,4 @@
   });
 </script>
 
-<style scoped lang="less"></style>
+<style lang="less" scoped></style>

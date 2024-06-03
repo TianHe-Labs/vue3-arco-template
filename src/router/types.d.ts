@@ -2,15 +2,15 @@ import 'vue-router';
 
 declare module 'vue-router' {
   interface RouteMeta {
-    roles?: string[]; // Controls roles that have access to the page
-    requiresAuth: boolean; // Whether login is required to access the current page (every route must declare)
-    icon?: string; // The icon show in the side menu
-    locale?: string; // The locale name show in side menu and breadcrumb
-    hideInMenu?: boolean; // If true, it is not displayed in the side menu
-    hideChildrenInMenu?: boolean; // if set true, the children are not displayed in the side menu
-    activeMenu?: string; // if set name, the menu will be highlighted according to the name you set
-    order?: number; // Sort routing menu items. If set key, the higher the value, the more forward it is
-    noAffix?: boolean; // if set true, the tag will not affix in the tab-bar
-    ignoreCache?: boolean; // if set true, the page will not be cached
+    requiresAuth: boolean; // 控制访问页面是否需要认证，不可缺省
+    roles?: string[]; // 控制页面访问权限
+    icon?: string; // 页面路由图标
+    locale?: string; // 页面路由本地化名称
+    hideInMenu?: boolean; // 是否在导航菜单中隐藏路由
+    hideChildrenInMenu?: boolean; // 是否在导航菜单中隐藏子路由
+    activeMenu?: string; // 页面活跃时高亮的路由，默认是页面自身的路由
+    order?: number; // 在导航菜单中顺序
+    noAffix?: boolean; // 页面标签前缀
+    ignoreCache?: boolean; // 控制页面是否忽略缓存
   }
 }

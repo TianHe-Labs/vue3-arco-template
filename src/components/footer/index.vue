@@ -1,13 +1,15 @@
 <template>
   <a-layout-footer class="footer">
-    &copy; {{ new Date().getFullYear() }} {{ appStore.appCopr }}
+    &copy; {{ new Date().getFullYear() }} {{ appCopyright }}
   </a-layout-footer>
 </template>
 
 <script lang="ts" setup>
-  import { useAppStore } from '@/store';
+  import { useI18n } from 'vue-i18n';
 
-  const appStore = useAppStore();
+  const { t } = useI18n();
+
+  const appCopyright = import.meta.env.VITE_APP_COPR || t('');
 </script>
 
 <style lang="less" scoped>

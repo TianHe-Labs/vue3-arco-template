@@ -8,9 +8,8 @@
 </template>
 
 <script lang="ts" setup>
-  import { ref, nextTick } from 'vue';
+  import { shallowRef, nextTick } from 'vue';
   import VCharts from 'vue-echarts';
-  // import { useAppStore } from '@/store';
 
   defineProps({
     options: {
@@ -32,16 +31,12 @@
       default: '100%',
     },
   });
-  // const appStore = useAppStore();
-  // const theme = computed(() => {
-  //   if (appStore.theme === 'dark') return 'dark';
-  //   return '';
-  // });
-  const renderChart = ref(false);
-  // wait container expand
+
+  const renderChart = shallowRef(false);
+
   nextTick(() => {
     renderChart.value = true;
   });
 </script>
 
-<style scoped lang="less"></style>
+<style lang="less" scoped></style>

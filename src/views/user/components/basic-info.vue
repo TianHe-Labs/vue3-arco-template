@@ -69,10 +69,10 @@
     <a-form-item>
       <a-space>
         <a-button type="primary" @click="validate">
-          {{ $t('userSettings.update') }}
+          {{ $t('UserProfile.update') }}
         </a-button>
         <a-button type="secondary" @click="reset">
-          {{ $t('userSettings.reset') }}
+          {{ $t('UserProfile.reset') }}
         </a-button>
       </a-space>
     </a-form-item>
@@ -103,12 +103,12 @@
     if (!errors) {
       try {
         const { data } = await updateUserInfo(userFormData);
-        if (data.id) {
-          Message.info(t('userSettings.update.message.success'));
+        if (data.username) {
+          Message.info(t('UserProfile.update.message.success'));
         }
       } catch (err) {
         // you can report use errorHandler or other
-        Message.info(t('userSettings.update.message.failure'));
+        Message.info(t('UserProfile.update.message.failure'));
       }
     }
   };
@@ -117,7 +117,7 @@
   };
 </script>
 
-<style scoped lang="less">
+<style lang="less" scoped>
   .form {
     width: 540px;
     margin: 0 auto;

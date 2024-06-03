@@ -1,13 +1,9 @@
 <template>
-  <div class="container">
+  <div class="login-wrapper">
     <LoginBanner />
     <div class="content">
-      <div class="content-inner">
-        <LoginForm />
-      </div>
-      <div class="footer">
-        <Footer />
-      </div>
+      <LoginForm />
+      <Footer />
     </div>
   </div>
 </template>
@@ -19,12 +15,12 @@
 </script>
 
 <style lang="less" scoped>
-  .container {
+  .login-wrapper {
     display: flex;
     height: 100vh;
 
     .banner {
-      width: 550px;
+      width: 500px;
       background: linear-gradient(163.85deg, #1d2129 0%, #00308f 100%);
     }
 
@@ -49,9 +45,9 @@
 <style lang="less" scoped>
   // responsive
   @media (max-width: @screen-lg) {
-    .container {
+    .login-wrapper {
       .banner {
-        width: 25%;
+        width: 0%;
       }
     }
   }

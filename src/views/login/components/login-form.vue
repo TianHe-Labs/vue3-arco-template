@@ -1,7 +1,7 @@
 <template>
-  <div class="login-form-wrapper">
+  <div class="login-form">
     <div class="login-form-title">{{ $t('login.form.title') }}</div>
-    <div class="login-form-subtitle">{{ appStore.appName }}</div>
+    <div class="login-form-subtitle">{{ appName }}</div>
     <div class="login-form-error-msg">{{ errorMessage }}</div>
     <a-form
       ref="loginForm"
@@ -71,7 +71,7 @@
   import { ValidatedError } from '@arco-design/web-vue/es/form/interface';
   import { useI18n } from 'vue-i18n';
   import { useStorage } from '@vueuse/core';
-  import { useUserStore, useAppStore } from '@/store';
+  import { useUserStore } from '@/store';
   import useLoading from '@/hooks/loading';
   import { DEFAULT_ROUTE_NAME } from '@/router/constants';
 
@@ -80,7 +80,8 @@
   const { loading, setLoading } = useLoading();
 
   const userStore = useUserStore();
-  const appStore = useAppStore();
+
+  const appName = import.meta.env.VITE_APP_NAME || t('');
 
   const loginConfig = useStorage('login-config', {
     username: '',
@@ -135,9 +136,7 @@
 
 <style lang="less" scoped>
   .login-form {
-    &-wrapper {
-      width: 320px;
-    }
+    width: 320px;
 
     &-title {
       color: var(--color-text-1);

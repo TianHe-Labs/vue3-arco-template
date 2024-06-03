@@ -13,11 +13,9 @@ export function isReportMode(): boolean {
  * 要使用 JSON.parse 解析，因此必须使用双引号
  */
 export function createProxy() {
-  const proxyRaw = loadEnv(
-    process.env.NODE_ENV as string,
-    process.cwd()
-  ).VITE_DEV_PROXY;
-  const proxyArr = JSON.parse(proxyRaw);
+  // 只从 development 中读取
+  const proxyRaw = loadEnv('development', process.cwd()).VITE_DEV_PROXY;
+  const proxyArr = JSON.parse(proxyRaw || '[]');
   const proxyObj: Record<string, object> = {};
 
   proxyArr.forEach((item: string[]) => {

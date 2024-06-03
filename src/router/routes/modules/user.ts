@@ -2,26 +2,27 @@ import { DEFAULT_LAYOUT } from '../base';
 import { AppRouteRecordRaw } from '../types';
 
 const USERCENTER: AppRouteRecordRaw = {
-  path: '/user-center',
-  name: 'UserCenter',
-  redirect: '/user-center/settings',
+  path: '/user',
+  name: 'User',
+  redirect: '/user',
   component: DEFAULT_LAYOUT,
   meta: {
-    locale: 'menu.userCenter',
+    locale: 'menu.user',
     icon: 'icon-user',
     requiresAuth: true,
     order: 7,
-    hideInMenu: true,
+    // hideChildrenInMenu: true,
   },
   children: [
     {
-      path: 'settings',
-      name: 'UserSettings',
-      component: () => import('@/views/user-center/index.vue'),
+      path: '',
+      name: 'UserProfile',
+      component: () => import('@/views/user/index.vue'),
       meta: {
-        locale: 'menu.userCenter.settings',
+        locale: 'menu.user.profile',
         requiresAuth: true,
         roles: ['*'],
+        activeMenu: 'User',
         hideInMenu: true,
       },
     },

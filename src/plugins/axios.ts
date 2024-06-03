@@ -5,7 +5,7 @@ import axios, {
 } from 'axios';
 import { Message } from '@arco-design/web-vue';
 import { useUserStore } from '@/store';
-import useUserLogout from '@/hooks/user-logout';
+import useLogout from '@/hooks/logout';
 
 if (import.meta.env.VITE_API_BASE) {
   // 自定义环境变量，手动指定 API Base
@@ -53,7 +53,7 @@ axios.interceptors.response.use(
     // api 返回结果不要进行多余的封装包裹
     // 要么直接返回结果，要么返回错误信息
     const userStore = useUserStore();
-    const { logout } = useUserLogout();
+    const { logout } = useLogout();
 
     // 处理 token 过期以及 刷新 token 重发请求问题
     const status = error.response?.status;

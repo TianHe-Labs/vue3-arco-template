@@ -3,14 +3,8 @@ import axios from 'axios';
 import { UserState } from '@/store/modules/user/types';
 
 // 登录
-export interface LoginParams {
-  username: string;
-  password: string;
-}
-export interface LoginRes {
-  accessToken: string;
-  refreshToken: string;
-}
+export type LoginParams = Pick<UserState, 'username' | 'password'>;
+export type LoginRes = Pick<UserState, 'accessToken' | 'refreshToken'>;
 
 export function login(data: LoginParams) {
   // 有时候前端的有些字段和后端接口不一致
@@ -20,8 +14,8 @@ export function login(data: LoginParams) {
 }
 
 // 刷新令牌
-export type UpdateRefreshTokenParams = Pick<LoginRes, 'refreshToken'>;
-export type UpdateRefreshTokenRes = Pick<LoginRes, 'accessToken'>;
+export type UpdateRefreshTokenParams = Pick<UserState, 'refreshToken'>;
+export type UpdateRefreshTokenRes = Pick<UserState, 'accessToken'>;
 
 export function updateUserToken(params: UpdateRefreshTokenParams) {
   return axios.get<UpdateRefreshTokenRes>('/api/user/refresh', {
@@ -41,6 +35,11 @@ export function queryUserInfo() {
   return axios.get<QueryUserInfoRes>('/api/user/info');
 }
 
+// 获取用户菜单（由后端完全控制登录用户路由权限）
+export function queryServerMenuList() {
+  return axios.post<RouteRecordNormalized[]>('/api/user/menu');
+}
+
 // 更新用户信息（除密码）
 export type UpdateUserInfoParams = Omit<
   UserState,
@@ -52,16 +51,11 @@ export function updateUserInfo(data: UpdateUserInfoParams) {
   return axios.put<UpdateUserInfoRes>('/api/user/info/update', data);
 }
 
-// 获取用户菜单（后端控制权限，返回用户可达页面）
-export function queryUserMenuList() {
-  return axios.post<RouteRecordNormalized[]>('/api/user/menu');
-}
-
 // 更新用户密码
 export interface UpdateUserPasswordParams {
   oldPassword: string;
   newPassword: string;
-  confirmPassword?: string;
+  confirmPassword?: string; // confirmPassword === newPassword 前端检查即可
 }
 export type UpdateUserPasswordRes = Pick<UserState, 'username'>;
 

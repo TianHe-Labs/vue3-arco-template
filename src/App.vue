@@ -1,7 +1,8 @@
 <template>
-  <a-config-provider :locale="locale">
+  <a-config-provider :locale="locale" global update-at-scroll>
     <router-view />
-    <global-setting />
+    <GlobalSetting />
+    <MessageBox />
   </a-config-provider>
 </template>
 
@@ -9,12 +10,15 @@
   import { computed } from 'vue';
   import enUS from '@arco-design/web-vue/es/locale/lang/en-us';
   import zhCN from '@arco-design/web-vue/es/locale/lang/zh-cn';
+  import { useI18n } from 'vue-i18n';
+  import { provideMessage } from '@/components/message-box/hooks';
   import GlobalSetting from '@/components/global-setting/index.vue';
-  import useLocale from '@/hooks/locale';
+  import MessageBox from '@/components/message-box/index.vue';
 
-  const { currentLocale } = useLocale();
+  const i18n = useI18n();
+
   const locale = computed(() => {
-    switch (currentLocale.value) {
+    switch (i18n.locale.value) {
       case 'zh-CN':
         return zhCN;
       case 'en-US':
@@ -23,4 +27,6 @@
         return enUS;
     }
   });
+
+  provideMessage();
 </script>

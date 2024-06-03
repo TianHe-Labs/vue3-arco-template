@@ -10,43 +10,43 @@ export default function setupPermissionGuard(router: Router) {
   router.beforeEach(async (to, from, next) => {
     const appStore = useAppStore();
     const userStore = useUserStore();
-    const Permission = usePermission();
-    const permissionsAllow = Permission.accessRouter(to);
+    const { accessRoute, findFirstAccessibleRoute } = usePermission();
+    const isAccessibleRoute = accessRoute(to);
     if (appStore.menuFromServer) {
       // 针对来自服务端的菜单配置进行处理
-      // Handle routing configuration from the server
-
       // 根据需要自行完善来源于服务端的菜单配置的permission逻辑
-      // Refine the permission logic from the server's menu configuration as needed
       if (
-        !appStore.appAsyncMenus.length &&
+        !appStore.appServerMenus.length &&
         !WHITE_LIST.find((el) => el.name === to.name)
       ) {
-        await appStore.fetchServerMenuConfig();
+        await appStore.queryAppServerMenus();
       }
-      const serverMenuConfig = [...appStore.appAsyncMenus, ...WHITE_LIST];
+      const appMenus = [...appStore.appServerMenus, ...WHITE_LIST];
 
+      // 判断当前待跳转的路由是否存在（由后端完全控制的路由）
       let exist = false;
-      while (serverMenuConfig.length && !exist) {
-        const element = serverMenuConfig.shift();
+      while (appMenus.length && !exist) {
+        const element = appMenus.shift();
         if (element?.name === to.name) exist = true;
 
         if (element?.children) {
-          serverMenuConfig.push(
+          appMenus.push(
             ...(element.children as unknown as RouteRecordNormalized[])
           );
         }
       }
-      if (exist && permissionsAllow) {
+      if (exist && isAccessibleRoute) {
         next();
-      } else next(NOT_FOUND);
+      } else {
+        next(NOT_FOUND);
+      }
     } else {
       // eslint-disable-next-line no-lonely-if
-      if (permissionsAllow) next();
-      else {
+      if (isAccessibleRoute) {
+        next();
+      } else {
         const destination =
-          Permission.findFirstPermissionRoute(appRoutes, userStore.role) ||
-          NOT_FOUND;
+          findFirstAccessibleRoute(appRoutes, userStore.role) || NOT_FOUND;
         next(destination);
       }
     }

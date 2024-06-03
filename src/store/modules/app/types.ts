@@ -1,20 +1,20 @@
 import type { RouteRecordNormalized } from 'vue-router';
 
 export interface AppState {
+  globalSettingEnabled: boolean;
   theme: string;
   colorWeak: boolean;
+  themeColor: string;
+  device: string;
   navbar: boolean;
   menu: boolean;
   topMenu: boolean;
   hideMenu: boolean;
-  menuCollapse: boolean;
-  footer: boolean;
-  themeColor: string;
   menuWidth: number;
-  globalSettings: boolean;
-  device: string;
+  menuCollapse: boolean;
   tabBar: boolean;
   menuFromServer: boolean;
-  serverMenu: RouteRecordNormalized[];
+  serverMenus: RouteRecordNormalized[];
+  footer: boolean;
   [key: string]: unknown;
 }

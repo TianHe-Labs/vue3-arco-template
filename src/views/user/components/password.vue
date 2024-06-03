@@ -74,10 +74,10 @@
     <a-form-item>
       <a-space>
         <a-button type="primary" @click="validate">
-          {{ $t('userSettings.update') }}
+          {{ $t('UserProfile.update') }}
         </a-button>
         <a-button type="secondary" @click="reset">
-          {{ $t('userSettings.reset') }}
+          {{ $t('UserProfile.reset') }}
         </a-button>
       </a-space>
     </a-form-item>
@@ -90,7 +90,7 @@
   import { FormInstance } from '@arco-design/web-vue/es/form';
   import { UpdateUserPasswordParams, updateUserPassword } from '@/api/user';
   import { Message } from '@arco-design/web-vue';
-  import useUserLogout from '@/hooks/user-logout';
+  import useUserLogout from '@/hooks/logout';
 
   const { t } = useI18n();
 
@@ -108,7 +108,7 @@
     if (!errors) {
       try {
         const { data } = await updateUserPassword(passwordFormData);
-        if (data.id) {
+        if (data.username) {
           Message.info(t('userPassword.form.update'));
           setTimeout(() => {
             logout();
@@ -116,7 +116,7 @@
         }
       } catch (err) {
         // you can report use errorHandler or other
-        Message.info(t('userSettings.update.message.failure'));
+        Message.info(t('UserProfile.update.message.failure'));
       }
     }
   };
@@ -125,7 +125,7 @@
   };
 </script>
 
-<style scoped lang="less">
+<style lang="less" scoped>
   .form {
     width: 540px;
     margin: 0 auto;

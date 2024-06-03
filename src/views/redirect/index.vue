@@ -13,4 +13,4 @@
   router.replace({ path: gotoPath });
 </script>
 
-<style scoped lang="less"></style>
+<style lang="less" scoped></style>

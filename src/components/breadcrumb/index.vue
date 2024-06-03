@@ -1,35 +1,36 @@
 <template>
-  <a-breadcrumb class="container-breadcrumb">
+  <a-breadcrumb>
     <a-breadcrumb-item>
       <icon-apps />
     </a-breadcrumb-item>
-    <a-breadcrumb-item v-for="item in items" :key="item">
-      {{ $t(item) }}
-    </a-breadcrumb-item>
+    <template v-for="(item, index) in items" :key="index">
+      <a-breadcrumb-item class="opacity-75">
+        <router-link v-if="isBreadcrumbRoute(item)" :to="item">
+          {{ item.label }}
+        </router-link>
+        <template v-else>
+          {{ $t(item) }}
+        </template>
+      </a-breadcrumb-item>
+    </template>
   </a-breadcrumb>
 </template>
 
 <script lang="ts" setup>
-  import { PropType } from 'vue';
+  import { BreadcrumbRoute } from '@arco-design/web-vue';
 
-  defineProps({
-    items: {
-      type: Array as PropType<string[]>,
-      default() {
-        return [];
-      },
-    },
-  });
-</script>
-
-<style scoped lang="less">
-  .container-breadcrumb {
-    margin: 16px 0;
-    :deep(.arco-breadcrumb-item) {
-      color: rgb(var(--gray-6));
-      &:last-child {
-        color: rgb(var(--gray-8));
-      }
+  withDefaults(
+    defineProps<{
+      items: (string | BreadcrumbRoute)[];
+    }>(),
+    {
+      items: () => [],
     }
-  }
-</style>
+  );
+
+  const isBreadcrumbRoute = (
+    item: string | BreadcrumbRoute
+  ): item is BreadcrumbRoute => {
+    return (item as BreadcrumbRoute).label !== undefined;
+  };
+</script>

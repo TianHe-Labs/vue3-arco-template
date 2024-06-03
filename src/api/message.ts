@@ -1,38 +1,35 @@
 import axios from 'axios';
 
+// 通知、告警、待办
+export type MessageType = 'notice' | 'alert';
+
 export interface MessageRecord {
-  id: number;
-  type: string;
+  id: string;
   title: string;
-  subTitle: string;
+  subTitle?: string;
   avatar?: string;
   content: string;
-  time: string;
-  status: 0 | 1;
-  messageType?: number;
+  type: MessageType;
+  readAt?: string | Date; // 阅读时间，同时可以用来标识是否已读，不再额外增加字段
+  createdAt: string | Date;
+  updatedAt: string | Date;
 }
 export type MessageListType = MessageRecord[];
 
+// 获取最新未读消息列表
+export interface QueryMessageListRes {
+  list: MessageRecord[];
+}
+
 export function queryMessageList() {
-  return axios.post<MessageListType>('/api/message/list');
+  return axios.post<QueryMessageListRes>('/api/message/list');
 }
 
-interface MessageStatus {
-  ids: number[];
+// 标记已读，单个、批量二合一
+interface updateMessageStatusParams {
+  ids: string[];
 }
 
-export function setMessageStatus(data: MessageStatus) {
-  return axios.post<MessageListType>('/api/message/read', data);
-}
-
-export interface ChatRecord {
-  id: number;
-  username: string;
-  content: string;
-  time: string;
-  isCollect: boolean;
-}
-
-export function queryChatList() {
-  return axios.post<ChatRecord[]>('/api/chat/list');
+export function updateMessageStatus(data: updateMessageStatusParams) {
+  return axios.put('/api/message/read', data);
 }

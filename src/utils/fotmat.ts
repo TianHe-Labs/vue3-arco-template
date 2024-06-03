@@ -1,5 +1,17 @@
 // 工具函数·数据格式化类
 
+// 时间格式化，不要对 dayjs 二次封装
+import dayjsExt from 'dayjs';
+import 'dayjs/locale/zh-cn';
+import relativeTime from 'dayjs/plugin/relativeTime';
+import localizedFormat from 'dayjs/plugin/localizedFormat';
+
+dayjsExt.locale('zh-cn');
+dayjsExt.extend(relativeTime);
+dayjsExt.extend(localizedFormat);
+
+export const dayjs = dayjsExt;
+
 // 数字格式化 千位分隔符
 export function formatNumber(obj: number, separator = ','): string {
   if (typeof obj !== 'number') return 'Invalid Number';

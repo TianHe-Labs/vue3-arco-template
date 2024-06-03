@@ -12,7 +12,6 @@ export interface NodeOptions extends Options {
 }
 
 export interface MockRequest {
-  headers(headers: any): unknown;
   url: string;
   type: string;
   body?: string;

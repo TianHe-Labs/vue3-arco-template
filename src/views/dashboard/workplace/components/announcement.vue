@@ -49,22 +49,23 @@
   ];
 </script>
 
-<style scoped lang="less">
+<style lang="less" scoped>
   .item {
     display: flex;
     align-items: center;
     width: 100%;
     height: 24px;
     margin-bottom: 4px;
+
     .item-content {
       flex: 1;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
       margin-left: 4px;
+      overflow: hidden;
       color: var(--color-text-2);
-      text-decoration: none;
       font-size: 13px;
+      white-space: nowrap;
+      text-decoration: none;
+      text-overflow: ellipsis;
       cursor: pointer;
     }
   }

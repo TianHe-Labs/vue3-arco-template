@@ -4,7 +4,7 @@ import { useUserStore } from '@/store';
 export default function usePermission() {
   const userStore = useUserStore();
   return {
-    accessRouter(route: RouteLocationNormalized | RouteRecordRaw) {
+    accessRoute(route: RouteLocationNormalized | RouteRecordRaw) {
       return (
         !route.meta?.requiresAuth ||
         !route.meta?.roles ||
@@ -12,10 +12,10 @@ export default function usePermission() {
         route.meta?.roles?.includes(userStore.role as string)
       );
     },
-    findFirstPermissionRoute(_routers: any, role = 'admin') {
-      const cloneRouters = [..._routers];
-      while (cloneRouters.length) {
-        const firstElement = cloneRouters.shift();
+    findFirstAccessibleRoute(_routers: any, role = 'admin') {
+      const clonedRouters = [..._routers];
+      while (clonedRouters.length) {
+        const firstElement = clonedRouters.shift();
         if (
           firstElement?.meta?.roles?.find((el: string[]) => {
             return el.includes('*') || el.includes(role);
@@ -23,7 +23,7 @@ export default function usePermission() {
         )
           return { name: firstElement.name };
         if (firstElement?.children) {
-          cloneRouters.push(...firstElement.children);
+          clonedRouters.push(...firstElement.children);
         }
       }
       return null;

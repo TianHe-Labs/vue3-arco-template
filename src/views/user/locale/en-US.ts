@@ -1,14 +1,14 @@
 export default {
-  'menu.userCenter.settings': 'User Settings',
+  'menu.user.profile': 'User Settings',
 
-  'userSettings.update': 'Save',
-  'userSettings.update.message.success': 'Update success',
-  'userSettings.update.message.failure': 'Update failure',
-  'userSettings.cancel': 'Cancel',
-  'userSettings.reset': 'Reset',
+  'UserProfile.update': 'Save',
+  'UserProfile.update.message.success': 'Update success',
+  'UserProfile.update.message.failure': 'Update failure',
+  'UserProfile.cancel': 'Cancel',
+  'UserProfile.reset': 'Reset',
   // new
-  'userSettings.tab.userInformation': 'User Information',
-  'userSettings.tab.userPassword': 'User Password',
+  'UserProfile.tab.userInformation': 'User Information',
+  'UserProfile.tab.userPassword': 'User Password',
 
   'userInformation.form.username.label': 'Username',
   'userInformation.form.username.placeholder': 'Please enter username',
