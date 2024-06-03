@@ -8,23 +8,25 @@ import { cloneDeep } from 'lodash';
 export default function useMenuTree() {
   const permission = usePermission();
   const appStore = useAppStore();
-  const appRoute = computed(() => {
-    if (appStore.menuFromServer) {
-      return appStore.appAsyncMenus;
-    }
-    return appClientMenus;
-  });
+
   const menuTree = computed(() => {
-    const copyRouter = cloneDeep(appRoute.value) as RouteRecordNormalized[];
-    copyRouter.sort((a: RouteRecordNormalized, b: RouteRecordNormalized) => {
+    const appMenus = appStore.menuFromServer
+      ? appStore.appServerMenus
+      : appClientMenus;
+
+    const clonedRoutes = cloneDeep(appMenus) as RouteRecordNormalized[];
+
+    // 按照 order 排序
+    clonedRoutes.sort((a: RouteRecordNormalized, b: RouteRecordNormalized) => {
       return (a.meta.order || 0) - (b.meta.order || 0);
     });
+
     function travel(_routes: RouteRecordRaw[], layer: number) {
       if (!_routes) return null;
 
       const collector: any = _routes.map((element) => {
         // no access
-        if (!permission.accessRouter(element)) {
+        if (!permission.accessRoute(element)) {
           return null;
         }
 
@@ -60,7 +62,8 @@ export default function useMenuTree() {
       });
       return collector.filter(Boolean);
     }
-    return travel(copyRouter, 0);
+
+    return travel(clonedRoutes, 0);
   });
 
   return {

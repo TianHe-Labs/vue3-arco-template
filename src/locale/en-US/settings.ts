@@ -1,13 +1,14 @@
 export default {
   'settings.search': 'Search',
-  'settings.language': 'Language',
-  'settings.navbar.locale.toggle': 'Switch to English',
-  'settings.navbar.theme.toLight': 'Click to use light mode',
-  'settings.navbar.theme.toDark': 'Click to use dark mode',
-  'settings.navbar.alerts': 'alerts',
-  'settings.screen.toFull': 'Click to switch to full screen mode',
-  'settings.screen.toExit': 'Click to exit the full screen mode',
-  'settings.footer.copyright': 'Tianhe Security',
+  'settings.language.toggle': 'Toggle Language',
+  'settings.language.toggle.message': 'Switch to English',
+  'settings.theme.toLight': 'Light',
+  'settings.theme.toLight.message': 'Switch to light',
+  'settings.theme.toDark': 'Dark',
+  'settings.theme.toDark.tooltip': 'Switch to dark',
+  'settings.message': 'alerts',
+  'settings.screen.toFull': 'Switch to full screen',
+  'settings.screen.toExit': 'Exit the full screen',
 
   'settings.title': 'Settings',
   'settings.content': 'Content Setting',
@@ -18,7 +19,7 @@ export default {
   'settings.tabBar': 'Tab Bar',
   'settings.menuFromServer': 'Menu From Server',
   'settings.menuWidth': 'Menu Width (px)',
-  'settings.otherSettings': 'Other Settings',
+  'settings.other': 'Other Settings',
   'settings.colorWeak': 'Color Weak',
   'settings.alertContent':
     'After the configuration is only temporarily effective, if you want to really affect the project, click the "Copy Settings" button below and replace the configuration in settings.json.',
@@ -26,7 +27,6 @@ export default {
   'settings.copySettings.message':
     'Copy succeeded, please paste to file src/settings.json.',
   'settings.close': 'Close',
-  'settings.themeColor': 'Theme Color',
-  'settings.color.tooltip':
-    '10 gradient colors generated according to the theme color',
+
+  'settings.logout': 'Logout',
 };

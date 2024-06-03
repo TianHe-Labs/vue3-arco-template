@@ -1,21 +1,37 @@
 <script lang="tsx">
-  import { defineComponent, ref, h, compile, computed } from 'vue';
+  import { defineComponent, ref, h, compile, computed, inject } from 'vue';
   import { useI18n } from 'vue-i18n';
-  import { useRoute, useRouter, RouteRecordRaw } from 'vue-router';
-  import type { RouteMeta } from 'vue-router';
+  import {
+    type RouteRecordRaw,
+    type RouteMeta,
+    useRoute,
+    useRouter,
+  } from 'vue-router';
   import { useAppStore } from '@/store';
   import { listenerRouteChange } from '@/plugins/route-listener';
   import { openWindow, regexUrl } from '@/utils';
   import useMenuTree from './use-menu-tree';
 
   export default defineComponent({
+    props: {
+      mode: {
+        type: String,
+        default: 'vertical',
+      },
+    },
     emit: ['collapse'],
-    setup() {
+    setup(props) {
       const { t } = useI18n();
-      const appStore = useAppStore();
       const router = useRouter();
       const route = useRoute();
+      const appStore = useAppStore();
       const { menuTree } = useMenuTree();
+
+      // 移动端抽屉菜单
+      const toggleDrawerMenu = inject('toggleDrawerMenu') as (
+        opts?: any
+      ) => void;
+
       const collapsed = computed({
         get() {
           if (appStore.device === 'desktop') return appStore.menuCollapse;
@@ -25,8 +41,11 @@
           appStore.updateSettings({ menuCollapse: value });
         },
       });
+      const setCollapse = (val: boolean) => {
+        if (appStore.device === 'desktop')
+          appStore.updateSettings({ menuCollapse: val });
+      };
 
-      const topMenu = computed(() => appStore.topMenu);
       const openKeys = ref<string[]>([]);
       const selectedKey = ref<string[]>([]);
 
@@ -48,6 +67,7 @@
           name: item.name,
         });
       };
+
       const findMenuOpenKeys = (target: string) => {
         const result: string[] = [];
         let isFind = false;
@@ -69,6 +89,7 @@
         });
         return result;
       };
+
       listenerRouteChange((newRoute) => {
         const { requiresAuth, activeMenu, hideInMenu } = newRoute.meta;
         if (requiresAuth && (!hideInMenu || activeMenu)) {
@@ -84,10 +105,6 @@
           ];
         }
       }, true);
-      const setCollapse = (val: boolean) => {
-        if (appStore.device === 'desktop')
-          appStore.updateSettings({ menuCollapse: val });
-      };
 
       const renderSubMenu = () => {
         function travel(_route: RouteRecordRaw[], nodes = []) {
@@ -112,7 +129,10 @@
                   <a-menu-item
                     key={element?.name}
                     v-slots={{ icon }}
-                    onClick={() => goto(element)}
+                    onClick={() => {
+                      goto(element);
+                      toggleDrawerMenu({ isMenuClick: true });
+                    }}
                   >
                     {t(element?.meta?.locale || '')}
                   </a-menu-item>
@@ -127,15 +147,16 @@
 
       return () => (
         <a-menu
-          mode={topMenu.value ? 'horizontal' : 'vertical'}
           v-model:collapsed={collapsed.value}
           v-model:open-keys={openKeys.value}
+          mode={props.mode}
+          auto-scroll-into-view={true}
           show-collapse-button={appStore.device !== 'mobile'}
           auto-open={false}
           selected-keys={selectedKey.value}
           auto-open-selected={true}
           level-indent={34}
-          style="height: 100%;width:100%;"
+          style="height:100%;width:100%;"
           onCollapse={setCollapse}
         >
           {renderSubMenu()}
@@ -144,18 +165,3 @@
     },
   });
 </script>
-
-<style lang="less" scoped>
-  :deep(.arco-menu-inner) {
-    .arco-menu-inline-header {
-      display: flex;
-      align-items: center;
-    }
-
-    .arco-icon {
-      &:not(.arco-icon-down) {
-        font-size: 18px;
-      }
-    }
-  }
-</style>

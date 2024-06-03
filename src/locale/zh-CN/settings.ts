@@ -1,24 +1,25 @@
 export default {
   'settings.search': '搜索',
-  'settings.language': '语言',
-  'settings.navbar.locale.toggle': '切换为中文',
-  'settings.navbar.theme.toLight': '点击切换为亮色模式',
-  'settings.navbar.theme.toDark': '点击切换为暗黑模式',
-  'settings.navbar.alerts': '消息通知',
-  'settings.screen.toFull': '点击切换全屏模式',
-  'settings.screen.toExit': '点击退出全屏模式',
-  'settings.footer.copyright': '天合安全',
+  'settings.language.toggle': '切换语言',
+  'settings.language.toggle.message': '切换为中文',
+  'settings.theme.toLight': '亮色',
+  'settings.theme.toLight.message': '切换为亮色',
+  'settings.theme.toDark': '暗色',
+  'settings.theme.toDark.tooltip': '切换为暗色',
+  'settings.message': '消息通知',
+  'settings.screen.toFull': '切换全屏',
+  'settings.screen.toExit': '退出全屏',
 
   'settings.title': '页面配置',
   'settings.content': '内容区域',
   'settings.navbar': '导航栏',
   'settings.menu': '菜单栏',
   'settings.topMenu': '顶部菜单栏',
-  'settings.footer': '底部',
-  'settings.tabBar': '多页签',
   'settings.menuFromServer': '菜单来源于后台',
+  'settings.tabBar': '多页签',
+  'settings.footer': '底部',
   'settings.menuWidth': '菜单宽度 (px)',
-  'settings.otherSettings': '其他设置',
+  'settings.other': '其他设置',
   'settings.colorWeak': '色弱模式',
   'settings.alertContent':
     '配置之后仅是临时生效，要想真正作用于项目，点击下方的 "复制配置" 按钮，将配置替换到 settings.json 中即可。',
@@ -26,7 +27,6 @@ export default {
   'settings.copySettings.message':
     '复制成功，请粘贴到 src/settings.json 文件中',
   'settings.close': '关闭',
-  'settings.themeColor': '主题色',
-  'settings.color.tooltip':
-    '根据主题颜色生成的 10 个梯度色（将配置复制到项目中，主题色才能对亮色 / 暗黑模式同时生效）',
+
+  'settings.logout': '登出登录',
 };

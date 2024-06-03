@@ -1,11 +1,13 @@
 <template>
   <router-view v-slot="{ Component, route }">
     <transition name="fade" mode="out-in" appear>
+      <!-- 页面设置了不缓存 -->
       <component
         :is="Component"
         v-if="route.meta.ignoreCache"
         :key="route.fullPath"
       />
+      <!-- 页面未设置不缓存：缓存状态根据TabBar动态改变 -->
       <keep-alive v-else :include="cacheList">
         <component :is="Component" :key="route.fullPath" />
       </keep-alive>
@@ -22,4 +24,4 @@
   const cacheList = computed(() => tabBarStore.getCacheList);
 </script>
 
-<style scoped lang="less"></style>
+<style lang="less" scoped></style>

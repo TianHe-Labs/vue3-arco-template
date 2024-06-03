@@ -1,10 +1,13 @@
 <template>
-  <a-layout class="layout" :class="{ mobile: appStore.hideMenu }">
-    <div v-if="navbar" class="layout-navbar">
-      <NavBar />
-    </div>
-    <a-layout>
+  <a-scrollbar>
+    <a-layout class="layout" :class="{ mobile: appStore.hideMenu }">
+      <!-- 顶部 -->
+      <a-layout-header v-if="navbar" class="layout-navbar">
+        <NavBar />
+      </a-layout-header>
+      <!-- 主体 -->
       <a-layout>
+        <!-- 左侧：侧边导航 -->
         <a-layout-sider
           v-if="renderMenu"
           v-show="!hideMenu"
@@ -21,17 +24,24 @@
             <Menu />
           </div>
         </a-layout-sider>
+        <!-- 移动端渲染抽屉式菜单 -->
         <a-drawer
           v-if="hideMenu"
           :visible="drawerVisible"
-          placement="left"
-          :footer="false"
-          mask-closable
           :closable="false"
+          :header="false"
+          :footer="false"
+          placement="left"
+          mask-closable
           @cancel="drawerCancel"
         >
-          <Menu />
+          <Menu style="padding-bottom: 180px" />
+          <Toolbar
+            mode="vertical"
+            style="position: relative; margin-top: -180px"
+          />
         </a-drawer>
+        <!-- 右侧：内容 -->
         <a-layout class="layout-content" :style="paddingStyle">
           <TabBar v-if="appStore.tabBar" />
           <a-layout-content>
@@ -41,30 +51,28 @@
         </a-layout>
       </a-layout>
     </a-layout>
-  </a-layout>
+  </a-scrollbar>
 </template>
 
 <script lang="ts" setup>
-  import { ref, computed, watch, provide, onMounted } from 'vue';
-  import { useRouter, useRoute } from 'vue-router';
-  import { useAppStore, useUserStore } from '@/store';
+  import { ref, computed, provide, onMounted } from 'vue';
+  import { useAppStore } from '@/store';
   import NavBar from '@/components/navbar/index.vue';
   import Menu from '@/components/menu/index.vue';
+  import Toolbar from '@/components/toolbar/index.vue';
   import Footer from '@/components/footer/index.vue';
   import TabBar from '@/components/tab-bar/index.vue';
-  import usePermission from '@/hooks/permission';
   import useResponsive from '@/hooks/responsive';
   import PageLayout from './page-layout.vue';
 
   const isInit = ref(false);
   const appStore = useAppStore();
-  const userStore = useUserStore();
-  const router = useRouter();
-  const route = useRoute();
-  const permission = usePermission();
+
   useResponsive(true);
-  const navbarHeight = `60px`;
+
   const navbar = computed(() => appStore.navbar);
+  const navbarHeight = `60px`;
+
   const renderMenu = computed(() => appStore.menu && !appStore.topMenu);
   const hideMenu = computed(() => appStore.hideMenu);
   const footer = computed(() => appStore.footer);
@@ -86,26 +94,31 @@
     if (!isInit.value) return; // for page initialization menu state problem
     appStore.updateSettings({ menuCollapse: val });
   };
-  watch(
-    () => userStore.role,
-    (roleValue) => {
-      if (roleValue && !permission.accessRouter(route))
-        router.push({ name: 'NotFound' });
-    }
-  );
+
   const drawerVisible = ref(false);
   const drawerCancel = () => {
     drawerVisible.value = false;
   };
-  provide('toggleDrawerMenu', () => {
-    drawerVisible.value = !drawerVisible.value;
+  provide('toggleDrawerMenu', (opts?: any) => {
+    if (opts?.isMenuClick) {
+      // 如果是抽屉侧边菜单点击，需要关闭
+      drawerVisible.value = false;
+    } else {
+      drawerVisible.value = !drawerVisible.value;
+    }
   });
   onMounted(() => {
     isInit.value = true;
   });
 </script>
 
-<style scoped lang="less">
+<style>
+  :root {
+    --toolbar-vertical-height: 180px;
+  }
+</style>
+
+<style lang="less" scoped>
   @nav-size-height: 60px;
   @layout-max-width: 1100px;
 
@@ -151,23 +164,23 @@
     height: 100%;
     overflow: auto;
     overflow-x: hidden;
+  }
 
-    :deep(.arco-menu) {
-      ::-webkit-scrollbar {
-        width: 12px;
-        height: 4px;
-      }
+  :deep(.arco-menu) {
+    ::-webkit-scrollbar {
+      width: 12px;
+      height: 4px;
+    }
 
-      ::-webkit-scrollbar-thumb {
-        background-color: var(--color-text-4);
-        background-clip: padding-box;
-        border: 4px solid transparent;
-        border-radius: 7px;
-      }
+    ::-webkit-scrollbar-thumb {
+      background-color: var(--color-text-4);
+      background-clip: padding-box;
+      border: 4px solid transparent;
+      border-radius: 7px;
+    }
 
-      ::-webkit-scrollbar-thumb:hover {
-        background-color: var(--color-text-3);
-      }
+    ::-webkit-scrollbar-thumb:hover {
+      background-color: var(--color-text-3);
     }
   }
 

@@ -4,7 +4,7 @@ import localeLogin from '@/views/login/locale/en-US';
 
 import localeWorkplace from '@/views/dashboard/workplace/locale/en-US';
 
-import localeUserCenter from '@/views/user-center/locale/en-US';
+import localeUser from '@/views/user/locale/en-US';
 
 import localeSettings from './en-US/settings';
 
@@ -20,7 +20,7 @@ export default {
   'menu.form': 'Form',
   'menu.profile': 'Profile',
   'menu.visualization': 'Data Visualization',
-  'menu.userCenter': 'User Center',
+  'menu.user': 'User Center',
 
   'menu.website': 'Tianhe Security',
   'menu.faq': 'FAQ',
@@ -29,5 +29,5 @@ export default {
   ...localeMessageBox,
   ...localeLogin,
   ...localeWorkplace,
-  ...localeUserCenter,
+  ...localeUser,
 };

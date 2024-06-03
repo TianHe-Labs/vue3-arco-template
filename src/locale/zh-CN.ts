@@ -4,7 +4,7 @@ import localeLogin from '@/views/login/locale/zh-CN';
 
 import localeWorkplace from '@/views/dashboard/workplace/locale/zh-CN';
 
-import localeUserCenter from '@/views/user-center/locale/zh-CN';
+import localeUser from '@/views/user/locale/zh-CN';
 
 import localeSettings from './zh-CN/settings';
 
@@ -20,7 +20,7 @@ export default {
   'menu.form': '表单页',
   'menu.profile': '详情页',
   'menu.visualization': '数据可视化',
-  'menu.userCenter': '个人中心',
+  'menu.user': '个人中心',
 
   'menu.website': '天合安全',
   'menu.faq': '常见问题',
@@ -28,5 +28,5 @@ export default {
   ...localeMessageBox,
   ...localeLogin,
   ...localeWorkplace,
-  ...localeUserCenter,
+  ...localeUser,
 };
