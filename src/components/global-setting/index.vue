@@ -1,4 +1,5 @@
 <template>
+  <!-- 如果没有导航栏，在右边放一个固定按钮入口 -->
   <div v-if="!appStore.navbar" class="fixed-settings" @click="setVisible">
     <a-button type="primary">
       <template #icon>
@@ -7,18 +8,17 @@
     </a-button>
   </div>
   <a-drawer
+    :visible="globalSettingPanelvisible"
     :width="300"
-    unmount-on-close
-    :visible="visible"
     :cancel-text="$t('settings.close')"
     :ok-text="$t('settings.copySettings')"
     @ok="copySettings"
     @cancel="cancel"
   >
-    <template #title> {{ $t('settings.title') }} </template>
+    <template #title>{{ $t('settings.title') }}</template>
     <Block :options="contentOpts" :title="$t('settings.content')" />
-    <Block :options="othersOpts" :title="$t('settings.otherSettings')" />
-    <a-alert>{{ $t('settings.alertContent') }}</a-alert>
+    <Block :options="othersOpts" :title="$t('settings.other')" />
+    <a-alert :show-icon="false">{{ $t('settings.alertContent') }}</a-alert>
   </a-drawer>
 </template>
 
@@ -30,61 +30,68 @@
   import { useAppStore } from '@/store';
   import Block from './block.vue';
 
-  const emit = defineEmits(['cancel']);
-
-  const appStore = useAppStore();
   const { t } = useI18n();
   const { copy } = useClipboard();
-  const visible = computed(() => appStore.globalSettings);
+
+  const appStore = useAppStore();
+  const globalSettingPanelvisible = computed(
+    () => appStore.globalSettingEnabled
+  );
+
+  const setVisible = () => {
+    appStore.updateSettings({ globalSettingEnabled: true });
+  };
+
   const contentOpts = computed(() => [
-    { name: 'settings.navbar', key: 'navbar', defaultVal: appStore.navbar },
     {
-      name: 'settings.menu',
-      key: 'menu',
-      defaultVal: appStore.menu,
+      name: 'navbar',
+      label: 'settings.navbar',
+      defaultValue: appStore.navbar,
     },
     {
-      name: 'settings.topMenu',
-      key: 'topMenu',
-      defaultVal: appStore.topMenu,
-    },
-    { name: 'settings.footer', key: 'footer', defaultVal: appStore.footer },
-    { name: 'settings.tabBar', key: 'tabBar', defaultVal: appStore.tabBar },
-    {
-      name: 'settings.menuFromServer',
-      key: 'menuFromServer',
-      defaultVal: appStore.menuFromServer,
+      name: 'menu',
+      label: 'settings.menu',
+      defaultValue: appStore.menu,
     },
     {
-      name: 'settings.menuWidth',
-      key: 'menuWidth',
-      defaultVal: appStore.menuWidth,
+      name: 'topMenu',
+      label: 'settings.topMenu',
+      defaultValue: appStore.topMenu,
+    },
+    {
+      name: 'menuFromServer',
+      label: 'settings.menuFromServer',
+      defaultValue: appStore.menuFromServer,
+    },
+    { name: 'tabBar', label: 'settings.tabBar', defaultValue: appStore.tabBar },
+    { name: 'footer', label: 'settings.footer', defaultValue: appStore.footer },
+    {
+      name: 'menuWidth',
+      label: 'settings.menuWidth',
       type: 'number',
+      defaultValue: appStore.menuWidth,
     },
   ]);
   const othersOpts = computed(() => [
     {
-      name: 'settings.colorWeak',
-      key: 'colorWeak',
-      defaultVal: appStore.colorWeak,
+      name: 'colorWeak',
+      label: 'settings.colorWeak',
+      defaultValue: appStore.colorWeak,
     },
   ]);
 
   const cancel = () => {
-    appStore.updateSettings({ globalSettings: false });
-    emit('cancel');
+    appStore.updateSettings({ globalSettingEnabled: false });
   };
+
   const copySettings = async () => {
     const text = JSON.stringify(appStore.$state, null, 2);
     await copy(text);
     Message.success(t('settings.copySettings.message'));
   };
-  const setVisible = () => {
-    appStore.updateSettings({ globalSettings: true });
-  };
 </script>
 
-<style scoped lang="less">
+<style lang="less" scoped>
   .fixed-settings {
     position: fixed;
     top: 280px;

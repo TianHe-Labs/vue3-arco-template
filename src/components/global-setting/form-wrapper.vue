@@ -7,7 +7,7 @@
     @change="handleChange"
   />
   <a-switch
-    v-else
+    v-else-if="type === 'boolean'"
     :default-checked="(defaultValue as boolean)"
     size="small"
     @change="handleChange"
@@ -15,25 +15,21 @@
 </template>
 
 <script lang="ts" setup>
-  const props = defineProps({
-    type: {
-      type: String,
-      default: '',
-    },
-    name: {
-      type: String,
-      default: '',
-    },
-    defaultValue: {
-      type: [String, Boolean, Number],
-      default: '',
-    },
-  });
-  const emit = defineEmits(['inputChange']);
-  const handleChange = (value: unknown) => {
-    emit('inputChange', {
-      value,
-      key: props.name,
-    });
+  interface Props {
+    type: string;
+    name: string;
+    defaultValue: number | boolean;
+  }
+
+  interface Emits {
+    (event: 'change', value: any, name: string): void;
+  }
+
+  const props = defineProps<Props>();
+
+  const emits = defineEmits<Emits>();
+
+  const handleChange = (value: any) => {
+    emits('change', value, props.name);
   };
 </script>

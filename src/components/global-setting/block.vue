@@ -1,76 +1,65 @@
 <template>
   <div class="block">
     <h5 class="title">{{ title }}</h5>
-    <div v-for="option in options" :key="option.name" class="switch-wrapper">
-      <span>{{ $t(option.name) }}</span>
+    <div v-for="option in options" :key="option.name" class="form-item">
+      <span>{{ $t(option.label) }}</span>
       <form-wrapper
-        :type="option.type || 'switch'"
-        :name="option.key"
-        :default-value="option.defaultVal"
-        @input-change="handleChange"
+        :type="option?.type || 'boolean'"
+        :name="option.name"
+        :default-value="option.defaultValue"
+        @change="handleChange"
       />
     </div>
   </div>
 </template>
 
 <script lang="ts" setup>
-  import { PropType } from 'vue';
   import { useAppStore } from '@/store';
   import FormWrapper from './form-wrapper.vue';
 
-  interface OptionsProps {
+  interface Option {
     name: string;
-    key: string;
+    label: string;
     type?: string;
-    defaultVal?: boolean | string | number;
+    defaultValue: boolean | number;
   }
-  defineProps({
-    title: {
-      type: String,
-      default: '',
-    },
-    options: {
-      type: Array as PropType<OptionsProps[]>,
-      default() {
-        return [];
-      },
-    },
-  });
+
+  interface Props {
+    title: string;
+    options: Option[];
+  }
+
+  defineProps<Props>();
+
   const appStore = useAppStore();
-  const handleChange = async ({
-    key,
-    value,
-  }: {
-    key: string;
-    value: unknown;
-  }) => {
-    if (key === 'colorWeak') {
-      document.body.style.filter = value ? 'invert(80%)' : 'none';
+
+  const handleChange = async (value: any, name: string) => {
+    if (name === 'menuFromServer' && value) {
+      await appStore.queryAppServerMenus();
     }
-    if (key === 'menuFromServer' && value) {
-      await appStore.fetchServerMenuConfig();
-    }
-    if (key === 'topMenu') {
+    if (name === 'topMenu') {
       appStore.updateSettings({
         menuCollapse: false,
       });
     }
-    appStore.updateSettings({ [key]: value });
+    if (name === 'colorWeak') {
+      document.body.style.filter = value ? 'invert(80%)' : 'none';
+    }
+    appStore.updateSettings({ [name]: value });
   };
 </script>
 
-<style scoped lang="less">
+<style lang="less" scoped>
   .block {
     margin-bottom: 24px;
   }
 
   .title {
     margin: 10px 0;
-    padding: 0;
     font-size: 14px;
   }
 
-  .switch-wrapper {
+  .form-item {
     display: flex;
     align-items: center;
     justify-content: space-between;
