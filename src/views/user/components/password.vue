@@ -2,64 +2,64 @@
   <a-form
     ref="passwordFormRef"
     :model="passwordFormData"
-    class="form"
     auto-label-width
+    class="w-full max-w-500px mx-auto pr-4"
   >
     <!-- 当前密码 -->
     <a-form-item
       field="oldPassword"
-      :label="$t('userPassword.form.oldPassword.label')"
+      :label="$t('password.form.oldPassword.label')"
       :rules="[
         {
           required: true,
-          message: $t('userPassword.form.oldPassword.error.required'),
+          message: $t('password.form.oldPassword.error.required'),
         },
         {
           minLength: 8,
-          message: $t('userPassword.form.oldPassword.error.short'),
+          message: $t('password.form.oldPassword.error.short'),
         },
       ]"
     >
       <a-input-password
         v-model="passwordFormData.oldPassword"
         allow-clear
-        :placeholder="$t('userPassword.form.oldPassword.placeholder')"
+        :placeholder="$t('password.form.oldPassword.placeholder')"
       />
     </a-form-item>
     <!-- 新密码 -->
     <a-form-item
       field="newPassword"
-      :label="$t('userPassword.form.newPassword.label')"
+      :label="$t('password.form.newPassword.label')"
       :rules="[
         {
           required: true,
-          message: $t('userPassword.form.newPassword.error.required'),
+          message: $t('password.form.newPassword.error.required'),
         },
         {
           minLength: 8,
-          message: $t('userPassword.form.newPassword.error.short'),
+          message: $t('password.form.newPassword.error.short'),
         },
       ]"
     >
       <a-input-password
         v-model="passwordFormData.newPassword"
         allow-clear
-        :placeholder="$t('userPassword.form.newPassword.placeholder')"
+        :placeholder="$t('password.form.newPassword.placeholder')"
       />
     </a-form-item>
     <!-- 确认新密码 -->
     <a-form-item
       field="confirmPassword"
-      :label="$t('userPassword.form.confirmPassword.label')"
+      :label="$t('password.form.confirmPassword.label')"
       :rules="[
         {
           required: true,
-          message: $t('userPassword.form.confirmPassword.error.required'),
+          message: $t('password.form.confirmPassword.error.required'),
         },
         {
           validator: (value: any, callback: any) => {
             if (value !== passwordFormData.newPassword) {
-              callback($t('userPassword.form.confirmPassword.error.invalid'));
+              callback($t('password.form.confirmPassword.error.invalid'));
             }
           },
         },
@@ -68,16 +68,16 @@
       <a-input-password
         v-model="passwordFormData.confirmPassword"
         allow-clear
-        :placeholder="$t('userPassword.form.confirmPassword.placeholder')"
+        :placeholder="$t('password.form.confirmPassword.placeholder')"
       />
     </a-form-item>
     <a-form-item>
       <a-space>
         <a-button type="primary" @click="validate">
-          {{ $t('UserProfile.update') }}
+          {{ $t('profile.actions.update') }}
         </a-button>
         <a-button type="secondary" @click="reset">
-          {{ $t('UserProfile.reset') }}
+          {{ $t('profile.actions.reset') }}
         </a-button>
       </a-space>
     </a-form-item>
@@ -109,14 +109,14 @@
       try {
         const { data } = await updateUserPassword(passwordFormData);
         if (data.username) {
-          Message.info(t('userPassword.form.update'));
+          Message.info(t('password.form.actions.update.success.message'));
           setTimeout(() => {
             logout();
           }, 600);
         }
       } catch (err) {
         // you can report use errorHandler or other
-        Message.info(t('UserProfile.update.message.failure'));
+        Message.info(t('profile.actions.update.failure.message'));
       }
     }
   };
@@ -124,11 +124,3 @@
     await passwordFormRef.value?.resetFields();
   };
 </script>
-
-<style lang="less" scoped>
-  .form {
-    width: 540px;
-    margin: 0 auto;
-    padding-right: 50px;
-  }
-</style>

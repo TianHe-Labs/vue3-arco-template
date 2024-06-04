@@ -1,9 +1,9 @@
 import Mock from 'mockjs';
 
 import './user';
-import '@/components/message-box/mock';
+import './message-box';
 
-import '@/views/dashboard/workplace/mock';
+import '@/views/dashboard/mock';
 
 Mock.setup({
   timeout: '600-1000',

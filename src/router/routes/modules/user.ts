@@ -16,7 +16,7 @@ const USERCENTER: AppRouteRecordRaw = {
   children: [
     {
       path: '',
-      name: 'UserProfile',
+      name: 'Profile',
       component: () => import('@/views/user/index.vue'),
       meta: {
         locale: 'menu.user.profile',

@@ -1,80 +1,85 @@
 <template>
-  <a-form ref="userFormRef" :model="userFormData" class="form" auto-label-width>
+  <a-form
+    ref="infoFormRef"
+    :model="infoFormData"
+    auto-label-width
+    class="w-full max-w-500px mx-auto pr-4"
+  >
     <!-- 名称 -->
     <a-form-item
       field="username"
-      :label="$t('userInformation.form.username.label')"
+      :label="$t('information.form.username.label')"
       :rules="[
         {
           required: true,
-          message: $t('userInformation.form.username.error.required'),
+          message: $t('information.form.username.error.required'),
         },
       ]"
     >
       <a-input
-        v-model="userFormData.username"
-        :placeholder="$t('userInformation.form.username.placeholder')"
+        v-model="infoFormData.username"
+        :placeholder="$t('information.form.username.placeholder')"
       />
     </a-form-item>
     <!-- 邮箱 -->
     <a-form-item
       field="email"
-      :label="$t('userInformation.form.email.label')"
+      :label="$t('information.form.email.label')"
       :rules="[
         {
           required: true,
-          message: $t('userInformation.form.email.error.required'),
+          message: $t('information.form.email.error.required'),
         },
       ]"
     >
       <a-input
-        v-model="userFormData.email"
-        :placeholder="$t('userInformation.form.email.placeholder')"
+        v-model="infoFormData.email"
+        :placeholder="$t('information.form.email.placeholder')"
       />
     </a-form-item>
     <!-- 手机 -->
     <a-form-item
       field="phone"
       hide-asterisk
-      :label="$t('userInformation.form.phone.label')"
+      :label="$t('information.form.phone.label')"
       :rules="[
         {
           required: false,
-          message: $t('userInformation.form.phone.error.required'),
+          message: $t('information.form.phone.error.required'),
         },
       ]"
     >
       <a-input
-        v-model="userFormData.phone"
-        :placeholder="$t('userInformation.form.phone.placeholder')"
+        v-model="infoFormData.phone"
+        :placeholder="$t('information.form.phone.placeholder')"
       />
     </a-form-item>
     <!-- 部门 -->
     <a-form-item
       field="sector"
       hide-asterisk
-      :label="$t('userInformation.form.sector.label')"
+      :label="$t('information.form.sector.label')"
       :rules="[
         {
           required: false,
-          message: $t('userInformation.form.sector.error.required'),
+          message: $t('information.form.sector.error.required'),
         },
       ]"
     >
       <a-input
-        v-model="userFormData.sector"
-        :placeholder="$t('userInformation.form.sector.placeholder')"
+        v-model="infoFormData.sector"
+        :placeholder="$t('information.form.sector.placeholder')"
       />
     </a-form-item>
     <a-form-item>
-      <a-space>
+      <div class="flex gap-4">
         <a-button type="primary" @click="validate">
-          {{ $t('UserProfile.update') }}
+          {{ $t('profile.actions.update') }}
         </a-button>
         <a-button type="secondary" @click="reset">
-          {{ $t('UserProfile.reset') }}
+          {{ $t('profile.actions.reset') }}
         </a-button>
-      </a-space>
+      </div>
     </a-form-item>
   </a-form>
 </template>
@@ -91,36 +96,28 @@
 
   const userStore = useUserStore();
 
-  const userFormRef = ref<FormInstance>();
-  const userFormData = reactive<UpdateUserInfoParams>({
+  const infoFormRef = ref<FormInstance>();
+  const infoFormData = reactive<UpdateUserInfoParams>({
     username: userStore.username,
     phone: userStore.phone,
     email: userStore.email,
     sector: userStore.sector,
   });
   const validate = async () => {
-    const errors = await userFormRef.value?.validate();
+    const errors = await infoFormRef.value?.validate();
     if (!errors) {
       try {
-        const { data } = await updateUserInfo(userFormData);
+        const { data } = await updateUserInfo(infoFormData);
         if (data.username) {
-          Message.info(t('UserProfile.update.message.success'));
+          Message.info(t('profile.actions.update.success.message'));
         }
       } catch (err) {
         // you can report use errorHandler or other
-        Message.info(t('UserProfile.update.message.failure'));
+        Message.info(t('profile.actions.update.failure.message'));
       }
     }
   };
   const reset = async () => {
-    await userFormRef.value?.resetFields();
+    await infoFormRef.value?.resetFields();
   };
 </script>
-
-<style lang="less" scoped>
-  .form {
-    width: 540px;
-    margin: 0 auto;
-    padding-right: 50px;
-  }
-</style>

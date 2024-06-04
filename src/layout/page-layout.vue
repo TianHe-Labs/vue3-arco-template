@@ -23,5 +23,3 @@
 
   const cacheList = computed(() => tabBarStore.getCacheList);
 </script>
-
-<style lang="less" scoped></style>

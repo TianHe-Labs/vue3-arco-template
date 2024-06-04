@@ -1,7 +1,11 @@
 <template>
-  <div class="block">
-    <h5 class="title">{{ title }}</h5>
-    <div v-for="option in options" :key="option.name" class="form-item">
+  <div class="mb-6">
+    <h5 class="my-2 text-base">{{ title }}</h5>
+    <div
+      v-for="option in options"
+      :key="option.name"
+      class="flex justify-between items-center my-3"
+    >
       <span>{{ $t(option.label) }}</span>
       <form-wrapper
         :type="option?.type || 'boolean'"
@@ -48,21 +52,3 @@
     appStore.updateSettings({ [name]: value });
   };
 </script>
-
-<style lang="less" scoped>
-  .block {
-    margin-bottom: 24px;
-  }
-
-  .title {
-    margin: 10px 0;
-    font-size: 14px;
-  }
-
-  .form-item {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    height: 32px;
-  }
-</style>

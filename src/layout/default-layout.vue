@@ -1,6 +1,6 @@
 <template>
   <a-scrollbar>
-    <a-layout class="layout" :class="{ mobile: appStore.hideMenu }">
+    <a-layout class="w-full h-full" :class="{ mobile: appStore.hideMenu }">
       <!-- 顶部 -->
       <a-layout-header v-if="navbar" class="layout-navbar">
         <NavBar />
@@ -20,7 +20,7 @@
           :hide-trigger="true"
           @collapse="setCollapsed"
         >
-          <div class="menu-wrapper">
+          <div class="h-full overflow-x-hidden overflow-y-auto">
             <Menu />
           </div>
         </a-layout-sider>
@@ -122,11 +122,6 @@
   @nav-size-height: 60px;
   @layout-max-width: 1100px;
 
-  .layout {
-    width: 100%;
-    height: 100%;
-  }
-
   .layout-navbar {
     position: fixed;
     top: 0;
@@ -158,12 +153,6 @@
     > :deep(.arco-layout-sider-children) {
       overflow-y: hidden;
     }
-  }
-
-  .menu-wrapper {
-    height: 100%;
-    overflow: auto;
-    overflow-x: hidden;
   }
 
   :deep(.arco-menu) {

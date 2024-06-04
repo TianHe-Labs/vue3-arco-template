@@ -1,17 +1,13 @@
 <template>
-  <div class="banner">
-    <div class="banner-inner">
-      <a-carousel class="carousel" animation-name="fade">
-        <a-carousel-item v-for="item in carouselItem" :key="item.slogan">
-          <div :key="item.slogan" class="carousel-item">
-            <div class="carousel-title">{{ item.slogan }}</div>
-            <div class="carousel-subtitle">{{ item.subSlogan }}</div>
-            <img class="carousel-image" :src="item.image" />
-          </div>
-        </a-carousel-item>
-      </a-carousel>
-    </div>
-  </div>
+  <a-carousel class="carousel" animation-name="fade">
+    <a-carousel-item v-for="item in carouselItem" :key="item.slogan">
+      <div :key="item.slogan" class="carousel-item">
+        <div class="carousel-title">{{ item.slogan }}</div>
+        <div class="carousel-subtitle">{{ item.subSlogan }}</div>
+        <img class="carousel-image" :src="item.image" />
+      </div>
+    </a-carousel-item>
+  </a-carousel>
 </template>
 
 <script lang="ts" setup>
@@ -35,17 +31,6 @@
 </script>
 
 <style lang="less" scoped>
-  .banner {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    &-inner {
-      flex: 1;
-      height: 100%;
-    }
-  }
-
   .carousel {
     height: 100%;
 

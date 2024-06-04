@@ -1,8 +1,8 @@
 <template>
-  <div class="navbar">
+  <div class="h-full flex justify-between px-4 navbar">
     <!-- 导航栏：左侧 -->
-    <div class="left-side">
-      <div class="title-bar">
+    <div class="flex gap-2 items-center left-side">
+      <div class="flex gap-2 items-center">
         <img alt="logo" src="~@/assets/logo.svg?url" width="24" />
         <a-typography-title
           :style="{ margin: 0, fontSize: '18px' }"
@@ -13,11 +13,11 @@
       </div>
     </div>
     <!-- 导航栏：菜单 -->
-    <div class="center-side">
+    <div class="flex-1 center-side">
       <Menu v-if="topMenu && appStore.device === 'desktop'" mode="horizontal" />
     </div>
     <!-- 导航栏：右侧 -->
-    <div class="right-side">
+    <div class="flex gap-4 items-center right-side">
       <Toolbar v-if="appStore.device === 'desktop'" />
       <a-button
         v-else
@@ -56,28 +56,7 @@
 
 <style lang="less" scoped>
   .navbar {
-    display: flex;
-    justify-content: space-between;
-    height: 100%;
-    padding: 0 20px;
     background-color: var(--color-bg-2);
     border-bottom: 1px solid var(--color-border);
-  }
-
-  .left-side,
-  .title-bar {
-    display: flex;
-    gap: 8px;
-    align-items: center;
-  }
-
-  .center-side {
-    flex: 1;
-  }
-
-  .right-side {
-    display: flex;
-    gap: 20px;
-    align-items: center;
   }
 </style>

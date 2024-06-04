@@ -4,10 +4,10 @@
     v-if="appStore.device !== 'desktop'"
     :count="9"
     dot
-    class="fixed-message"
+    class="fixed right-5 bottom-20"
   >
     <a-button
-      class="msg-btn"
+      class="fixed-btn"
       size="large"
       shape="circle"
       @click="setPopoverVisible"
@@ -131,17 +131,10 @@
 </script>
 
 <style lang="less" scoped>
-  .fixed-message {
-    position: fixed;
-    right: 25px;
-    bottom: 100px;
-    z-index: 999;
-
-    .msg-btn {
-      background: var(--color-bg-5) !important;
-      border: 1px solid var(--color-fill-3) !important;
-      box-shadow: 0 2px 12px #0000001a;
-    }
+  .fixed-btn {
+    background: var(--color-bg-5) !important;
+    border: 1px solid var(--color-fill-3) !important;
+    box-shadow: 0 2px 12px #0000001a;
   }
 
   :deep(.arco-tabs-nav) {

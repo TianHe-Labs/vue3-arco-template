@@ -1,9 +1,9 @@
 <template>
-  <div class="content">
-    <a-result class="result" status="404" :subtitle="'not found'"> </a-result>
-    <div class="operation-row">
-      <a-button key="back" type="primary" @click="back"> back </a-button>
-    </div>
+  <div class="h-full flex flex-col justify-center items-center">
+    <a-result status="404" :subtitle="$t('notFound.title')"></a-result>
+    <a-button key="back" type="primary" @click="back">
+      {{ $t('notFound.actions.back') }}
+    </a-button>
   </div>
 </template>
 
@@ -18,15 +18,3 @@
     router.push({ name: DEFAULT_ROUTE_NAME });
   };
 </script>
-
-<style lang="less" scoped>
-  .content {
-    // padding-top: 100px;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    margin-top: -121px;
-    margin-left: -95px;
-    text-align: center;
-  }
-</style>

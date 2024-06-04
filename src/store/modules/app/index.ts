@@ -42,7 +42,7 @@ const useAppStore = defineStore('app', {
       }
     },
 
-    // 设备
+    // 响应式
     toggleDevice(device: string) {
       this.device = device;
     },

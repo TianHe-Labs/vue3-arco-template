@@ -1,5 +1,8 @@
 <template>
-  <a-layout-footer class="footer">
+  <a-layout-footer
+    class="py-4 flex justify-center items-center text-center"
+    style="color: var(--color-text-2)"
+  >
     &copy; {{ new Date().getFullYear() }} {{ appCopyright }}
   </a-layout-footer>
 </template>
@@ -11,14 +14,3 @@
 
   const appCopyright = import.meta.env.VITE_APP_COPR || t('');
 </script>
-
-<style lang="less" scoped>
-  .footer {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    height: 40px;
-    color: var(--color-text-2);
-    text-align: center;
-  }
-</style>

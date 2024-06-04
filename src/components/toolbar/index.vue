@@ -1,5 +1,5 @@
 <template>
-  <div v-if="mode === 'horizontal'" class="toolbar toolbar-horizontal">
+  <div v-if="mode === 'horizontal'" class="flex gap-5 items-center toolbar">
     <!-- 搜索 -->
     <!-- <a-tooltip mini :content="$t('settings.search')">
         <a-button class="nav-btn" type="outline" shape="circle">
@@ -125,10 +125,10 @@
     </a-dropdown>
   </div>
   <template v-else>
-    <div class="toolbar toolbar-vertical">
+    <div class="flex flex-col gap-4 toolbar">
       <!-- 搜索 -->
       <a-input
-        class="nav-search"
+        class="rounded-2xl"
         size="small"
         :placeholder="$t('settings.search')"
       />
@@ -280,35 +280,10 @@
 
 <style lang="less" scoped>
   .toolbar {
-    display: flex;
-
-    &-horizontal {
-      gap: 20px;
-      align-items: center;
-    }
-
-    &-vertical {
-      flex-direction: column;
-      gap: 16px;
-    }
-
-    :deep(.locale-select) {
-      border-radius: 20px;
-    }
-
-    a {
-      color: var(--color-text-1);
-      text-decoration: none;
-    }
-
     .nav-btn {
       color: rgb(var(--gray-8));
       font-size: 16px;
       border-color: rgb(var(--gray-2));
-    }
-
-    .nav-search {
-      border-radius: 16px;
     }
   }
 </style>

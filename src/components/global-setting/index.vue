@@ -1,9 +1,13 @@
 <template>
   <!-- 如果没有导航栏，在右边放一个固定按钮入口 -->
-  <div v-if="!appStore.navbar" class="fixed-settings" @click="setVisible">
+  <div
+    v-if="!appStore.navbar"
+    class="fixed right-0 top-1/2"
+    @click="setVisible"
+  >
     <a-button type="primary">
       <template #icon>
-        <icon-settings />
+        <icon-settings size="large" />
       </template>
     </a-button>
   </div>
@@ -90,16 +94,3 @@
     Message.success(t('settings.copySettings.message'));
   };
 </script>
-
-<style lang="less" scoped>
-  .fixed-settings {
-    position: fixed;
-    top: 280px;
-    right: 0;
-
-    svg {
-      font-size: 18px;
-      vertical-align: -4px;
-    }
-  }
-</style>

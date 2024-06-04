@@ -1,54 +1,36 @@
 <template>
-  <div class="login-wrapper">
-    <LoginBanner />
-    <div class="content">
+  <div class="h-screen flex">
+    <div class="lg:w-500px banner">
+      <LoginBanner />
+    </div>
+    <div class="flex-1 flex justify-center items-center content">
       <LoginForm />
-      <Footer />
+      <Footer class="footer" />
     </div>
   </div>
 </template>
 
 <script lang="ts" setup>
+  import { computed } from 'vue';
+  import { useAppStore } from '@/store';
   import Footer from '@/components/footer/index.vue';
   import LoginBanner from './components/banner.vue';
   import LoginForm from './components/login-form.vue';
+
+  const appStore = useAppStore();
 </script>
 
 <style lang="less" scoped>
-  .login-wrapper {
-    display: flex;
-    height: 100vh;
+  .banner {
+    background: linear-gradient(163.85deg, #1d2129 0%, #00308f 100%);
+  }
 
-    .banner {
-      width: 500px;
-      background: linear-gradient(163.85deg, #1d2129 0%, #00308f 100%);
-    }
-
-    .content {
-      position: relative;
-      display: flex;
-      flex: 1;
-      align-items: center;
-      justify-content: center;
-      padding-bottom: 40px;
-    }
+  .content {
+    position: relative;
 
     .footer {
       position: absolute;
-      right: 0;
       bottom: 0;
-      width: 100%;
-    }
-  }
-</style>
-
-<style lang="less" scoped>
-  // responsive
-  @media (max-width: @screen-lg) {
-    .login-wrapper {
-      .banner {
-        width: 0%;
-      }
     }
   }
 </style>

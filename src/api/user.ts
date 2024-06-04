@@ -62,14 +62,3 @@ export type UpdateUserPasswordRes = Pick<UserState, 'username'>;
 export function updateUserPassword(data: UpdateUserPasswordParams) {
   return axios.post<UpdateUserPasswordRes>('/api/user/password/update', data);
 }
-
-export function userUploadApi(
-  data: FormData,
-  config: {
-    controller: AbortController;
-    onUploadProgress?: (progressEvent: any) => void;
-  }
-) {
-  // const controller = new AbortController();
-  return axios.post('/api/user/upload', data, config);
-}

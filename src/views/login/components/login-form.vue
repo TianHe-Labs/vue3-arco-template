@@ -139,15 +139,15 @@
     width: 320px;
 
     &-title {
-      color: var(--color-text-1);
+      color: var(--color-text-2);
       font-weight: 500;
-      font-size: 24px;
+      font-size: 22px;
       line-height: 32px;
     }
 
     &-subtitle {
       color: var(--color-text-3);
-      font-size: 16px;
+      font-size: 18px;
       line-height: 24px;
     }
 

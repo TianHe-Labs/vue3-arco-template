@@ -44,7 +44,7 @@ setupMock({
       return failureResponseWrap('用户名或密码错误！');
     });
 
-    // 用户信息
+    // 获取用户信息
     Mock.mock(new RegExp('/api/user/info'), () => {
       const foundItem = users[0];
 
@@ -55,7 +55,7 @@ setupMock({
       return failureResponseWrap('用户名或密码错误！');
     });
 
-    // 用户服务端菜单
+    // 后去用户服务端菜单
     Mock.mock(new RegExp('/api/user/menu'), () => {
       const menuList = [
         {

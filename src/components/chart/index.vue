@@ -38,5 +38,3 @@
     renderChart.value = true;
   });
 </script>
-
-<style lang="less" scoped></style>
