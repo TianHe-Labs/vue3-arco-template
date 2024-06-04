@@ -6,6 +6,13 @@ declare module '*.vue' {
   const component: DefineComponent<{}, {}, any>;
   export default component;
 }
+
+declare namespace JSX {
+  interface IntrinsicElements {
+    [elem: string]: any;
+  }
+}
+
 interface ImportMetaEnv {
   readonly VITE_API_BASE: string;
   readonly VITE_APP_NAME: string;

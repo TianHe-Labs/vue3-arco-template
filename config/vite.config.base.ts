@@ -40,7 +40,7 @@ export default defineConfig({
       },
       {
         find: 'vue-i18n',
-        replacement: 'vue-i18n/dist/vue-i18n.cjs.js', // Resolve the i18n warning issue
+        replacement: 'vue-i18n/dist/vue-i18n.mjs', // Resolve the i18n warning issue
       },
       {
         find: 'vue',

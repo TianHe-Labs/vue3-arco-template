@@ -57,7 +57,7 @@
           message: $t('userPassword.form.confirmPassword.error.required'),
         },
         {
-          validator: (value, callback) => {
+          validator: (value: any, callback: any) => {
             if (value !== passwordFormData.newPassword) {
               callback($t('userPassword.form.confirmPassword.error.invalid'));
             }
