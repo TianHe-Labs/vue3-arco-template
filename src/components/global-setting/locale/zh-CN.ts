@@ -1,15 +1,4 @@
 export default {
-  'settings.search': '搜索',
-  'settings.language.toggle': '切换语言',
-  'settings.language.toggle.message': '切换为中文',
-  'settings.theme.toLight': '亮色',
-  'settings.theme.toLight.message': '切换为亮色',
-  'settings.theme.toDark': '暗色',
-  'settings.theme.toDark.tooltip': '切换为暗色',
-  'settings.message': '消息通知',
-  'settings.screen.toFull': '切换全屏',
-  'settings.screen.toExit': '退出全屏',
-
   'settings.title': '页面配置',
   'settings.content': '内容区域',
   'settings.navbar': '导航栏',
@@ -27,6 +16,4 @@ export default {
   'settings.copySettings.message':
     '复制成功，请粘贴到 src/settings.json 文件中',
   'settings.close': '关闭',
-
-  'settings.logout': '登出登录',
 };

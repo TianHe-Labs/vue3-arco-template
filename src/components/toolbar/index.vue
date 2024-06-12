@@ -1,7 +1,7 @@
 <template>
   <div v-if="mode === 'horizontal'" class="flex gap-5 items-center toolbar">
     <!-- 搜索 -->
-    <!-- <a-tooltip mini :content="$t('settings.search')">
+    <!-- <a-tooltip mini :content="$t('toolbar.search')">
         <a-button class="nav-btn" type="outline" shape="circle">
           <template #icon>
             <icon-search />
@@ -10,7 +10,7 @@
       </a-tooltip> -->
     <!-- 语言 -->
     <a-dropdown trigger="click" @select="toggleLocale as any">
-      <a-tooltip mini :content="$t('settings.language.toggle')">
+      <a-tooltip mini :content="$t('toolbar.language.toggle')">
         <a-button class="nav-btn" type="outline" shape="circle">
           <template #icon>
             <icon-language />
@@ -35,8 +35,8 @@
       mini
       :content="
         theme === 'light'
-          ? $t('settings.theme.toDark.tooltip')
-          : $t('settings.theme.toLight.message')
+          ? $t('toolbar.theme.toDark.tooltip')
+          : $t('toolbar.theme.toLight.message')
       "
     >
       <a-button
@@ -51,8 +51,19 @@
         </template>
       </a-button>
     </a-tooltip>
+    <!-- 反馈 -->
+    <a-tooltip mini :content="$t('toolbar.feedback')">
+      <a-button
+        class="nav-btn"
+        type="outline"
+        shape="circle"
+        @click.stop="feedbackPanelVisible = !feedbackPanelVisible"
+      >
+        <icon-customer-service />
+      </a-button>
+    </a-tooltip>
     <!-- 消息 -->
-    <a-tooltip mini :content="$t('settings.message')">
+    <a-tooltip mini :content="$t('toolbar.message')">
       <a-badge :count="renderStats?.total || 0" dot>
         <a-button
           class="nav-btn"
@@ -68,9 +79,7 @@
     <a-tooltip
       mini
       :content="
-        isFullscreen
-          ? $t('settings.screen.toExit')
-          : $t('settings.screen.toFull')
+        isFullscreen ? $t('toolbar.screen.toExit') : $t('toolbar.screen.toFull')
       "
     >
       <a-button
@@ -117,7 +126,7 @@
           <a-space @click="handleLogout">
             <icon-export />
             <span>
-              {{ $t('settings.logout') }}
+              {{ $t('toolbar.logout') }}
             </span>
           </a-space>
         </a-doption>
@@ -130,7 +139,7 @@
       <a-input
         class="rounded-2xl"
         size="small"
-        :placeholder="$t('settings.search')"
+        :placeholder="$t('toolbar.search')"
       />
       <!-- 用户中心 -->
       <a-button
@@ -161,7 +170,7 @@
         <template #icon>
           <icon-language />
         </template>
-        {{ $t('settings.language.toggle') }}
+        {{ $t('toolbar.language.toggle') }}
       </a-button>
       <div class="grid grid-cols-2 gap-3">
         <!-- 主题 -->
@@ -177,8 +186,8 @@
           </template>
           {{
             theme === 'light'
-              ? $t('settings.theme.toDark')
-              : $t('settings.theme.toLight')
+              ? $t('toolbar.theme.toDark')
+              : $t('toolbar.theme.toLight')
           }}
         </a-button>
         <!-- 退出登录 -->
@@ -186,7 +195,7 @@
           <template #icon>
             <icon-export />
           </template>
-          {{ $t('settings.logout') }}
+          {{ $t('toolbar.logout') }}
         </a-button>
       </div>
       <!-- 用户 -->
@@ -234,7 +243,7 @@
     }
     i18n.locale.value = target;
     localStorage.setItem('arco-locale', target);
-    Message.success(i18n.t('settings.language.toggle.message'));
+    Message.success(i18n.t('toolbar.language.toggle.message'));
   };
 
   // 主题
@@ -255,6 +264,9 @@
   const handleToggleTheme = () => {
     toggleTheme();
   };
+
+  // 反馈
+  const feedbackPanelVisible = inject('feedbackPanelVisible') as boolean;
 
   // 消息
   const { setPopoverVisible, renderStats } = useMessage();

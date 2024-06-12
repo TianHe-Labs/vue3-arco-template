@@ -1,4 +1,7 @@
+import localeGlobalSetting from '@/components/global-setting/locale/en-US';
+import localeToolbar from '@/components/toolbar/locale/en-US';
 import localeMessageBox from '@/components/message-box/locale/en-US';
+import localeFeedbackPanel from '@/components/feedback-panel/locale/en-US';
 
 import localeLogin from '@/views/login/locale/en-US';
 
@@ -7,8 +10,6 @@ import localeDashboard from '@/views/dashboard/locale/en-US';
 import localeUser from '@/views/user/locale/en-US';
 
 import localeNotFound from '@/views/not-found/locale/en-US';
-
-import localeSettings from './en-US/settings';
 
 export default {
   'menu.server.dashboard': 'Dashboard-Server',
@@ -21,8 +22,10 @@ export default {
   'menu.website': 'Tianhe Security',
   'menu.faq': 'FAQ',
 
-  ...localeSettings,
+  ...localeGlobalSetting,
+  ...localeToolbar,
   ...localeMessageBox,
+  ...localeFeedbackPanel,
   ...localeLogin,
   ...localeDashboard,
   ...localeUser,

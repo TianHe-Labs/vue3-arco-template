@@ -11,13 +11,9 @@
 </template>
 
 <script lang="ts" setup>
-  import { computed } from 'vue';
-  import { useAppStore } from '@/store';
   import Footer from '@/components/footer/index.vue';
   import LoginBanner from './components/banner.vue';
   import LoginForm from './components/login-form.vue';
-
-  const appStore = useAppStore();
 </script>
 
 <style lang="less" scoped>

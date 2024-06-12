@@ -12,7 +12,7 @@
     </a-button>
   </div>
   <a-drawer
-    :visible="globalSettingPanelvisible"
+    :visible="globalSettingPanelVisible"
     :width="300"
     :cancel-text="$t('settings.close')"
     :ok-text="$t('settings.copySettings')"
@@ -32,13 +32,13 @@
   import { useI18n } from 'vue-i18n';
   import { useClipboard } from '@vueuse/core';
   import { useAppStore } from '@/store';
-  import Block from './block.vue';
+  import Block from './components/block.vue';
 
   const { t } = useI18n();
   const { copy } = useClipboard();
 
   const appStore = useAppStore();
-  const globalSettingPanelvisible = computed(
+  const globalSettingPanelVisible = computed(
     () => appStore.globalSettingEnabled
   );
 

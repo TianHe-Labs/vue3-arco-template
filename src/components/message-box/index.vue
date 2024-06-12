@@ -131,12 +131,6 @@
 </script>
 
 <style lang="less" scoped>
-  .fixed-btn {
-    background: var(--color-bg-5) !important;
-    border: 1px solid var(--color-fill-3) !important;
-    box-shadow: 0 2px 12px #0000001a;
-  }
-
   :deep(.arco-tabs-nav) {
     padding: 4px 0 12px;
     border-bottom: 1px solid var(--color-border-2);

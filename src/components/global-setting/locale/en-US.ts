@@ -1,15 +1,4 @@
 export default {
-  'settings.search': 'Search',
-  'settings.language.toggle': 'Toggle Language',
-  'settings.language.toggle.message': 'Switch to English',
-  'settings.theme.toLight': 'Light',
-  'settings.theme.toLight.message': 'Switch to light',
-  'settings.theme.toDark': 'Dark',
-  'settings.theme.toDark.tooltip': 'Switch to dark',
-  'settings.message': 'alerts',
-  'settings.screen.toFull': 'Switch to full screen',
-  'settings.screen.toExit': 'Exit the full screen',
-
   'settings.title': 'Settings',
   'settings.content': 'Content Setting',
   'settings.navbar': 'Navbar',
@@ -27,6 +16,4 @@ export default {
   'settings.copySettings.message':
     'Copy succeeded, please paste to file src/settings.json.',
   'settings.close': 'Close',
-
-  'settings.logout': 'Logout',
 };
