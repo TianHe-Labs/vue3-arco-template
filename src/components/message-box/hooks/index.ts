@@ -1,7 +1,7 @@
 import { type Ref, provide, inject, ref, computed, shallowRef } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { Message } from '@arco-design/web-vue';
-import { dayjs } from '@/utils/fotmat';
+import { dayjs } from '@/utils/format';
 import useLoading from '@/hooks/loading';
 import {
   queryMessageList,
