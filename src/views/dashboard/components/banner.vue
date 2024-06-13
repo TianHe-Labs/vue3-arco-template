@@ -1,7 +1,7 @@
 <template>
   <a-card :bordered="false" class="w-full rounded">
     <a-typography-text bold class="text-2xl">
-      {{ $t('workplace.welcome') }} {{ userStore.username }}
+      {{ userStore.username }}
     </a-typography-text>
   </a-card>
 </template>
