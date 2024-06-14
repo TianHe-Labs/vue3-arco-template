@@ -52,6 +52,8 @@
       </a-layout>
     </a-layout>
   </a-scrollbar>
+
+  <MessageBox />
 </template>
 
 <script lang="ts" setup>
@@ -63,7 +65,11 @@
   import Footer from '@/components/footer/index.vue';
   import TabBar from '@/components/tab-bar/index.vue';
   import useResponsive from '@/hooks/responsive';
+  import { provideMessage } from '@/components/message-box/hooks';
+  import MessageBox from '@/components/message-box/index.vue';
   import PageLayout from './page-layout.vue';
+
+  provideMessage();
 
   const isInit = ref(false);
   const appStore = useAppStore();
