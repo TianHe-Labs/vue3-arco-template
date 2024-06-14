@@ -1,7 +1,7 @@
 import { DEFAULT_LAYOUT } from '../base';
 import { AppRouteRecordRaw } from '../types';
 
-const USERCENTER: AppRouteRecordRaw = {
+const USER: AppRouteRecordRaw = {
   path: '/user',
   name: 'User',
   redirect: '/user',
@@ -11,7 +11,6 @@ const USERCENTER: AppRouteRecordRaw = {
     icon: 'icon-user',
     requiresAuth: true,
     order: 7,
-    // hideChildrenInMenu: true,
   },
   children: [
     {
@@ -29,4 +28,4 @@ const USERCENTER: AppRouteRecordRaw = {
   ],
 };
 
-export default USERCENTER;
+export default USER;
