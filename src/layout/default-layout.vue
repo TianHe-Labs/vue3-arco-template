@@ -6,7 +6,7 @@
         <NavBar />
       </a-layout-header>
       <!-- 主体 -->
-      <a-layout>
+      <a-layout class="!flex-row">
         <!-- 左侧：侧边导航 -->
         <a-layout-sider
           v-if="renderMenu"
