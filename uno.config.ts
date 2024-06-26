@@ -27,57 +27,57 @@ export default defineConfig({
       // ArcoDesign 变量
       // https://arco.design/vue/docs/token
       primary: {
-        DEFAULT: 'var(--color-primary-6)',
-        7: 'var(--color-primary-7)',
-        6: 'var(--color-primary-6)', // DEFAULT
-        5: 'var(--color-primary-5)',
-        4: 'var(--color-primary-4)',
-        3: 'var(--color-primary-3)',
-        2: 'var(--color-primary-2)',
-        1: 'var(--color-primary-1)',
+        DEFAULT: 'var(--primary-6)',
+        7: 'var(--primary-7)',
+        6: 'var(--primary-6)', // DEFAULT
+        5: 'var(--primary-5)',
+        4: 'var(--primary-4)',
+        3: 'var(--primary-3)',
+        2: 'var(--primary-2)',
+        1: 'var(--primary-1)',
       },
 
       success: {
-        DEFAULT: 'var(--color-success-6)',
-        7: 'var(--color-success-7)',
-        6: 'var(--color-success-6)', // DEFAULT
-        5: 'var(--color-success-5)',
-        4: 'var(--color-success-4)',
-        3: 'var(--color-success-3)',
-        2: 'var(--color-success-2)',
-        1: 'var(--color-success-1)',
+        DEFAULT: 'var(--success-6)',
+        7: 'var(--success-7)',
+        6: 'var(--success-6)', // DEFAULT
+        5: 'var(--success-5)',
+        4: 'var(--success-4)',
+        3: 'var(--success-3)',
+        2: 'var(--success-2)',
+        1: 'var(--success-1)',
       },
 
       warning: {
-        DEFAULT: 'var(--color-warning-6)',
-        7: 'var(--color-warning-7)',
-        6: 'var(--color-warning-6)', // DEFAULT
-        5: 'var(--color-warning-5)',
-        4: 'var(--color-warning-4)',
-        3: 'var(--color-warning-3)',
-        2: 'var(--color-warning-2)',
-        1: 'var(--color-warning-1)',
+        DEFAULT: 'var(--warning-6)',
+        7: 'var(--warning-7)',
+        6: 'var(--warning-6)', // DEFAULT
+        5: 'var(--warning-5)',
+        4: 'var(--warning-4)',
+        3: 'var(--warning-3)',
+        2: 'var(--warning-2)',
+        1: 'var(--warning-1)',
       },
 
       danger: {
-        DEFAULT: 'var(--color-danger-6)',
-        7: 'var(--color-danger-7)',
-        6: 'var(--color-danger-6)', // DEFAULT
-        5: 'var(--color-danger-5)',
-        4: 'var(--color-danger-4)',
-        3: 'var(--color-danger-3)',
-        2: 'var(--color-danger-2)',
-        1: 'var(--color-danger-1)',
+        DEFAULT: 'var(--danger-6)',
+        7: 'var(--danger-7)',
+        6: 'var(--danger-6)', // DEFAULT
+        5: 'var(--danger-5)',
+        4: 'var(--danger-4)',
+        3: 'var(--danger-3)',
+        2: 'var(--danger-2)',
+        1: 'var(--danger-1)',
       },
       // ArcoDesign 链接
       link: {
-        7: 'var(--color-link-7)',
-        6: 'var(--color-link-6)',
-        5: 'var(--color-link-5)',
-        4: 'var(--color-link-4)',
-        3: 'var(--color-link-3)',
-        2: 'var(--color-link-2)',
-        1: 'var(--color-link-1)',
+        7: 'var(--link-7)',
+        6: 'var(--link-6)',
+        5: 'var(--link-5)',
+        4: 'var(--link-4)',
+        3: 'var(--link-3)',
+        2: 'var(--link-2)',
+        1: 'var(--link-1)',
       },
       // ArcoDesign 文字
       text: {
