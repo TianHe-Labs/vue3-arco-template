@@ -7,7 +7,12 @@ import {
 
 export default defineConfig({
   presets: [
-    presetUno(),
+    presetUno({
+      dark: {
+        // light: 'body[arco-theme=light]',
+        dark: 'body[arco-theme=dark]',
+      },
+    }),
     presetAttributify(),
     presetWebFonts({
       provider: 'none',
