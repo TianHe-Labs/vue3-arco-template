@@ -11,6 +11,8 @@ import localeUser from '@/views/user/locale/en-US';
 
 import localeNotFound from '@/views/not-found/locale/en-US';
 
+import localeErrors from './en-US/errors';
+
 export default {
   'menu.server.dashboard': 'Dashboard-Server',
   'menu.server.workplace': 'Workplace-Server',
@@ -30,4 +32,5 @@ export default {
   ...localeDashboard,
   ...localeUser,
   ...localeNotFound,
+  ...localeErrors,
 };

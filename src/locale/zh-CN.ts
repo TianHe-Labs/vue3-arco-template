@@ -11,6 +11,8 @@ import localeUser from '@/views/user/locale/zh-CN';
 
 import localeNotFound from '@/views/not-found/locale/zh-CN';
 
+import localeErrors from './zh-CN/errors';
+
 export default {
   'menu.server.dashboard': '仪表盘-服务端',
   'menu.server.workplace': '工作台-服务端',
@@ -30,4 +32,5 @@ export default {
   ...localeDashboard,
   ...localeUser,
   ...localeNotFound,
+  ...localeErrors,
 };

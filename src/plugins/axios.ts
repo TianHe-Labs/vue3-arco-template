@@ -4,6 +4,7 @@ import axios, {
   type AxiosError,
 } from 'axios';
 import { Message } from '@arco-design/web-vue';
+import { useI18n } from 'vue-i18n';
 import { useUserStore } from '@/store';
 import useLogout from '@/hooks/logout';
 
@@ -52,18 +53,19 @@ axios.interceptors.response.use(
   async (error: AxiosError<Record<string, any>>) => {
     // api 返回结果不要进行多余的封装包裹
     // 要么直接返回结果，要么返回错误信息
+    const { t } = useI18n();
     const userStore = useUserStore();
     const { logout } = useLogout();
 
     // 处理 token 过期以及 刷新 token 重发请求问题
-    const status = error.response?.status;
+    const status = error.response?.status as number;
     const respData = error.response?.data;
     // 错误消息可以用 message 或者 msg 字段 { message: '' } { msg: '' }
     const message = respData?.message || respData?.msg;
 
     if (status === 401) {
       Message.error({
-        content: message || error?.message || '身份验证不通过，请重新登录！',
+        content: message /* || error?.message */ || t('401'),
         duration: 5 * 1000,
       });
       logout();
@@ -78,7 +80,7 @@ axios.interceptors.response.use(
     } else if (status === 461) {
       // Refresh Token 过期
       Message.error({
-        content: message || error?.message || '身份验证已过期，请重新登录！',
+        content: message /* || error?.message */ || t('461'),
         duration: 5 * 1000,
       });
       logout();
@@ -93,6 +95,8 @@ axios.interceptors.response.use(
       error.config.url = error.config.url?.replace('api', 'mock');
       return axios.request(error.config);
     } */
-    return Promise.reject(new Error(message || error.message));
+    return Promise.reject(
+      new Error(message || t(`'${status}'`) || error.message)
+    );
   }
 );
