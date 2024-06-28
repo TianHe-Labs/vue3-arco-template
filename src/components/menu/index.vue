@@ -1,6 +1,5 @@
 <script lang="tsx">
   import { defineComponent, ref, h, compile, computed, inject } from 'vue';
-  import { breakpointsTailwind, useBreakpoints } from '@vueuse/core';
   import { useI18n } from 'vue-i18n';
   import {
     type RouteRecordRaw,
@@ -33,9 +32,7 @@
         opts?: any
       ) => void;
 
-      const breakpoints = useBreakpoints(breakpointsTailwind);
-
-      // const breakpoints = inject('breakpoints') as any;
+      const breakpoints = inject('breakpoints') as any;
 
       const collapsed = computed({
         get() {
