@@ -5,7 +5,6 @@ export interface AppState {
   theme: string;
   colorWeak: boolean;
   themeColor: string;
-  device: string;
   navbar: boolean;
   menu: boolean;
   topMenu: boolean;

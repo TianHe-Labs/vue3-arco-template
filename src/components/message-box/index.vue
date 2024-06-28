@@ -1,7 +1,7 @@
 <template>
   <!-- 移动端fixed固定在屏幕右下角 -->
   <a-badge
-    v-if="appStore.device !== 'desktop'"
+    v-if="breakpoints.smallerOrEqual('md').value"
     :count="9"
     dot
     class="fixed right-5 bottom-20"
@@ -18,7 +18,7 @@
   <a-popover
     :visible="true"
     trigger="click"
-    :position="appStore.device === 'desktop' ? 'br' : 'tr'"
+    :position="breakpoints.greater('md').value ? 'br' : 'tr'"
     class="w-480px max-w-9/10"
     content-class="mt-0"
   >
@@ -104,11 +104,11 @@
 </template>
 
 <script lang="ts" setup>
-  import { useAppStore } from '@/store';
+  import { inject } from 'vue';
   import { MessageRecord } from '@/api/message';
   import { useMessage } from './hooks';
 
-  const appStore = useAppStore();
+  const breakpoints = inject('breakpoints') as any;
 
   const {
     triggerRef,

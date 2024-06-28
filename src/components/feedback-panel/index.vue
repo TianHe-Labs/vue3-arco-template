@@ -1,7 +1,7 @@
 <template>
   <!-- 如果没有导航栏，在右边放一个固定按钮入口 -->
   <div
-    v-if="!appStore.navbar || appStore.device !== 'desktop'"
+    v-if="!appStore.navbar || breakpoints.smallerOrEqual('md').value"
     class="fixed right-5 bottom-36"
   >
     <a-button
@@ -18,7 +18,7 @@
   <a-modal
     v-model:visible="feedbackPanelVisible"
     :width="680"
-    :fullscreen="appStore.device === 'mobile'"
+    :fullscreen="breakpoints.smallerOrEqual('md').value"
     :title="$t('toolbar.feedback')"
     draggable
     title-align="start"
@@ -85,6 +85,8 @@
   import { useI18n } from 'vue-i18n';
   import { useAppStore } from '@/store';
   import axios from 'axios';
+
+  const breakpoints = inject('breakpoints') as any;
 
   const { t } = useI18n();
   const appStore = useAppStore();

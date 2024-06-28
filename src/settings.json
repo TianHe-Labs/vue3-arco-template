@@ -3,7 +3,6 @@
   "theme": "light",
   "colorWeak": false,
   "themeColor": "#165DFF",
-  "device": "desktop",
   "navbar": true,
   "menu": true,
   "topMenu": false,

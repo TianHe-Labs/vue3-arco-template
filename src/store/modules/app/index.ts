@@ -11,9 +11,6 @@ const useAppStore = defineStore('app', {
   }),
 
   getters: {
-    appDevice(state: AppState) {
-      return state.device;
-    },
     appServerMenus(state: AppState): RouteRecordNormalized[] {
       return state.serverMenus as unknown as RouteRecordNormalized[];
     },
@@ -40,16 +37,6 @@ const useAppStore = defineStore('app', {
         this.theme = 'light';
         document.body.removeAttribute('arco-theme');
       }
-    },
-
-    // 响应式
-    toggleDevice(device: string) {
-      this.device = device;
-    },
-
-    // 菜单
-    toggleMenu(value: boolean) {
-      this.hideMenu = value;
     },
 
     // 服务端路由

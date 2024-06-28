@@ -1,5 +1,5 @@
 <template>
-  <div class="h-full flex px-5 py-4">
+  <div class="h-full flex flex-col px-5 py-4">
     <Banner />
   </div>
 </template>

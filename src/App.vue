@@ -6,10 +6,11 @@
 </template>
 
 <script lang="ts" setup>
-  import { computed } from 'vue';
+  import { computed, provide } from 'vue';
+  import { useI18n } from 'vue-i18n';
+  import { breakpointsTailwind, useBreakpoints } from '@vueuse/core';
   import enUS from '@arco-design/web-vue/es/locale/lang/en-us';
   import zhCN from '@arco-design/web-vue/es/locale/lang/zh-cn';
-  import { useI18n } from 'vue-i18n';
   import GlobalSetting from '@/components/global-setting/index.vue';
 
   const i18n = useI18n();
@@ -24,6 +25,9 @@
         return enUS;
     }
   });
+
+  const breakpoints = useBreakpoints(breakpointsTailwind);
+  provide('breakpoints', breakpoints);
 </script>
 
 <style>

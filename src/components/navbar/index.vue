@@ -14,11 +14,14 @@
     </div>
     <!-- 导航栏：菜单 -->
     <div class="flex-1 center-side">
-      <Menu v-if="topMenu && appStore.device === 'desktop'" mode="horizontal" />
+      <Menu
+        v-if="topMenu && breakpoints.greater('md').value"
+        mode="horizontal"
+      />
     </div>
     <!-- 导航栏：右侧 -->
     <div class="flex gap-4 items-center right-side">
-      <Toolbar v-if="appStore.device === 'desktop'" />
+      <Toolbar v-if="breakpoints.greater('md').value" />
       <a-button
         v-else
         type="text"
@@ -40,6 +43,8 @@
   import { useAppStore } from '@/store';
   import Menu from '@/components/menu/index.vue';
   import Toolbar from '@/components/toolbar/index.vue';
+
+  const breakpoints = inject('breakpoints') as any;
 
   const { t } = useI18n();
 

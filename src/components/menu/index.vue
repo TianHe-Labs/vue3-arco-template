@@ -1,5 +1,6 @@
 <script lang="tsx">
   import { defineComponent, ref, h, compile, computed, inject } from 'vue';
+  import { breakpointsTailwind, useBreakpoints } from '@vueuse/core';
   import { useI18n } from 'vue-i18n';
   import {
     type RouteRecordRaw,
@@ -32,9 +33,13 @@
         opts?: any
       ) => void;
 
+      const breakpoints = useBreakpoints(breakpointsTailwind);
+
+      // const breakpoints = inject('breakpoints') as any;
+
       const collapsed = computed({
         get() {
-          if (appStore.device === 'desktop') return appStore.menuCollapse;
+          if (breakpoints.greater('md').value) return appStore.menuCollapse;
           return false;
         },
         set(value: boolean) {
@@ -42,7 +47,7 @@
         },
       });
       const setCollapse = (val: boolean) => {
-        if (appStore.device === 'desktop')
+        if (breakpoints.greater('md').value)
           appStore.updateSettings({ menuCollapse: val });
       };
 
@@ -151,7 +156,7 @@
           v-model:open-keys={openKeys.value}
           mode={props.mode}
           auto-scroll-into-view={true}
-          show-collapse-button={appStore.device !== 'mobile'}
+          show-collapse-button={breakpoints.greater('md').value}
           auto-open={false}
           selected-keys={selectedKey.value}
           auto-open-selected={true}

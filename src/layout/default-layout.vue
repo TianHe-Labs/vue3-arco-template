@@ -58,14 +58,13 @@
 </template>
 
 <script lang="ts" setup>
-  import { ref, computed, provide, onMounted } from 'vue';
+  import { ref, computed, provide, onMounted, inject } from 'vue';
   import { useAppStore } from '@/store';
   import NavBar from '@/components/navbar/index.vue';
   import Menu from '@/components/menu/index.vue';
   import Toolbar from '@/components/toolbar/index.vue';
   import Footer from '@/components/footer/index.vue';
   import TabBar from '@/components/tab-bar/index.vue';
-  import useResponsive from '@/hooks/responsive';
   import { provideMessage } from '@/components/message-box/hooks';
   import MessageBox from '@/components/message-box/index.vue';
   import FeedbackPanel from '@/components/feedback-panel/index.vue';
@@ -78,16 +77,19 @@
   const feedbackPanelVisible = ref<boolean>(false);
   provide('feedbackPanelVisible', feedbackPanelVisible);
 
+  // 响应式
+  const breakpoints = inject('breakpoints') as any;
+
   const isInit = ref(false);
   const appStore = useAppStore();
-
-  useResponsive(true);
 
   const navbar = computed(() => appStore.navbar);
   const navbarHeight = `60px`;
 
   const renderMenu = computed(() => appStore.menu && !appStore.topMenu);
-  const hideMenu = computed(() => appStore.hideMenu);
+  const hideMenu = computed(
+    () => appStore.hideMenu || breakpoints.smallerOrEqual('md').value
+  );
   const footer = computed(() => appStore.footer);
   const menuWidth = computed(() => {
     return appStore.menuCollapse ? 48 : appStore.menuWidth;
