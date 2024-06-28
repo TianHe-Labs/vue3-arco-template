@@ -73,7 +73,7 @@
   import { useStorage } from '@vueuse/core';
   import { useUserStore } from '@/store';
   import useLoading from '@/hooks/loading';
-  import { DEFAULT_ROUTE_NAME } from '@/router/constants';
+  import { DEFAULT_ROUTE /* , DEFAULT_ROUTE_NAME */ } from '@/router/constants';
 
   const { t } = useI18n();
   const router = useRouter();
@@ -110,7 +110,8 @@
         await userStore.login(values as LoginParams);
         const { redirect, ...othersQuery } = router.currentRoute.value.query;
         router.push({
-          name: (redirect as string) || DEFAULT_ROUTE_NAME,
+          path: (redirect as string) || DEFAULT_ROUTE.fullPath,
+          // name: (redirect as string) || DEFAULT_ROUTE_NAME,
           query: {
             ...othersQuery,
           },

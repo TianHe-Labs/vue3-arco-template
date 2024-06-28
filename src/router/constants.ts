@@ -13,6 +13,6 @@ export const DEFAULT_ROUTE_NAME = 'Workplace';
 
 export const DEFAULT_ROUTE = {
   name: DEFAULT_ROUTE_NAME,
-  fullPath: '/dashboard/workplace',
   title: 'menu.dashboard.workplace',
+  fullPath: '/dashboard/workplace',
 };

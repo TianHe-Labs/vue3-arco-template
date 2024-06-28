@@ -21,7 +21,9 @@ export default function setupUserLoginInfoGuard(router: Router) {
           next({
             name: 'Login',
             query: {
-              redirect: to.name,
+              redirect: to.path,
+              // redirect: to.name,
+              // ...to.params,
               ...to.query,
             } as LocationQueryRaw,
           });
@@ -34,7 +36,9 @@ export default function setupUserLoginInfoGuard(router: Router) {
       next({
         name: 'Login',
         query: {
-          redirect: to.name,
+          redirect: to.path,
+          // redirect: to.name,
+          // ...to.params,
           ...to.query,
         } as LocationQueryRaw,
       });

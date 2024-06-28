@@ -15,8 +15,10 @@ export default function useLogout() {
       router.push({
         name: logoutTo && typeof logoutTo === 'string' ? logoutTo : 'Login',
         query: {
+          redirect: currentRoute.path as string,
+          // redirect: currentRoute.name as string,
+          // ...currentRoute.params,
           ...currentRoute.query,
-          redirect: currentRoute.name as string,
         },
       });
     },
