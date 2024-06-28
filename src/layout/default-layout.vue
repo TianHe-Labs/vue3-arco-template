@@ -54,6 +54,7 @@
   </a-scrollbar>
 
   <MessageBox />
+  <FeedbackPanel />
 </template>
 
 <script lang="ts" setup>
@@ -67,9 +68,15 @@
   import useResponsive from '@/hooks/responsive';
   import { provideMessage } from '@/components/message-box/hooks';
   import MessageBox from '@/components/message-box/index.vue';
+  import FeedbackPanel from '@/components/feedback-panel/index.vue';
   import PageLayout from './page-layout.vue';
 
+  // 消息
   provideMessage();
+
+  // 反馈
+  const feedbackPanelVisible = ref<boolean>(false);
+  provide('feedbackPanelVisible', feedbackPanelVisible);
 
   const isInit = ref(false);
   const appStore = useAppStore();
