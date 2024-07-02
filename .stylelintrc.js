@@ -13,6 +13,12 @@ module.exports = {
         ignoreAtRules: ['plugin'],
       },
     ],
+    'color-function-notation': [
+      'modern',
+      {
+        ignore: ['with-var-inside'],
+      },
+    ],
     'rule-empty-line-before': [
       'always',
       {
