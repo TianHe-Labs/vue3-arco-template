@@ -9,7 +9,8 @@ import {
   DataZoomComponent,
   GraphicComponent,
 } from 'echarts/components';
-import Chart from './chart/index.vue';
+
+import Chart from 'vue-echarts';
 import Breadcrumb from './breadcrumb/index.vue';
 
 // Manually introduce ECharts modules to reduce packing size
