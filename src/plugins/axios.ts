@@ -4,7 +4,7 @@ import axios, {
   type AxiosError,
 } from 'axios';
 import { Message } from '@arco-design/web-vue';
-import { useI18n } from 'vue-i18n';
+import i18n from '@/locale';
 import { useUserStore } from '@/store';
 import useLogout from '@/hooks/logout';
 
@@ -53,7 +53,7 @@ axios.interceptors.response.use(
   async (error: AxiosError<Record<string, any>>) => {
     // api 返回结果不要进行多余的封装包裹
     // 要么直接返回结果，要么返回错误信息
-    const { t } = useI18n();
+    const { t } = i18n.global;
     const userStore = useUserStore();
     const { logout } = useLogout();
 
