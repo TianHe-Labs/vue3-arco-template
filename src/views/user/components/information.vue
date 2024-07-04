@@ -111,9 +111,11 @@
         if (data.username) {
           Message.info(t('profile.actions.update.success.message'));
         }
-      } catch (err) {
+      } catch (err: any) {
         // you can report use errorHandler or other
-        Message.info(t('profile.actions.update.failure.message'));
+        Message.error(
+          t(err?.message || 'profile.actions.update.failure.message')
+        );
       }
     }
   };

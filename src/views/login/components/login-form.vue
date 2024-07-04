@@ -123,8 +123,8 @@
         // The actual production environment requires encrypted storage.
         loginConfig.value.username = rememberPassword ? username : '';
         loginConfig.value.password = rememberPassword ? password : '';
-      } catch (err) {
-        errorMessage.value = (err as Error).message;
+      } catch (err: any) {
+        errorMessage.value = err?.message;
       } finally {
         setLoading(false);
       }

@@ -46,9 +46,9 @@ const useOssStore = defineStore('oss', {
       try {
         const { data } = await axios.get('/sts');
         this.setOssToken(data);
-      } catch (err) {
+      } catch (error) {
         this.resetOssToken();
-        throw err;
+        throw error;
       }
     },
 

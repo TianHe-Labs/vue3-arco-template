@@ -45,9 +45,9 @@ const useUserStore = defineStore('user', {
           throw new Error();
         }
         this.setUserInfo({ username: loginData.username, ...data });
-      } catch (err) {
+      } catch (error) {
         this.resetUserInfo();
-        throw err;
+        throw error;
       }
     },
 
@@ -90,9 +90,9 @@ const useUserStore = defineStore('user', {
           throw new Error();
         }
         this.setUserInfo(data);
-      } catch (err) {
+      } catch (error) {
         this.resetUserInfo();
-        throw err;
+        throw error;
       }
     },
   },

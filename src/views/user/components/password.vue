@@ -114,9 +114,11 @@
             logout();
           }, 600);
         }
-      } catch (err) {
+      } catch (err: any) {
         // you can report use errorHandler or other
-        Message.info(t('profile.actions.update.failure.message'));
+        Message.error(
+          err?.message || t('profile.actions.update.failure.message')
+        );
       }
     }
   };

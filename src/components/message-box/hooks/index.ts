@@ -95,8 +95,8 @@ export function provideMessage(): MessageCtx {
     try {
       const { data } = await queryMessageList();
       sourceData.value = data.list || [];
-    } catch (err) {
-      // you can report use errorHandler or other
+    } catch (err: any) {
+      Message.error(err?.message);
     } finally {
       setLoading(false);
     }
