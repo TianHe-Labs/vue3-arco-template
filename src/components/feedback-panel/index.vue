@@ -130,7 +130,7 @@
       }
       return true;
     } catch (err: any) {
-      Message.error(t('feedback.form.submit.failure.message'));
+      Message.error(err?.message || t('feedback.form.submit.failure.message'));
       return false;
     }
   };
