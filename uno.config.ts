@@ -21,7 +21,10 @@ export default defineConfig({
         number: ['impact'],
       },
     }),
-    presetIcons(), // iconify 图标集成 https://unocss.dev/presets/icons#options
+    presetIcons(),
+    // iconify 图标集成 https://unocss.dev/presets/icons#options
+    // https://icon-sets.iconify.design/
+    // <div class="i-solar:box-bold-duotone w-1em h-1em"></div>
   ],
   blocklist: ['container'],
   theme: {
