@@ -1,3 +1,3 @@
 export default {
-  'menu.dashboard.workplace': 'Workplace',
+  'menu.dashboard.overview': 'Overview',
 };

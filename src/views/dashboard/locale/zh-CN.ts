@@ -1,3 +1,3 @@
 export default {
-  'menu.dashboard.workplace': '工作台',
+  'menu.dashboard.overview': '态势感知',
 };

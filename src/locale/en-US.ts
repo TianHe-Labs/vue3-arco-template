@@ -15,8 +15,8 @@ import localeErrors from './en-US/errors';
 
 export default {
   'menu.server.dashboard': 'Dashboard-Server',
-  'menu.server.workplace': 'Workplace-Server',
-  'menu.server.monitor': 'Monitor-Server',
+  'menu.server.overview': 'Overview-Server',
+  'menu.server.screen': 'Screen-Server',
 
   'menu.dashboard': 'Dashboard',
   'menu.user': 'User Center',

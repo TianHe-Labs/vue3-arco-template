@@ -1,6 +1,6 @@
 <template>
   <a-scrollbar>
-    <a-layout class="w-full h-full" :class="{ mobile: appStore.hideMenu }">
+    <a-layout class="w-full h-full">
       <!-- 顶部 -->
       <a-layout-header v-if="navbar" class="layout-navbar">
         <NavBar />

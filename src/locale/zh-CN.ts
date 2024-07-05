@@ -15,8 +15,8 @@ import localeErrors from './zh-CN/errors';
 
 export default {
   'menu.server.dashboard': '仪表盘-服务端',
-  'menu.server.workplace': '工作台-服务端',
-  'menu.server.monitor': '实时监控-服务端',
+  'menu.server.overview': '态势感知-服务端',
+  'menu.server.screen': '数字孪生-服务端',
 
   'menu.dashboard': '仪表盘',
   'menu.user': '个人中心',

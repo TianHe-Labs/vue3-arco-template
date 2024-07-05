@@ -69,10 +69,10 @@ setupMock({
           },
           children: [
             {
-              path: 'workplace',
-              name: 'Workplace',
+              path: 'overview',
+              name: 'Overview',
               meta: {
-                locale: 'menu.server.workplace',
+                locale: 'menu.server.overview',
                 requiresAuth: true,
               },
             },
