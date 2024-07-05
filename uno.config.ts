@@ -3,6 +3,7 @@ import {
   presetUno,
   presetAttributify,
   presetWebFonts,
+  presetIcons,
 } from 'unocss';
 
 export default defineConfig({
@@ -20,6 +21,7 @@ export default defineConfig({
         number: ['impact'],
       },
     }),
+    presetIcons(), // iconify 图标集成 https://unocss.dev/presets/icons#options
   ],
   blocklist: ['container'],
   theme: {

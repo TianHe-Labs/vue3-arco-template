@@ -4,7 +4,10 @@
       {{ userStore.username }}
     </a-typography-text>
 
-    {{ breakpoints }}
+    <p>{{ breakpoints }}</p>
+
+    unocss/iconify 图标的使用
+    <div class="i-solar:box-bold-duotone w-5em h-5em"></div>
   </a-card>
 </template>
 
