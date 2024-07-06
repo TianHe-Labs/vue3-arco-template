@@ -8,6 +8,12 @@ import {
 
 export default defineConfig({
   presets: [
+    /*
+      unocss dark mode 与arcodesign协同注入，
+      unocss 默认使用class="dark"，因此可以利用arcodesign的接口动态改变class，
+      也可以在unocss.config.ts中改变默认配置，使用arcodesign的选择器，
+      这里的修改就是选择前一种方式
+    */
     presetUno({
       dark: {
         // light: 'body[arco-theme=light]',
@@ -21,10 +27,7 @@ export default defineConfig({
         number: ['impact'],
       },
     }),
-    presetIcons(),
-    // iconify 图标集成 https://unocss.dev/presets/icons#options
-    // https://icon-sets.iconify.design/
-    // <div class="i-solar:box-bold-duotone w-1em h-1em"></div>
+    presetIcons(), // iconify 图标集成 https://unocss.dev/presets/icons#options
   ],
   blocklist: ['container'],
   theme: {
@@ -33,6 +36,8 @@ export default defineConfig({
       // https://arco.design/vue/docs/token
       primary: {
         DEFAULT: 'rgba(var(--primary-6))',
+        9: 'rgba(var(--primary-9))',
+        8: 'rgba(var(--primary-8))',
         7: 'rgba(var(--primary-7))',
         6: 'rgba(var(--primary-6))', // DEFAULT
         5: 'rgba(var(--primary-5))',
@@ -44,6 +49,8 @@ export default defineConfig({
 
       success: {
         DEFAULT: 'rgba(var(--success-6))',
+        9: 'rgba(var(--success-9))',
+        8: 'rgba(var(--success-8))',
         7: 'rgba(var(--success-7))',
         6: 'rgba(var(--success-6))', // DEFAULT
         5: 'rgba(var(--success-5))',
@@ -55,6 +62,8 @@ export default defineConfig({
 
       warning: {
         DEFAULT: 'rgba(var(--warning-6))',
+        9: 'rgba(var(--warning-9))',
+        8: 'rgba(var(--warning-8))',
         7: 'rgba(var(--warning-7))',
         6: 'rgba(var(--warning-6))', // DEFAULT
         5: 'rgba(var(--warning-5))',
@@ -66,6 +75,8 @@ export default defineConfig({
 
       danger: {
         DEFAULT: 'rgba(var(--danger-6))',
+        9: 'rgba(var(--danger-9))',
+        8: 'rgba(var(--danger-8))',
         7: 'rgba(var(--danger-7))',
         6: 'rgba(var(--danger-6))', // DEFAULT
         5: 'rgba(var(--danger-5))',
