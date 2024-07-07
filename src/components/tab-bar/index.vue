@@ -5,7 +5,7 @@
         <div class="tab-bar-scroll">
           <div class="tags-wrap">
             <tab-item
-              v-for="(tag, index) in tagList"
+              v-for="(tag, index) in tabList"
               :key="tag.fullPath"
               :index="index"
               :item-data="tag"
@@ -32,7 +32,7 @@
   const tabBarStore = useTabBarStore();
 
   const affixRef = ref();
-  const tagList = computed(() => {
+  const tabList = computed(() => {
     return tabBarStore.getTabList;
   });
   const offsetTop = computed(() => {
@@ -48,7 +48,7 @@
   listenerRouteChange((route: RouteLocationNormalized) => {
     if (
       !route.meta.noAffix &&
-      !tagList.value.some((tag) => tag.fullPath === route.fullPath)
+      !tabList.value.some((tag) => tag.fullPath === route.fullPath)
     ) {
       tabBarStore.updateTabList(route);
     }

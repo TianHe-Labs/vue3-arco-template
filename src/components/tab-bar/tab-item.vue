@@ -93,7 +93,7 @@
   const goto = (tag: TagProps) => {
     router.push({ ...tag });
   };
-  const tagList = computed(() => {
+  const tabList = computed(() => {
     return tabBarStore.getTabList;
   });
 
@@ -110,43 +110,43 @@
   });
 
   const disabledRight = computed(() => {
-    return props.index === tagList.value.length - 1;
+    return props.index === tabList.value.length - 1;
   });
 
   const tagClose = (tag: TagProps, idx: number) => {
     tabBarStore.deleteTag(idx, tag);
     if (props.itemData.fullPath === route.fullPath) {
-      const latest = tagList.value[idx - 1]; // 获取队列的前一个tab
+      const latest = tabList.value[idx - 1]; // 获取队列的前一个tab
       router.push({ name: latest.name });
     }
   };
 
   const findCurrentRouteIndex = () => {
-    return tagList.value.findIndex((el) => el.fullPath === route.fullPath);
+    return tabList.value.findIndex((el) => el.fullPath === route.fullPath);
   };
   const actionSelect = async (value: any) => {
     const { itemData, index } = props;
-    const copyTagList = [...tagList.value];
+    const copyTabList = [...tabList.value];
     if (value === Eaction.current) {
       tagClose(itemData, index);
     } else if (value === Eaction.left) {
       const currentRouteIdx = findCurrentRouteIndex();
-      copyTagList.splice(1, props.index - 1);
+      copyTabList.splice(1, props.index - 1);
 
-      tabBarStore.freshTabList(copyTagList);
+      tabBarStore.freshTabList(copyTabList);
       if (currentRouteIdx < index) {
         router.push({ name: itemData.name });
       }
     } else if (value === Eaction.right) {
       const currentRouteIdx = findCurrentRouteIndex();
-      copyTagList.splice(props.index + 1);
+      copyTabList.splice(props.index + 1);
 
-      tabBarStore.freshTabList(copyTagList);
+      tabBarStore.freshTabList(copyTabList);
       if (currentRouteIdx > index) {
         router.push({ name: itemData.name });
       }
     } else if (value === Eaction.others) {
-      const filterList = tagList.value.filter((el, idx) => {
+      const filterList = tabList.value.filter((el, idx) => {
         return idx === 0 || idx === props.index;
       });
       tabBarStore.freshTabList(filterList);

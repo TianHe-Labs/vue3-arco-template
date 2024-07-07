@@ -24,12 +24,12 @@ const BAN_LIST = [REDIRECT_ROUTE_NAME];
 const useTabBarStore = defineStore('tab-bar', {
   state: (): TabBarState => ({
     cacheTabList: new Set([DEFAULT_ROUTE_NAME]),
-    tagList: [DEFAULT_ROUTE],
+    tabList: [DEFAULT_ROUTE],
   }),
 
   getters: {
     getTabList(): TagProps[] {
-      return this.tagList;
+      return this.tabList;
     },
     getCacheList(): string[] {
       return Array.from(this.cacheTabList);
@@ -39,13 +39,13 @@ const useTabBarStore = defineStore('tab-bar', {
   actions: {
     updateTabList(route: RouteLocationNormalized) {
       if (BAN_LIST.includes(route.name as string)) return;
-      this.tagList.push(formatTag(route));
+      this.tabList.push(formatTag(route));
       if (!route.meta.ignoreCache) {
         this.cacheTabList.add(route.name as string);
       }
     },
     deleteTag(idx: number, tag: TagProps) {
-      this.tagList.splice(idx, 1);
+      this.tabList.splice(idx, 1);
       this.cacheTabList.delete(tag.name);
     },
     addCache(name: string) {
@@ -55,16 +55,16 @@ const useTabBarStore = defineStore('tab-bar', {
       this.cacheTabList.delete(tag.name);
     },
     freshTabList(tags: TagProps[]) {
-      this.tagList = tags;
+      this.tabList = tags;
       this.cacheTabList.clear();
       // 要先判断ignoreCache
-      this.tagList
+      this.tabList
         .filter((el) => !el.ignoreCache)
         .map((el) => el.name)
         .forEach((x) => this.cacheTabList.add(x));
     },
     resetTabList() {
-      this.tagList = [DEFAULT_ROUTE];
+      this.tabList = [DEFAULT_ROUTE];
       this.cacheTabList.clear();
       this.cacheTabList.add(DEFAULT_ROUTE_NAME);
     },
