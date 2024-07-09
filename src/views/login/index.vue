@@ -3,9 +3,9 @@
     <div class="lg:w-500px banner">
       <LoginBanner />
     </div>
-    <div class="flex-1 flex justify-center items-center content">
+    <div class="flex-auto relative flex justify-center items-center">
       <LoginForm />
-      <Footer class="footer" />
+      <Footer class="absolute bottom-0" />
     </div>
   </div>
 </template>
@@ -19,14 +19,5 @@
 <style lang="less" scoped>
   .banner {
     background: linear-gradient(163.85deg, #1d2129 0%, #00308f 100%);
-  }
-
-  .content {
-    position: relative;
-
-    .footer {
-      position: absolute;
-      bottom: 0;
-    }
   }
 </style>

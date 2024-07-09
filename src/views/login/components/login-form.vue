@@ -1,5 +1,5 @@
 <template>
-  <div class="login-form">
+  <div class="login-form-wrapper">
     <div class="login-form-title">{{ $t('login.form.title') }}</div>
     <div class="login-form-subtitle">{{ appName }}</div>
     <div class="login-form-error-msg">{{ errorMessage }}</div>
