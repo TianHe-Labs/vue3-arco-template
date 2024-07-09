@@ -35,10 +35,13 @@
           mask-closable
           @cancel="drawerCancel"
         >
-          <Menu style="padding-bottom: 180px" />
+          <Menu style="padding-bottom: 'var(--toolbar-vertical-height)'" />
           <Toolbar
             mode="vertical"
-            style="position: relative; margin-top: -180px"
+            style="
+              position: relative;
+              margin-top: calc(-1 * var(--toolbar-vertical-height));
+            "
           />
         </a-drawer>
         <!-- 右侧：内容 -->
@@ -129,21 +132,19 @@
 
 <style>
   :root {
-    --toolbar-vertical-height: 180px;
+    --nav-height: 80px;
+    --toolbar-vertical-height: 90px;
   }
 </style>
 
 <style lang="less" scoped>
-  @nav-size-height: 60px;
-  @layout-max-width: 1100px;
-
   .layout-navbar {
     position: fixed;
     top: 0;
     left: 0;
     z-index: 100;
     width: 100%;
-    height: @nav-size-height;
+    height: var(--nav-height);
   }
 
   .layout-sider {
