@@ -87,7 +87,6 @@
   const appStore = useAppStore();
 
   const navbar = computed(() => appStore.navbar);
-  const navbarHeight = `60px`;
 
   const renderMenu = computed(() => appStore.menu && !appStore.topMenu);
   const hideMenu = computed(
@@ -105,7 +104,7 @@
       renderMenu.value && !hideMenu.value
         ? { paddingLeft: `${menuWidth.value}px` }
         : {};
-    const paddingTop = navbar.value ? { paddingTop: navbarHeight } : {};
+    const paddingTop = navbar.value ? { paddingTop: 'var(--nav-height)' } : {};
     return { ...paddingLeft, ...paddingTop };
   });
   const setCollapsed = (val: boolean) => {
