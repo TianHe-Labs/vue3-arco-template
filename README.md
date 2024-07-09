@@ -73,22 +73,22 @@
   - **api**: queryX, createX, updateX, deleteX
 
     ```http
-    # queryX
+    // queryX
     GET/POST /api/X/list
     GET /api/X/detail/{id}
     ...
 
     createX
-    POST /api/X/create, # body: {}
+    POST /api/X/create, // body: {}
     ...
 
-    # updateX
-    PUT /api/X/update, # body: {}
-    PUT /api/X/y/update # X.y body: {}
+    // updateX
+    PUT /api/X/update, // body: {}
+    PUT /api/X/y/update // X.y body: {}
     ...
 
-    # deleteX
-    DELETE /api/X # body: { ids: [] }
+    // deleteX
+    DELETE /api/X // body: { ids: [] }
     DELETE /api/X/{id}
     ...
     ```
@@ -97,11 +97,11 @@
 
   - **components**: common components, inclues some global components(index.ts)
 
-  - **directive**: Vue3 directive, eg: ``v-permission``
+  - **directives**: Vue3 directive, eg: ``v-permission``
 
   - **hooks**: common hooks, eg: ``chart-option``, ``loading``, ``logout``, ``permission``
 
-  - **layout**: common layout components
+  - **layouts**: common layout components
 
   - **locale**: ``i18n``
 
