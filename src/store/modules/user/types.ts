@@ -1,8 +1,12 @@
-type RoleEnum = 'admin' | 'user';
+// eslint-disable-next-line no-shadow
+export enum USERROLE {
+  ADMIN = 'admin',
+  USER = 'user',
+}
 
 export interface UserState {
   username?: string;
-  role?: RoleEnum;
+  role?: USERROLE.ADMIN;
 
   password?: string;
 
@@ -16,3 +20,5 @@ export interface UserState {
   createdAt?: string | Date;
   updatedAt?: string | Date;
 }
+
+export {};

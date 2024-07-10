@@ -5,7 +5,7 @@ import {
   queryUserInfo as queryUserInfoApi,
   updateUserToken as updateUserTokenApi,
 } from '@/api/user';
-import { UserState } from './types';
+import { USERROLE, UserState } from './types';
 
 const useUserStore = defineStore('user', {
   state: (): UserState => ({
@@ -59,12 +59,12 @@ const useUserStore = defineStore('user', {
     async queryUserInfo() {
       try {
         const { data } = await queryUserInfoApi();
-        this.setUserInfo({ ...data, role: data?.role || 'admin' });
+        this.setUserInfo({ ...data, role: data?.role || USERROLE.ADMIN });
       } catch (err: any) {
         if (err?.isAxiosError) {
           // axios 拦截统一处理了返回结果
           // 如果该接口 404，则认为是单用户系统，没有用户信息
-          this.setUserInfo({ role: 'admin' });
+          this.setUserInfo({ role: USERROLE.ADMIN });
         } else {
           this.resetUserInfo();
           throw err;

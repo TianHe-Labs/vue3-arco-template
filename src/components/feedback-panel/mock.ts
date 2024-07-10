@@ -1,6 +1,6 @@
 import Mock from 'mockjs';
 import setupMock, { successResponseWrap } from '@/plugins/setup-mock';
-import { MockRequest } from '@/types/global';
+import { MockRequest } from '@/mock/types';
 
 setupMock({
   setup: () => {

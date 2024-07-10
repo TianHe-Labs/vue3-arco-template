@@ -1,7 +1,7 @@
 import Mock from 'mockjs';
 import qs from 'query-string';
-import { MockRequest } from '@/types/global';
 import setupMock, { successResponseWrap } from '@/plugins/setup-mock';
+import { MockRequest } from '@/mock/types';
 
 const textList = [
   {
@@ -101,8 +101,8 @@ const videoList = [
 ];
 setupMock({
   setup() {
-    Mock.mock(new RegExp('/api/popular/list'), (params: MockRequest) => {
-      const { type = 'text' } = qs.parseUrl(params.url).query;
+    Mock.mock(new RegExp('/api/popular/list'), (req: MockRequest) => {
+      const { type = 'text' } = qs.parseUrl(req.url).query;
       if (type === 'image') {
         return successResponseWrap([...videoList]);
       }

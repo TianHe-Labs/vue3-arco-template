@@ -1,5 +1,6 @@
 import { RouteLocationNormalized, RouteRecordRaw } from 'vue-router';
 import { useUserStore } from '@/store';
+import { USERROLE } from '@/store/modules/user/types';
 
 export default function usePermission() {
   const userStore = useUserStore();
@@ -12,7 +13,7 @@ export default function usePermission() {
         route.meta?.roles?.includes(userStore.role as string)
       );
     },
-    findFirstAccessibleRoute(_routers: any, role = 'admin') {
+    findFirstAccessibleRoute(_routers: any, role = USERROLE.ADMIN) {
       const clonedRouters = [..._routers];
       while (clonedRouters.length) {
         const firstElement = clonedRouters.shift();

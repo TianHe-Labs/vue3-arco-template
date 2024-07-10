@@ -8,3 +8,5 @@ export interface ToolTipFormatterParams extends CallbackDataParams {
   axisValue: string;
   axisValueLabel: string;
 }
+
+export {};

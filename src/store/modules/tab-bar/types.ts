@@ -10,3 +10,5 @@ export interface TabBarState {
   tabList: TagProps[];
   cacheTabList: Set<string>;
 }
+
+export {};
