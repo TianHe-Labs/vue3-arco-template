@@ -95,8 +95,6 @@ axios.interceptors.response.use(
       error.config.url = error.config.url?.replace('api', 'mock');
       return axios.request(error.config);
     } */
-    return Promise.reject(
-      new Error(message || t(`'${status}'`) || error.message)
-    );
+    return Promise.reject(new Error(message || t(status) || error.message));
   }
 );
