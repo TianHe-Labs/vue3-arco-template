@@ -5,6 +5,7 @@ import {
   queryUserInfo as queryUserInfoApi,
   updateUserToken as updateUserTokenApi,
 } from '@/api/user';
+import { camelCase, mapKeys } from 'lodash';
 import { USERROLE, UserState } from './types';
 
 const useUserStore = defineStore('user', {
@@ -41,10 +42,11 @@ const useUserStore = defineStore('user', {
     async login(loginData: LoginParams) {
       try {
         const { data } = await loginApi(loginData);
-        if (!data?.accessToken || !data?.refreshToken) {
+        const formatedData = mapKeys(data, (_, key) => camelCase(key));
+        if (!formatedData?.accessToken || !formatedData?.refreshToken) {
           throw new Error();
         }
-        this.setUserInfo({ username: loginData.username, ...data });
+        this.setUserInfo({ username: loginData.username, ...formatedData });
       } catch (error) {
         this.resetUserInfo();
         throw error;
@@ -86,10 +88,11 @@ const useUserStore = defineStore('user', {
       const params = { refreshToken: this.$state?.refreshToken };
       try {
         const { data } = await updateUserTokenApi(params);
-        if (!data?.accessToken) {
+        const formatedData = mapKeys(data, (_, key) => camelCase(key));
+        if (!formatedData?.accessToken) {
           throw new Error();
         }
-        this.setUserInfo(data);
+        this.setUserInfo(formatedData);
       } catch (error) {
         this.resetUserInfo();
         throw error;
