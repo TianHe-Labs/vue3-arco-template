@@ -66,7 +66,7 @@ const useOssStore = defineStore('oss', {
       const method = options.method || 'GET';
       const expires = Math.floor(Date.now() / 1000 + (options.expires || 1800));
 
-      const { hostname, pathname } = new URL(url);
+      const { /* origin, */ hostname, pathname } = new URL(url);
       const bucket = hostname.split('.')?.[0];
       const object = pathname.replace(/^\/+/, '');
       const resource = `/${bucket}/${encoder(object)}`;
@@ -80,7 +80,11 @@ const useOssStore = defineStore('oss', {
       );
 
       // 构造完整的URL
-      const signedUrl = `/media${pathname}?OSSAccessKeyId=${
+      // ${origin}
+      // ${import.meta.env.BASE_URL}media
+      const signedUrl = `${
+        import.meta.env.BASE_URL
+      }media${pathname}?OSSAccessKeyId=${
         this.$state.accessKeyId
       }&Expires=${expires}&Signature=${encodeURIComponent(
         signature
