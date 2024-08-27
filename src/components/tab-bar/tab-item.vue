@@ -6,11 +6,11 @@
   >
     <span
       class="arco-tag arco-tag-size-medium arco-tag-checked"
-      :class="{ 'link-activated': itemData.fullPath === $route.fullPath }"
+      :class="{ 'link-activated': itemData.fullPath === route.fullPath }"
       @click="goto(itemData)"
     >
       <span class="tag-link">
-        {{ $t(itemData.title) }}
+        {{ t(itemData.title) }}
       </span>
       <span
         class="arco-icon-hover arco-tag-icon-hover arco-icon-hover-size-medium arco-tag-close-btn"
@@ -59,6 +59,7 @@
 <script lang="ts" setup>
   import { PropType, computed } from 'vue';
   import { useRouter, useRoute } from 'vue-router';
+  import { useI18n } from 'vue-i18n';
   import { useTabBarStore } from '@/store';
   import type { TagProps } from '@/store/modules/tab-bar/types';
   import { DEFAULT_ROUTE_NAME, REDIRECT_ROUTE_NAME } from '@/router/constants';
@@ -89,6 +90,7 @@
   const router = useRouter();
   const route = useRoute();
   const tabBarStore = useTabBarStore();
+  const { t } = useI18n();
 
   const goto = (tag: TagProps) => {
     router.push({ ...tag });

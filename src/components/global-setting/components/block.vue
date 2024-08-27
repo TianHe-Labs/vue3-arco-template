@@ -6,7 +6,7 @@
       :key="option.name"
       class="flex justify-between items-center my-3"
     >
-      <span>{{ $t(option.label) }}</span>
+      <span>{{ t(option.label) }}</span>
       <form-wrapper
         :type="option?.type || 'boolean'"
         :name="option.name"
@@ -18,8 +18,11 @@
 </template>
 
 <script lang="ts" setup>
+  import { useI18n } from 'vue-i18n';
   import { useAppStore } from '@/store';
   import FormWrapper from './form-wrapper.vue';
+
+  const { t } = useI18n();
 
   interface Option {
     name: string;

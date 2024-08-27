@@ -19,7 +19,7 @@
     v-model:visible="feedbackPanelVisible"
     :width="680"
     :fullscreen="breakpoints.smallerOrEqual('md').value"
-    :title="$t('toolbar.feedback')"
+    :title="t('toolbar.feedback')"
     draggable
     title-align="start"
     @before-ok="handleSubmit"
@@ -29,11 +29,11 @@
         required
         asterisk-position="end"
         field="type"
-        :label="$t('feedback.form.type.label')"
+        :label="t('feedback.form.type.label')"
         :rules="[
           {
             required: true,
-            message: $t('feedback.form.type.placeholder'),
+            message: t('feedback.form.type.placeholder'),
           },
         ]"
       >
@@ -41,18 +41,18 @@
           v-model="feedbackModel.type"
           allow-clear
           :options="typeOptions"
-          :placeholder="$t('feedback.form.type.placeholder')"
+          :placeholder="t('feedback.form.type.placeholder')"
         />
       </a-form-item>
       <a-form-item
         required
         asterisk-position="end"
         field="content"
-        :label="$t('feedback.form.content.label')"
+        :label="t('feedback.form.content.label')"
         :rules="[
           {
             required: true,
-            message: $t('feedback.form.content.placeholder'),
+            message: t('feedback.form.content.placeholder'),
           },
         ]"
       >
@@ -60,12 +60,12 @@
           v-model="feedbackModel.content"
           allow-clear
           :auto-size="{ minRows: 7, maxRows: 12 }"
-          :placeholder="$t('feedback.form.content.placeholder')"
+          :placeholder="t('feedback.form.content.placeholder')"
         />
       </a-form-item>
       <!-- <a-form-item
         field="attachment"
-        :label="$t('feedback.form.attachment.label')"
+        :label="t('feedback.form.attachment.label')"
       >
         <a-upload
           draggable

@@ -7,7 +7,7 @@
         :bordered="false"
         :header-style="{ border: 'none' }"
         :body-style="{ height: '100%' }"
-        :title="$t('information.form.title')"
+        :title="t('information.form.title')"
       >
         <Information />
       </a-card>
@@ -16,7 +16,7 @@
         :bordered="false"
         :header-style="{ border: 'none' }"
         :body-style="{ height: '100%' }"
-        :title="$t('password.form.title')"
+        :title="t('password.form.title')"
       >
         <Password />
       </a-card>
@@ -25,8 +25,11 @@
 </template>
 
 <script lang="ts" setup>
+  import { useI18n } from 'vue-i18n';
   import Information from './components/information.vue';
   import Password from './components/password.vue';
+
+  const { t } = useI18n();
 </script>
 
 <script lang="ts">

@@ -8,76 +8,76 @@
     <!-- 名称 -->
     <a-form-item
       field="username"
-      :label="$t('information.form.username.label')"
+      :label="t('information.form.username.label')"
       :rules="[
         {
           required: true,
-          message: $t('information.form.username.error.required'),
+          message: t('information.form.username.error.required'),
         },
       ]"
     >
       <a-input
         v-model="infoFormData.username"
-        :placeholder="$t('information.form.username.placeholder')"
+        :placeholder="t('information.form.username.placeholder')"
       />
     </a-form-item>
     <!-- 邮箱 -->
     <a-form-item
       field="email"
-      :label="$t('information.form.email.label')"
+      :label="t('information.form.email.label')"
       :rules="[
         {
           required: true,
-          message: $t('information.form.email.error.required'),
+          message: t('information.form.email.error.required'),
         },
       ]"
     >
       <a-input
         v-model="infoFormData.email"
-        :placeholder="$t('information.form.email.placeholder')"
+        :placeholder="t('information.form.email.placeholder')"
       />
     </a-form-item>
     <!-- 手机 -->
     <a-form-item
       field="phone"
       hide-asterisk
-      :label="$t('information.form.phone.label')"
+      :label="t('information.form.phone.label')"
       :rules="[
         {
           required: false,
-          message: $t('information.form.phone.error.required'),
+          message: t('information.form.phone.error.required'),
         },
       ]"
     >
       <a-input
         v-model="infoFormData.phone"
-        :placeholder="$t('information.form.phone.placeholder')"
+        :placeholder="t('information.form.phone.placeholder')"
       />
     </a-form-item>
     <!-- 部门 -->
     <a-form-item
       field="sector"
       hide-asterisk
-      :label="$t('information.form.sector.label')"
+      :label="t('information.form.sector.label')"
       :rules="[
         {
           required: false,
-          message: $t('information.form.sector.error.required'),
+          message: t('information.form.sector.error.required'),
         },
       ]"
     >
       <a-input
         v-model="infoFormData.sector"
-        :placeholder="$t('information.form.sector.placeholder')"
+        :placeholder="t('information.form.sector.placeholder')"
       />
     </a-form-item>
     <a-form-item>
       <div class="flex gap-4">
         <a-button type="primary" @click="validate">
-          {{ $t('profile.actions.update') }}
+          {{ t('profile.actions.update') }}
         </a-button>
         <a-button type="secondary" @click="reset">
-          {{ $t('profile.actions.reset') }}
+          {{ t('profile.actions.reset') }}
         </a-button>
       </div>
     </a-form-item>

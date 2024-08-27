@@ -33,7 +33,7 @@
         <!-- 清空：标记已读清空列表 -->
         <template #extra>
           <a-button type="text" size="small" @click="handleClearData">
-            {{ $t('messageBox.actions.allClear') }}
+            {{ t('messageBox.actions.allClear') }}
           </a-button>
         </template>
         <a-tab-pane v-for="tab in tabList" :key="tab.key">
@@ -93,7 +93,7 @@
                 type="text"
                 size="small"
                 @click="handleMarkAllRead(messageType)"
-                >{{ $t('messageBox.actions.allRead') }}</a-button
+                >{{ t('messageBox.actions.allRead') }}</a-button
               >
             </template>
           </a-list>
@@ -105,8 +105,11 @@
 
 <script lang="ts" setup>
   import { inject } from 'vue';
+  import { useI18n } from 'vue-i18n';
   import { MessageRecord } from '@/api/message';
   import { useMessage } from './hooks';
+
+  const { t } = useI18n();
 
   const breakpoints = inject('breakpoints') as any;
 

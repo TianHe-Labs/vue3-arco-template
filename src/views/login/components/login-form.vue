@@ -1,6 +1,6 @@
 <template>
   <div class="login-form-wrapper">
-    <div class="login-form-title">{{ $t('login.form.title') }}</div>
+    <div class="login-form-title">{{ t('login.form.title') }}</div>
     <div class="login-form-subtitle">{{ appName }}</div>
     <div class="login-form-error-msg">{{ errorMessage }}</div>
     <a-form
@@ -12,13 +12,13 @@
     >
       <a-form-item
         field="username"
-        :rules="[{ required: true, message: $t('login.form.username.errMsg') }]"
+        :rules="[{ required: true, message: t('login.form.username.errMsg') }]"
         :validate-trigger="['change', 'blur']"
         hide-label
       >
         <a-input
           v-model="loginData.username"
-          :placeholder="$t('login.form.username.placeholder')"
+          :placeholder="t('login.form.username.placeholder')"
         >
           <template #prefix>
             <icon-user />
@@ -27,13 +27,13 @@
       </a-form-item>
       <a-form-item
         field="password"
-        :rules="[{ required: true, message: $t('login.form.password.errMsg') }]"
+        :rules="[{ required: true, message: t('login.form.password.errMsg') }]"
         :validate-trigger="['change', 'blur']"
         hide-label
       >
         <a-input-password
           v-model="loginData.password"
-          :placeholder="$t('login.form.password.placeholder')"
+          :placeholder="t('login.form.password.placeholder')"
           allow-clear
         >
           <template #prefix>
@@ -48,15 +48,15 @@
             :model-value="loginConfig.rememberPassword"
             @change="setRememberPassword as any"
           >
-            {{ $t('login.form.rememberPassword') }}
+            {{ t('login.form.rememberPassword') }}
           </a-checkbox>
-          <a-link>{{ $t('login.form.forgetPassword') }}</a-link>
+          <a-link>{{ t('login.form.forgetPassword') }}</a-link>
         </div>
         <a-button type="primary" html-type="submit" long :loading="loading">
-          {{ $t('login.form.login') }}
+          {{ t('login.form.login') }}
         </a-button>
         <!-- <a-button type="text" long class="login-form-signup-btn">
-          {{ $t('login.form.signup') }}
+          {{ t('login.form.signup') }}
         </a-button> -->
       </a-space>
     </a-form>
