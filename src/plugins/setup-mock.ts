@@ -1,7 +1,7 @@
-import { isDevelopment } from '@/utils';
+// import { isDevelopment } from '@/utils';
 
 export default ({ mock, setup }: { mock?: boolean; setup: () => void }) => {
-  if (mock !== false && isDevelopment) setup();
+  if (mock !== false /* && isDevelopment */) setup();
 };
 
 export const successResponseWrap = (data: any) => {
