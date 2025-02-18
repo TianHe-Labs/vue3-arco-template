@@ -5,8 +5,6 @@ import localeFeedbackPanel from '@/components/feedback-panel/locale/zh-CN';
 
 import localeLogin from '@/views/login/locale/zh-CN';
 
-import localeDashboard from '@/views/dashboard/locale/zh-CN';
-
 import localeUser from '@/views/user/locale/zh-CN';
 
 import localeNotFound from '@/views/not-found/locale/zh-CN';
@@ -29,7 +27,6 @@ export default {
   ...localeMessageBox,
   ...localeFeedbackPanel,
   ...localeLogin,
-  ...localeDashboard,
   ...localeUser,
   ...localeNotFound,
   ...localeErrors,

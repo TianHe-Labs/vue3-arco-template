@@ -1,5 +1,5 @@
 import axios, {
-  type AxiosRequestConfig,
+  type InternalAxiosRequestConfig,
   type AxiosResponse,
   type AxiosError,
 } from 'axios';
@@ -18,7 +18,7 @@ if (import.meta.env.VITE_API_BASE) {
 
 // add request interceptors(Authorization)
 axios.interceptors.request.use(
-  (config: AxiosRequestConfig) => {
+  (config: InternalAxiosRequestConfig) => {
     // 如果发起请求时已经传入，则不再处理
     // 例如 updateUserToken with refreshToken
     if (config.headers?.Authorization) {
@@ -28,9 +28,9 @@ axios.interceptors.request.use(
     const userStore = useUserStore();
     const token = userStore.accessToken;
     if (token) {
-      if (!config.headers) {
-        config.headers = {};
-      }
+      // if (!config.headers) {
+      //   config.headers = {};
+      // }
       config.headers.Authorization = `Bearer ${token}`;
     }
     return config;
@@ -73,7 +73,7 @@ axios.interceptors.response.use(
       // Access Token 过期
       // 保存本次未成功的请求，在拿到新的 access token 后重发
       // 这里最好使用一个队列，保存为成功的请求
-      const { url, method, data } = error.config as AxiosRequestConfig;
+      const { url, method, data } = error.config as InternalAxiosRequestConfig;
       // 获取新的 access token，重发请求
       await userStore.updateUserToken();
       return axios.request({ url, method, data });

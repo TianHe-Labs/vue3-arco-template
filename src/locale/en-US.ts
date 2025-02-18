@@ -5,8 +5,6 @@ import localeFeedbackPanel from '@/components/feedback-panel/locale/en-US';
 
 import localeLogin from '@/views/login/locale/en-US';
 
-import localeDashboard from '@/views/dashboard/locale/en-US';
-
 import localeUser from '@/views/user/locale/en-US';
 
 import localeNotFound from '@/views/not-found/locale/en-US';
@@ -29,7 +27,6 @@ export default {
   ...localeMessageBox,
   ...localeFeedbackPanel,
   ...localeLogin,
-  ...localeDashboard,
   ...localeUser,
   ...localeNotFound,
   ...localeErrors,

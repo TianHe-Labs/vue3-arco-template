@@ -9,7 +9,7 @@
         </a-button>
       </a-tooltip> -->
     <!-- 语言 -->
-    <a-dropdown trigger="click" @select="toggleLocale as any">
+    <!-- <a-dropdown trigger="click" @select="toggleLocale as any">
       <a-tooltip mini :content="t('toolbar.language.toggle')">
         <a-button class="nav-btn" type="outline" shape="circle">
           <template #icon>
@@ -29,7 +29,7 @@
           {{ item.label }}
         </a-doption>
       </template>
-    </a-dropdown>
+    </a-dropdown> -->
     <!-- 主题 -->
     <a-tooltip
       mini
@@ -52,7 +52,7 @@
       </a-button>
     </a-tooltip>
     <!-- 反馈 -->
-    <a-tooltip mini :content="t('toolbar.feedback')">
+    <!-- <a-tooltip mini :content="t('toolbar.feedback')">
       <a-button
         class="nav-btn"
         type="outline"
@@ -61,9 +61,9 @@
       >
         <icon-customer-service />
       </a-button>
-    </a-tooltip>
+    </a-tooltip> -->
     <!-- 消息 -->
-    <a-tooltip mini :content="t('toolbar.message')">
+    <!-- <a-tooltip mini :content="t('toolbar.message')">
       <a-badge :count="renderStats?.total || 0" dot>
         <a-button
           class="nav-btn"
@@ -74,7 +74,7 @@
           <icon-notification />
         </a-button>
       </a-badge>
-    </a-tooltip>
+    </a-tooltip> -->
     <!-- 全屏 -->
     <a-tooltip
       mini
@@ -160,7 +160,7 @@
         {{ t('menu.user') }}
       </a-button>
       <!-- 语言 -->
-      <a-button
+      <!-- <a-button
         long
         size="small"
         shape="round"
@@ -171,7 +171,7 @@
           <icon-language />
         </template>
         {{ t('toolbar.language.toggle') }}
-      </a-button>
+      </a-button> -->
       <div class="grid grid-cols-2 gap-3">
         <!-- 主题 -->
         <a-button
@@ -208,15 +208,15 @@
 
 <script lang="ts" setup>
   import { computed, inject } from 'vue';
-  import { Message } from '@arco-design/web-vue';
+  // import { Message } from '@arco-design/web-vue';
   import { useDark, useToggle, useFullscreen } from '@vueuse/core';
   import { useI18n } from 'vue-i18n';
   import { useRouter } from 'vue-router';
-  import { LOCALE_OPTIONS } from '@/locale';
+  // import { LOCALE_OPTIONS } from '@/locale';
   import useLogout from '@/hooks/logout';
   import { useAppStore } from '@/store';
   import { isDevelopment } from '@/utils';
-  import { useMessage } from '../message-box/hooks';
+  // import { useMessage } from '../message-box/hooks';
 
   withDefaults(
     defineProps<{
@@ -231,22 +231,22 @@
 
   const router = useRouter();
   // 语言
-  const { t, locale } = useI18n();
-  const locales = [...LOCALE_OPTIONS];
-  const toggleLocale = (value?: string) => {
-    const target =
-      value ||
-      locales[
-        (locales.findIndex((item) => item.value === locale.value) + 1) %
-          locales.length
-      ].value;
-    if (locale.value === target) {
-      return;
-    }
-    locale.value = target;
-    localStorage.setItem('arco-locale', target);
-    Message.success(t('toolbar.language.toggle.message'));
-  };
+  const { t /* , locale */ } = useI18n();
+  // const locales = [...LOCALE_OPTIONS];
+  // const toggleLocale = (value?: string) => {
+  //   const target =
+  //     value ||
+  //     locales[
+  //       (locales.findIndex((item) => item.value === locale.value) + 1) %
+  //         locales.length
+  //     ].value;
+  //   if (locale.value === target) {
+  //     return;
+  //   }
+  //   locale.value = target;
+  //   localStorage.setItem('arco-locale', target);
+  //   Message.success(t('toolbar.language.toggle.message'));
+  // };
 
   // 主题
   const theme = computed(() => {
@@ -268,10 +268,10 @@
   };
 
   // 反馈
-  const feedbackPanelVisible = inject('feedbackPanelVisible') as boolean;
+  // const feedbackPanelVisible = inject('feedbackPanelVisible') as boolean;
 
   // 消息
-  const { setPopoverVisible, renderStats } = useMessage();
+  // const { setPopoverVisible, renderStats } = useMessage();
 
   // 全屏
   const { isFullscreen, toggle: toggleFullScreen } = useFullscreen();
