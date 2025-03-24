@@ -8,6 +8,9 @@ on:
 env:
   REGISTRY: ghcr.io
 
+  REGISTRY_DOMAIN: registry.cn-shanghai.aliyuncs.com
+  REGISTRY_NAMESPACE: internal-projects
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -50,23 +53,38 @@ jobs:
       - name: Build app
         run: pnpm run build
 
-      - name: Login to ghcr
+      # - name: Login to ghcr
+      #   uses: docker/login-action@v3
+      #   with:
+      #     registry: ${{ env.REGISTRY }}
+      #     username: ${{ github.actor }}
+      #     password: ${{ secrets.GITHUB_TOKEN }}
+
+      # - name: Lowercase the repo name
+      #   run: echo "IMAGE=${GITHUB_REPOSITORY,,}" >>${GITHUB_ENV}
+
+      - name: Login to acr
         uses: docker/login-action@v3
         with:
-          registry: ${{ env.REGISTRY }}
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
+          registry: ${{ env.REGISTRY_DOMAIN }}
+          username: ${{ secrets.REGISTRY_USERNAME }}
+          password: ${{ secrets.REGISTRY_PASSWORD }}
 
       - name: Lowercase the repo name
-        run: echo "IMAGE=${GITHUB_REPOSITORY,,}" >>${GITHUB_ENV}
+        run: |
+          echo "IMAGE=${GITHUB_REPOSITORY,,}" >>${GITHUB_ENV}
+          IMAGE_NAME=$(echo $GITHUB_REPOSITORY | cut -d'/' -f2)
+          echo "IMAGE_NAME=${IMAGE_NAME,,}" >> $GITHUB_ENV
 
+      # ${{ env.REGISTRY }}/${{ env.IMAGE }}:latest
       - name: Build docker and push
         uses: docker/build-push-action@v5
         with:
           context: .
           file: Lite.Dockerfile
           push: true
-          tags: ${{ env.REGISTRY }}/${{ env.IMAGE }}:latest
+          tags: |
+            ${{ env.REGISTRY_DOMAIN }}/${{env.REGISTRY_NAMESPACE}}/${{ env.IMAGE_NAME }}:latest
 
       - name: Deploy to Coolify
         run: |
