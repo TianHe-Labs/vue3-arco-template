@@ -9,8 +9,8 @@ export type LoginRes = Pick<UserState, 'accessToken' | 'refreshToken'>;
 export function login(data: LoginParams) {
   // 有时候前端的有些字段和后端接口不一致
   // 为了避免大面积修改变量，可以只在接口这里做一下映射处理
-  // const cleanedData = { ...data, xxx: '' }
-  return axios.post<LoginRes>('/api/user/login', data);
+  const cleanedData = { ...data, account: data.username };
+  return axios.post<LoginRes>('/api/user/login', cleanedData);
 }
 
 // 刷新令牌
@@ -48,7 +48,10 @@ export type UpdateUserInfoParams = Omit<
 export type UpdateUserInfoRes = Pick<UserState, 'username'>;
 
 export function updateUserInfo(data: UpdateUserInfoParams) {
-  return axios.put<UpdateUserInfoRes>('/api/user/info/update', data);
+  // 有时候前端的有些字段和后端接口不一致
+  // 为了避免大面积修改变量，可以只在接口这里做一下映射处理
+  const cleanedData = { ...data, account: data.username };
+  return axios.put<UpdateUserInfoRes>('/api/user/info/update', cleanedData);
 }
 
 // 更新用户密码

@@ -1,6 +1,11 @@
 export default {
   'menu.user.profile': '用户设置',
 
+  'profile.role': '用户角色',
+  'profile.role.developer': '系统开发者',
+  'profile.role.admin': '系统管理员',
+  'profile.role.user': '系统用户',
+
   'profile.actions.update': '保存',
   'profile.actions.update.success.message': '更新成功',
   'profile.actions.update.failure.message': '更新失败',
@@ -8,9 +13,9 @@ export default {
   'profile.actions.reset': '重置',
 
   'information.form.title': '用户信息',
-  'information.form.username.label': '用户名称',
-  'information.form.username.placeholder': '请输入用户名称',
-  'information.form.username.error.required': '用户名称不可为空',
+  'information.form.username.label': '账号名称',
+  'information.form.username.placeholder': '请输入账号名称',
+  'information.form.username.error.required': '账号名称不可为空',
   'information.form.phone.label': '手机号码',
   'information.form.phone.placeholder': `请输入手机号码，如178xxxxxxxx`,
   'information.form.phone.error.required': '手机号码不可为空',
@@ -30,7 +35,7 @@ export default {
   'password.form.newPassword.placeholder': '请输入新密码',
   'password.form.newPassword.error.required': '新密码不可为空',
   'password.form.newPassword.error.short': '新密码不可少于8个字符',
-  'password.form.confirmPassword.label': '确认密码',
+  'password.form.confirmPassword.label': '确认新密码',
   'password.form.confirmPassword.placeholder': '请确认新密码',
   'password.form.confirmPassword.error.required': '密码不可为空',
   'password.form.confirmPassword.error.invalid': '与新密码不一致',

@@ -56,8 +56,8 @@
     </a-layout>
   </a-scrollbar>
 
-  <MessageBox />
-  <FeedbackPanel />
+  <!-- <MessageBox /> -->
+  <!-- <FeedbackPanel /> -->
 </template>
 
 <script lang="ts" setup>
@@ -68,17 +68,17 @@
   import Toolbar from '@/components/toolbar/index.vue';
   import Footer from '@/components/footer/index.vue';
   import TabBar from '@/components/tab-bar/index.vue';
-  import { provideMessage } from '@/components/message-box/hooks';
-  import MessageBox from '@/components/message-box/index.vue';
-  import FeedbackPanel from '@/components/feedback-panel/index.vue';
+  // import { provideMessage } from '@/components/message-box/hooks';
+  // import MessageBox from '@/components/message-box/index.vue';
+  // import FeedbackPanel from '@/components/feedback-panel/index.vue';
   import PageLayout from './page-layout.vue';
 
   // 消息
-  provideMessage();
+  // provideMessage();
 
   // 反馈
-  const feedbackPanelVisible = ref<boolean>(false);
-  provide('feedbackPanelVisible', feedbackPanelVisible);
+  // const feedbackPanelVisible = ref<boolean>(false);
+  // provide('feedbackPanelVisible', feedbackPanelVisible);
 
   // 响应式
   const breakpoints = inject('breakpoints') as any;
@@ -131,7 +131,7 @@
 
 <style>
   :root {
-    --nav-height: 80px;
+    --nav-height: 64px;
     --toolbar-vertical-height: 90px;
   }
 </style>
@@ -153,7 +153,7 @@
     z-index: 99;
     height: 100%;
     transition: all 0.2s cubic-bezier(0.34, 0.69, 0.1, 1);
-
+    // background-color: transparent !important;
     &::after {
       position: absolute;
       top: 0;
@@ -165,7 +165,7 @@
       content: '';
     }
 
-    > :deep(.arco-layout-sider-children) {
+    & > .arco-layout-sider-children {
       overflow-y: hidden;
     }
   }

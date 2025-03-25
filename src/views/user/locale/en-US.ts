@@ -1,6 +1,11 @@
 export default {
   'menu.user.profile': 'User Profile',
 
+  'profile.role': 'User Role',
+  'profile.role.developer': 'Developer',
+  'profile.role.admin': 'Admin',
+  'profile.role.user': 'User',
+
   'profile.actions.update': 'Save',
   'profile.actions.update.success.message': 'Update success',
   'profile.actions.update.failure.message': 'Update failure',

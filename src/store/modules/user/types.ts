@@ -1,18 +1,24 @@
 // eslint-disable-next-line no-shadow
 export enum USERROLE {
+  DEVELOPER = 'developer',
   ADMIN = 'admin',
   USER = 'user',
 }
 
 export interface UserState {
   username?: string;
-  role?: USERROLE.ADMIN;
+  nickname?: string;
 
   password?: string;
 
+  role?: USERROLE.ADMIN;
+
   email?: string;
   phone?: string;
+
   sector?: string;
+  status?: string;
+  avatar?: string;
 
   accessToken?: string;
   refreshToken?: string;

@@ -2,7 +2,7 @@
   <div v-if="mode === 'horizontal'" class="flex gap-5 items-center toolbar">
     <!-- 搜索 -->
     <!-- <a-tooltip mini :content="t('toolbar.search')">
-        <a-button class="nav-btn" type="outline" shape="circle">
+        <a-button class="nav-btn"  shape="circle">
           <template #icon>
             <icon-search />
           </template>
@@ -11,7 +11,7 @@
     <!-- 语言 -->
     <!-- <a-dropdown trigger="click" @select="toggleLocale as any">
       <a-tooltip mini :content="t('toolbar.language.toggle')">
-        <a-button class="nav-btn" type="outline" shape="circle">
+        <a-button class="nav-btn"  shape="circle">
           <template #icon>
             <icon-language />
           </template>
@@ -39,12 +39,7 @@
           : t('toolbar.theme.toLight.message')
       "
     >
-      <a-button
-        class="nav-btn"
-        type="outline"
-        shape="circle"
-        @click="handleToggleTheme"
-      >
+      <a-button class="nav-btn" shape="circle" @click="handleToggleTheme">
         <template #icon>
           <icon-moon-fill v-if="theme === 'dark'" />
           <icon-sun-fill v-else />
@@ -55,7 +50,7 @@
     <!-- <a-tooltip mini :content="t('toolbar.feedback')">
       <a-button
         class="nav-btn"
-        type="outline"
+
         shape="circle"
         @click.stop="feedbackPanelVisible = !feedbackPanelVisible"
       >
@@ -67,7 +62,7 @@
       <a-badge :count="renderStats?.total || 0" dot>
         <a-button
           class="nav-btn"
-          type="outline"
+
           shape="circle"
           @click.stop="setPopoverVisible"
         >
@@ -82,12 +77,7 @@
         isFullscreen ? t('toolbar.screen.toExit') : t('toolbar.screen.toFull')
       "
     >
-      <a-button
-        class="nav-btn"
-        type="outline"
-        shape="circle"
-        @click="toggleFullScreen"
-      >
+      <a-button class="nav-btn" shape="circle" @click="toggleFullScreen">
         <template #icon>
           <icon-fullscreen-exit v-if="isFullscreen" />
           <icon-fullscreen v-else />
@@ -99,7 +89,6 @@
       <a-button
         v-if="isDevelopment"
         class="nav-btn"
-        type="outline"
         shape="circle"
         @click="setVisible"
       >
@@ -108,12 +97,50 @@
         </template>
       </a-button>
     </a-tooltip>
+
+    <!-- <a-divider direction="vertical" :margin="4" /> -->
     <!-- 用户 -->
     <a-dropdown trigger="click">
-      <a-avatar :size="32" :style="{ cursor: 'pointer' }">
-        <icon-user />
-      </a-avatar>
+      <div
+        class="flex gap-2 items-center pl-1.5 pr-3.5 py-1.5 rounded-3xl hover:bg-fill-1 transition transition-colors duration-150 ease-out cursor-pointer"
+        flex="~ gap-2"
+      >
+        <a-avatar
+          :size="32"
+          :style="{
+            border: '3px solid var(--color-border-2)',
+            background: 'rgba(var(--primary-5))',
+          }"
+        >
+          <img v-if="userStore?.avatar" alt="avatar" :src="userStore?.avatar" />
+          <span v-else-if="userStore?.nickname" class="uppercase">{{
+            userStore?.nickname?.substring(0, 1)
+          }}</span>
+          <icon-user v-else />
+        </a-avatar>
+        <div>
+          <div
+            :class="[
+              '-mt-1 font-medium text-text-1',
+              { 'text-xl': !userStore?.status },
+            ]"
+          >
+            {{ userStore.nickname || userStore.username }}
+          </div>
+          <div v-if="userStore?.status" class="-ml-0.5 !text-10px text-text-2">
+            <icon-bulb />
+            {{ userStore.status }}
+          </div>
+        </div>
+      </div>
       <template #content>
+        <div class="flex flex-col px-3 pt-1 gap-y-2">
+          <a-typography-text v-if="userStore?.role" class="!text-sm">
+            <icon-idcard />
+            {{ $t(`profile.role.${userStore.role}`) }}
+          </a-typography-text>
+        </div>
+        <a-divider :margin="8" />
         <a-doption>
           <a-space @click="router.push({ name: 'User' })">
             <icon-user />
@@ -214,7 +241,7 @@
   import { useRouter } from 'vue-router';
   // import { LOCALE_OPTIONS } from '@/locale';
   import useLogout from '@/hooks/logout';
-  import { useAppStore } from '@/store';
+  import { useAppStore, useUserStore } from '@/store';
   import { isDevelopment } from '@/utils';
   // import { useMessage } from '../message-box/hooks';
 
@@ -226,6 +253,8 @@
       mode: 'horizontal',
     }
   );
+
+  const userStore = useUserStore();
 
   const appStore = useAppStore();
 
@@ -297,7 +326,11 @@
     .nav-btn {
       color: rgb(var(--gray-8));
       font-size: 16px;
-      border-color: rgb(var(--gray-2));
+      background-color: transparent;
+
+      &:hover {
+        background-color: rgb(var(--gray-2));
+      }
     }
   }
 </style>

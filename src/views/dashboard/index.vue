@@ -1,5 +1,5 @@
 <template>
-  <div class="h-full flex flex-col px-5 py-4">
+  <div class="h-full flex flex-col p-4 gap-4">
     <Breadcrumb :items="['仪表盘']" />
     <Banner />
   </div>

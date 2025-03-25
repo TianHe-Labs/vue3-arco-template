@@ -8,7 +8,7 @@
         <router-link v-if="isBreadcrumbRoute(item)" :to="item">
           {{ item.label }}
         </router-link>
-        <template v-else-if="te(item)">
+        <template v-else-if="t(item)">
           {{ t(item) }}
         </template>
         <template v-else>
@@ -20,10 +20,10 @@
 </template>
 
 <script lang="ts" setup>
-  import { BreadcrumbRoute } from '@arco-design/web-vue';
+  import type { BreadcrumbRoute } from '@arco-design/web-vue';
   import { useI18n } from 'vue-i18n';
 
-  const { te, t } = useI18n();
+  const { t } = useI18n();
 
   withDefaults(
     defineProps<{

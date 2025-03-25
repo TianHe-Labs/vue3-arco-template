@@ -11,11 +11,14 @@ import { USERROLE, UserState } from './types';
 const useUserStore = defineStore('user', {
   state: (): UserState => ({
     username: undefined,
+    nickname: undefined,
+
     role: undefined,
 
     email: 'example@skyvault.cn',
-    phone: '17800000000',
-    sector: '',
+    phone: '17000000000',
+    sector: '网络部',
+    status: '',
 
     accessToken: undefined,
     refreshToken: undefined,
@@ -42,7 +45,9 @@ const useUserStore = defineStore('user', {
     async login(loginData: LoginParams) {
       try {
         const { data } = await loginApi(loginData);
-        const formatedData = mapKeys(data, (_, key) => camelCase(key));
+        const formatedData = mapKeys(data, (_: any, key: string) =>
+          camelCase(key)
+        );
         if (!formatedData?.accessToken || !formatedData?.refreshToken) {
           throw new Error();
         }
@@ -88,7 +93,9 @@ const useUserStore = defineStore('user', {
       const params = { refreshToken: this.$state?.refreshToken };
       try {
         const { data } = await updateUserTokenApi(params);
-        const formatedData = mapKeys(data, (_, key) => camelCase(key));
+        const formatedData = mapKeys(data, (_: any, key: string) =>
+          camelCase(key)
+        );
         if (!formatedData?.accessToken) {
           throw new Error();
         }

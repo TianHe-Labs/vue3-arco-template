@@ -3,13 +3,17 @@
     <!-- 导航栏：左侧 -->
     <div class="flex gap-2 items-center left-side">
       <div class="flex gap-2 items-center">
-        <img alt="logo" src="~@/assets/logo.svg?url" width="24" />
-        <a-typography-title
-          :style="{ margin: 0, fontSize: '18px' }"
-          :heading="5"
+        <!-- <img alt="logo" src="~@/assets/logo.svg?url" width="24" /> -->
+        <a-typography-text
+          bold
+          type="primary"
+          :style="{
+            fontSize: '28px',
+            fontFamily: 'YouSheBiaoTiHei',
+          }"
         >
           {{ appName }}
-        </a-typography-title>
+        </a-typography-text>
       </div>
     </div>
     <!-- 导航栏：菜单 -->
@@ -61,6 +65,7 @@
 
 <style lang="less" scoped>
   .navbar {
+    // background-color: transparent;
     background-color: var(--color-bg-2);
     border-bottom: 1px solid var(--color-border);
   }
