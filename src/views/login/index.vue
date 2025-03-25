@@ -1,12 +1,8 @@
 <template>
   <div class="h-screen flex">
-    <div class="lg:w-500px banner">
-      <LoginBanner />
-    </div>
-    <div class="flex-auto relative flex justify-center items-center">
-      <LoginForm />
-      <Footer class="absolute bottom-0" />
-    </div>
+    <LoginBanner class="w-0px lg:w-560px" />
+    <LoginForm class="self-center" />
+    <Footer class="absolute bottom-0 left-0px lg:left-560px right-0" />
   </div>
 </template>
 
@@ -15,9 +11,3 @@
   import LoginBanner from './components/banner.vue';
   import LoginForm from './components/login-form.vue';
 </script>
-
-<style lang="less" scoped>
-  .banner {
-    background: linear-gradient(163.85deg, #1d2129 0%, #00308f 100%);
-  }
-</style>

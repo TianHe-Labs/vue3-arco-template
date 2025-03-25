@@ -1,7 +1,7 @@
 import type { RouteRecordNormalized } from 'vue-router';
 
 export interface AppState {
-  globalSettingEnabled: boolean;
+  appSettingEnabled: boolean;
   theme: string;
   colorWeak: boolean;
   themeColor: string;

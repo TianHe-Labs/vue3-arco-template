@@ -55,3 +55,7 @@ export function isWindow(el: any): el is Window {
 export function isPhone(obj: any): boolean {
   return /^1[3-9]\d{9}$/.test(obj);
 }
+
+export function isEmail(obj: any): boolean {
+  return /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(obj);
+}

@@ -1,5 +1,4 @@
 import { type Ref, provide, inject, ref, computed, shallowRef } from 'vue';
-import { useI18n } from 'vue-i18n';
 import { Message } from '@arco-design/web-vue';
 import { dayjs } from '@/utils/format';
 import useLoading from '@/hooks/loading';
@@ -50,7 +49,6 @@ export function provideMessage(): MessageCtx {
     triggerRef.value?.dispatchEvent(newEvent);
   };
 
-  const { t } = useI18n();
   const { loading, setLoading } = useLoading(true);
 
   const sourceData = ref<MessageRecord[]>([]);
@@ -58,11 +56,11 @@ export function provideMessage(): MessageCtx {
   const tabList: TabItem[] = [
     {
       key: 'notice',
-      title: t('messageBox.tab.title.notice'),
+      title: '通知',
     },
     {
       key: 'alert',
-      title: t('messageBox.tab.title.alert'),
+      title: '告警',
     },
   ];
   const messageType = ref<MessageType>('notice');

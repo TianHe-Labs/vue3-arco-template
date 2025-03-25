@@ -1,67 +1,45 @@
-import type { RouteRecordNormalized } from 'vue-router';
 import axios from 'axios';
+import qs from 'query-string';
+import { List, Pagination } from '@/global';
 import { UserState } from '@/store/modules/user/types';
 
-// 登录
-export type LoginParams = Pick<UserState, 'username' | 'password'>;
-export type LoginRes = Pick<UserState, 'accessToken' | 'refreshToken'>;
+export interface UserModel
+  extends Omit<UserState, 'accessToken' | 'refreshToken'> {}
 
-export function login(data: LoginParams) {
-  // 有时候前端的有些字段和后端接口不一致
-  // 为了避免大面积修改变量，可以只在接口这里做一下映射处理
-  const cleanedData = { ...data, account: data.username };
-  return axios.post<LoginRes>('/api/user/login', cleanedData);
-}
+export interface QueryUserListReq extends Partial<UserModel> {}
+export type QueryUserListRes = List<UserModel>;
 
-// 刷新令牌
-export type UpdateRefreshTokenParams = Pick<UserState, 'refreshToken'>;
-export type UpdateRefreshTokenRes = Pick<UserState, 'accessToken'>;
+export function queryUserList(params: QueryUserListReq & Pagination) {
+  const { current, pageSize, ...data } = params;
 
-export function updateUserToken(params: UpdateRefreshTokenParams) {
-  return axios.get<UpdateRefreshTokenRes>('/api/user/refresh', {
-    headers: {
-      Authorization: `Bearer ${params.refreshToken}`,
+  return axios.post<QueryUserListRes>('/api/user/search', data, {
+    params: { current, pageSize },
+    paramsSerializer: (obj: Record<string, any>) => {
+      return qs.stringify(obj);
     },
   });
 }
 
-// 获取用户信息
-export type QueryUserInfoRes = Omit<
-  UserState,
-  'password' | 'accessToken' | 'refreshToken'
->;
+// 创建/更新
+// 创建时没有ID
+export type CreateOrUpdateUserReq = Partial<UserModel>;
+export type CreateOrUpdateUserRes = Pick<UserModel, 'id'>;
 
-export function queryUserInfo() {
-  return axios.get<QueryUserInfoRes>('/api/user/info');
+export function createOrUpdateUser(data: CreateOrUpdateUserReq) {
+  return axios.post('/api/user/create-update', data);
 }
 
-// 获取用户菜单（由后端完全控制登录用户路由权限）
-export function queryServerMenuList() {
-  return axios.post<RouteRecordNormalized[]>('/api/user/menu');
+// 删除
+// 兼容批量
+export interface DeleteUserReq {
+  ids: UserModel['id'][];
 }
+// 返回结果虽然定义上与请求相同，但是它代表的是删除失败的ID
+// 以此来告诉用户哪些操作失败了
+export type DeleteUserRes = DeleteUserReq;
 
-// 更新用户信息（除密码）
-export type UpdateUserInfoParams = Omit<
-  UserState,
-  'password' | 'accessToken' | 'refreshToken'
->;
-export type UpdateUserInfoRes = Pick<UserState, 'username'>;
-
-export function updateUserInfo(data: UpdateUserInfoParams) {
-  // 有时候前端的有些字段和后端接口不一致
-  // 为了避免大面积修改变量，可以只在接口这里做一下映射处理
-  const cleanedData = { ...data, account: data.username };
-  return axios.put<UpdateUserInfoRes>('/api/user/info/update', cleanedData);
-}
-
-// 更新用户密码
-export interface UpdateUserPasswordParams {
-  oldPassword: string;
-  newPassword: string;
-  confirmPassword?: string; // confirmPassword === newPassword 前端检查即可
-}
-export type UpdateUserPasswordRes = Pick<UserState, 'username'>;
-
-export function updateUserPassword(data: UpdateUserPasswordParams) {
-  return axios.post<UpdateUserPasswordRes>('/api/user/password/update', data);
+export function deleteUser(data: DeleteUserReq) {
+  return axios.delete('/api/user/delete', {
+    data,
+  });
 }

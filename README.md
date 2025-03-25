@@ -103,7 +103,7 @@
 
   - **layouts**: common layout components
 
-  - **locale**: ``i18n``
+  - **locale**: ``i18n``仅用于显示内容与实际数据的映射，不做系统级国际化
 
   - **mock**: mock data in development
 
@@ -113,13 +113,13 @@
 
   - **store**: global data store, eg: ``app``(theme, ...),  ``tab-bar``(multi page), ``user``(login, userinfo, ...), ``oss``(ali oss sts)
 
-  - **types**: global type definition
-
   - **utils**: tool function, eg: ``formatX``(preset dayjs), ``hasX``, ``isY``, ``canZ``, ``transformA``, ``index``(Unclassifiable fragmentary functions & Unified entry for various types of functions)
 
   - **views**: Vue3 view
 
   - **App.vue**: Vue3 entry
+
+  - **global.d.ts**: global type definition
 
   - **env.d.ts**: env type defintion, eg: ``VITE_APP_NAME``, ``VITE_DEV_PROXY``
 

@@ -3,14 +3,11 @@
     <a-breadcrumb-item>
       <icon-apps />
     </a-breadcrumb-item>
-    <template v-for="(item, index) in items" :key="index">
+    <template v-for="item in items" :key="item?.path || item">
       <a-breadcrumb-item class="opacity-75">
         <router-link v-if="isBreadcrumbRoute(item)" :to="item">
           {{ item.label }}
         </router-link>
-        <template v-else-if="t(item)">
-          {{ t(item) }}
-        </template>
         <template v-else>
           {{ item }}
         </template>
@@ -21,9 +18,6 @@
 
 <script lang="ts" setup>
   import type { BreadcrumbRoute } from '@arco-design/web-vue';
-  import { useI18n } from 'vue-i18n';
-
-  const { t } = useI18n();
 
   withDefaults(
     defineProps<{

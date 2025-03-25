@@ -4,24 +4,25 @@ import {
   login as loginApi,
   queryUserInfo as queryUserInfoApi,
   updateUserToken as updateUserTokenApi,
-} from '@/api/user';
+} from '@/api/account';
 import { camelCase, mapKeys } from 'lodash';
 import { USERROLE, UserState } from './types';
 
 const useUserStore = defineStore('user', {
   state: (): UserState => ({
-    username: undefined,
-    nickname: undefined,
+    id: '',
+    username: '',
+    nickname: '',
 
     role: undefined,
 
-    email: 'example@skyvault.cn',
+    email: 'admin@example.cn',
     phone: '17000000000',
     sector: '网络部',
     status: '',
 
-    accessToken: undefined,
-    refreshToken: undefined,
+    accessToken: '',
+    refreshToken: '',
   }),
 
   getters: {

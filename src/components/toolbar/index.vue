@@ -1,44 +1,15 @@
 <template>
   <div v-if="mode === 'horizontal'" class="flex gap-5 items-center toolbar">
     <!-- 搜索 -->
-    <!-- <a-tooltip mini :content="t('toolbar.search')">
+    <!-- <a-tooltip mini content="搜索">
         <a-button class="nav-btn"  shape="circle">
           <template #icon>
             <icon-search />
           </template>
         </a-button>
       </a-tooltip> -->
-    <!-- 语言 -->
-    <!-- <a-dropdown trigger="click" @select="toggleLocale as any">
-      <a-tooltip mini :content="t('toolbar.language.toggle')">
-        <a-button class="nav-btn"  shape="circle">
-          <template #icon>
-            <icon-language />
-          </template>
-        </a-button>
-      </a-tooltip>
-      <template #content>
-        <a-doption
-          v-for="item in locales"
-          :key="item.value"
-          :value="item.value"
-        >
-          <template #icon>
-            <icon-check v-show="item.value === locale" />
-          </template>
-          {{ item.label }}
-        </a-doption>
-      </template>
-    </a-dropdown> -->
     <!-- 主题 -->
-    <a-tooltip
-      mini
-      :content="
-        theme === 'light'
-          ? t('toolbar.theme.toDark.tooltip')
-          : t('toolbar.theme.toLight.message')
-      "
-    >
+    <a-tooltip mini :content="theme === 'light' ? '切换为暗色' : '切换为亮色'">
       <a-button class="nav-btn" shape="circle" @click="handleToggleTheme">
         <template #icon>
           <icon-moon-fill v-if="theme === 'dark'" />
@@ -47,7 +18,7 @@
       </a-button>
     </a-tooltip>
     <!-- 反馈 -->
-    <!-- <a-tooltip mini :content="t('toolbar.feedback')">
+    <!-- <a-tooltip mini content="问题反馈
       <a-button
         class="nav-btn"
 
@@ -58,7 +29,7 @@
       </a-button>
     </a-tooltip> -->
     <!-- 消息 -->
-    <!-- <a-tooltip mini :content="t('toolbar.message')">
+    <!-- <a-tooltip mini content="消息通知">
       <a-badge :count="renderStats?.total || 0" dot>
         <a-button
           class="nav-btn"
@@ -71,12 +42,7 @@
       </a-badge>
     </a-tooltip> -->
     <!-- 全屏 -->
-    <a-tooltip
-      mini
-      :content="
-        isFullscreen ? t('toolbar.screen.toExit') : t('toolbar.screen.toFull')
-      "
-    >
+    <a-tooltip mini :content="isFullscreen ? '退出全屏' : '切换全屏'">
       <a-button class="nav-btn" shape="circle" @click="toggleFullScreen">
         <template #icon>
           <icon-fullscreen-exit v-if="isFullscreen" />
@@ -85,7 +51,7 @@
       </a-button>
     </a-tooltip>
     <!-- 设置 -->
-    <a-tooltip mini :content="t('settings.title')">
+    <a-tooltip mini content="应用设置">
       <a-button
         v-if="isDevelopment"
         class="nav-btn"
@@ -98,7 +64,6 @@
       </a-button>
     </a-tooltip>
 
-    <!-- <a-divider direction="vertical" :margin="4" /> -->
     <!-- 用户 -->
     <a-dropdown trigger="click">
       <div
@@ -137,24 +102,20 @@
         <div class="flex flex-col px-3 pt-1 gap-y-2">
           <a-typography-text v-if="userStore?.role" class="!text-sm">
             <icon-idcard />
-            {{ $t(`profile.role.${userStore.role}`) }}
+            {{ $t(`account.roles.${userStore.role}`) }}
           </a-typography-text>
         </div>
         <a-divider :margin="8" />
         <a-doption>
-          <a-space @click="router.push({ name: 'User' })">
+          <a-space @click="router.push({ name: 'Account' })">
             <icon-user />
-            <span>
-              {{ t('menu.user') }}
-            </span>
+            <span> 账号设置 </span>
           </a-space>
         </a-doption>
         <a-doption>
           <a-space @click="handleLogout">
             <icon-export />
-            <span>
-              {{ t('toolbar.logout') }}
-            </span>
+            <span> 退出登录 </span>
           </a-space>
         </a-doption>
       </template>
@@ -163,71 +124,48 @@
   <template v-else>
     <div class="flex flex-col gap-4 toolbar">
       <!-- 搜索 -->
-      <a-input
-        class="rounded-2xl"
-        size="small"
-        :placeholder="t('toolbar.search')"
-      />
-      <!-- 用户中心 -->
+      <a-input class="rounded-2xl" size="small" placeholder="搜索" />
+
+      <!-- 主题 -->
       <a-button
         long
         size="small"
         shape="round"
         class="justify-start"
-        @click="
-          () => {
-            router.push({ name: 'User' });
-            toggleDrawerMenu();
-          }
-        "
+        @click="handleToggleTheme"
       >
         <template #icon>
-          <icon-user />
+          <icon-moon-fill v-if="theme === 'dark'" />
+          <icon-sun-fill v-else />
         </template>
-        {{ t('menu.user') }}
+        {{ theme === 'light' ? '切换为暗色' : '切换为亮色' }}
       </a-button>
-      <!-- 语言 -->
-      <!-- <a-button
-        long
-        size="small"
-        shape="round"
-        class="justify-start"
-        @click="toggleLocale()"
-      >
-        <template #icon>
-          <icon-language />
-        </template>
-        {{ t('toolbar.language.toggle') }}
-      </a-button> -->
+
       <div class="grid grid-cols-2 gap-3">
-        <!-- 主题 -->
+        <!-- 账号设置 -->
         <a-button
           size="small"
           shape="round"
           class="justify-start"
-          @click="handleToggleTheme"
+          @click="
+            () => {
+              router.push({ name: 'Account' });
+              toggleDrawerMenu();
+            }
+          "
         >
           <template #icon>
-            <icon-moon-fill v-if="theme === 'dark'" />
-            <icon-sun-fill v-else />
+            <icon-user />
           </template>
-          {{
-            theme === 'light'
-              ? t('toolbar.theme.toDark')
-              : t('toolbar.theme.toLight')
-          }}
+          账号设置
         </a-button>
         <!-- 退出登录 -->
         <a-button size="small" shape="round" @click="handleLogout">
           <template #icon>
             <icon-export />
           </template>
-          {{ t('toolbar.logout') }}
+          退出登录
         </a-button>
-      </div>
-      <!-- 用户 -->
-      <div class="flex">
-        <div> </div>
       </div>
     </div>
   </template>
@@ -235,11 +173,8 @@
 
 <script lang="ts" setup>
   import { computed, inject } from 'vue';
-  // import { Message } from '@arco-design/web-vue';
   import { useDark, useToggle, useFullscreen } from '@vueuse/core';
-  import { useI18n } from 'vue-i18n';
   import { useRouter } from 'vue-router';
-  // import { LOCALE_OPTIONS } from '@/locale';
   import useLogout from '@/hooks/logout';
   import { useAppStore, useUserStore } from '@/store';
   import { isDevelopment } from '@/utils';
@@ -259,23 +194,6 @@
   const appStore = useAppStore();
 
   const router = useRouter();
-  // 语言
-  const { t /* , locale */ } = useI18n();
-  // const locales = [...LOCALE_OPTIONS];
-  // const toggleLocale = (value?: string) => {
-  //   const target =
-  //     value ||
-  //     locales[
-  //       (locales.findIndex((item) => item.value === locale.value) + 1) %
-  //         locales.length
-  //     ].value;
-  //   if (locale.value === target) {
-  //     return;
-  //   }
-  //   locale.value = target;
-  //   localStorage.setItem('arco-locale', target);
-  //   Message.success(t('toolbar.language.toggle.message'));
-  // };
 
   // 主题
   const theme = computed(() => {
@@ -307,7 +225,7 @@
 
   // 设置
   const setVisible = () => {
-    appStore.updateSettings({ globalSettingEnabled: true });
+    appStore.updateSettings({ appSettingEnabled: true });
   };
 
   // 用户

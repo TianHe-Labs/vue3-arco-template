@@ -3,9 +3,9 @@ import 'vue-router';
 declare module 'vue-router' {
   interface RouteMeta {
     requiresAuth: boolean; // 控制访问页面是否需要认证，不可缺省
-    roles?: string[]; // 控制页面访问权限
+    title: string;
     icon?: string; // 页面路由图标
-    locale?: string; // 页面路由本地化名称
+    roles?: string[]; // 控制页面访问权限
     hideInMenu?: boolean; // 是否在导航菜单中隐藏路由
     hideChildrenInMenu?: boolean; // 是否在导航菜单中隐藏子路由
     activeMenu?: string; // 页面活跃时高亮的路由，默认是页面自身的路由

@@ -1,11 +1,11 @@
 import Mock from 'mockjs';
 
-import '@/views/dashboard/mock';
+import './servers/account';
 
-import '@/views/user/mock';
+import './servers/user';
 
 import '@/components/message-box/mock';
-import '@/components/feedback-panel/mock';
+import './servers/feedback';
 
 Mock.setup({
   timeout: '600-1000',

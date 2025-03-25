@@ -1,31 +1,28 @@
 import { DEFAULT_LAYOUT } from '../base';
-import { AppRouteRecordRaw } from '../types';
 
-const USER: AppRouteRecordRaw = {
+export default {
   path: '/user',
   name: 'User',
   redirect: '/user',
   component: DEFAULT_LAYOUT,
   meta: {
-    locale: 'menu.user',
-    icon: 'icon-user',
+    title: '用户管理',
+    icon: 'icon-user-group',
     requiresAuth: true,
-    order: 7,
+    order: 9,
+    hideChildrenInMenu: true,
   },
   children: [
     {
       path: '',
-      name: 'Profile',
+      name: 'UserIndex',
       component: () => import('@/views/user/index.vue'),
       meta: {
-        locale: 'menu.user.profile',
+        title: '用户列表',
         requiresAuth: true,
         roles: ['*'],
         activeMenu: 'User',
-        hideInMenu: true,
       },
     },
   ],
 };
-
-export default USER;

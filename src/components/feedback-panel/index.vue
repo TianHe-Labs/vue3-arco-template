@@ -17,23 +17,23 @@
   </div>
   <a-modal
     v-model:visible="feedbackPanelVisible"
+    title="问题反馈"
+    title-align="start"
+    draggable
     :width="680"
     :fullscreen="breakpoints.smallerOrEqual('md').value"
-    :title="t('toolbar.feedback')"
-    draggable
-    title-align="start"
     @before-ok="handleSubmit"
   >
     <a-form ref="feedbackFormRef" layout="vertical" :model="feedbackModel">
       <a-form-item
+        field="type"
         required
         asterisk-position="end"
-        field="type"
-        :label="t('feedback.form.type.label')"
+        label="反馈类型"
         :rules="[
           {
             required: true,
-            message: t('feedback.form.type.placeholder'),
+            message: '反馈类型不可为空',
           },
         ]"
       >
@@ -41,31 +41,31 @@
           v-model="feedbackModel.type"
           allow-clear
           :options="typeOptions"
-          :placeholder="t('feedback.form.type.placeholder')"
+          placeholder="请选择反馈问题类型"
         />
       </a-form-item>
       <a-form-item
+        field="content"
+        label="反馈详情"
         required
         asterisk-position="end"
-        field="content"
-        :label="t('feedback.form.content.label')"
         :rules="[
           {
             required: true,
-            message: t('feedback.form.content.placeholder'),
+            message: '反馈问题详情不可为空',
           },
         ]"
       >
         <a-textarea
           v-model="feedbackModel.content"
           allow-clear
-          :auto-size="{ minRows: 7, maxRows: 12 }"
-          :placeholder="t('feedback.form.content.placeholder')"
+          :auto-size="{ minRows: 8, maxRows: 12 }"
+          placeholder="请输入反馈问题详情"
         />
       </a-form-item>
       <!-- <a-form-item
         field="attachment"
-        :label="t('feedback.form.attachment.label')"
+        label="添加附件"
       >
         <a-upload
           draggable
@@ -83,8 +83,8 @@
   import { reactive, ref, inject } from 'vue';
   import { Message } from '@arco-design/web-vue';
   import { useI18n } from 'vue-i18n';
-  import { useAppStore } from '@/store';
   import axios from 'axios';
+  import { useAppStore } from '@/store';
 
   const breakpoints = inject('breakpoints') as any;
 
@@ -103,7 +103,7 @@
     'other',
   ].map((value) => ({
     value,
-    label: t(`feedback.form.type.options.${value}`),
+    label: t(`feedback.options.${value}`),
   }));
 
   const feedbackFormRef = ref();
@@ -119,19 +119,18 @@
 
   const handleSubmit = async () => {
     const errors = await feedbackFormRef.value?.validate();
-    if (errors && Object.keys(errors).length) {
+    if (errors && Object.keys(errors).length > 0) {
       return false;
     }
     try {
       const resp = await axios.post('/api/feedback/create');
       if (resp.status >= 200 && resp.status < 300) {
-        Message.success(t('feedback.form.submit.success.message'));
-        return true;
+        Message.success('反馈已提交');
       }
-      return true;
     } catch (err: any) {
-      Message.error(err?.message || t('feedback.form.submit.failure.message'));
-      return false;
+      Message.error(err?.message);
     }
+    // 不要主动关闭反馈窗口，有可能会反馈多个问题，用户可以不用重新打开窗口
+    return false;
   };
 </script>

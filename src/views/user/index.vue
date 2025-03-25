@@ -1,39 +1,29 @@
-<template>
-  <div class="h-full flex flex-col gap-4 px-5 py-4">
-    <Breadcrumb :items="['menu.user']" />
-    <div class="flex flex-wrap md:flex-nowrap gap-5">
-      <a-card
-        class="flex-auto rounded"
-        :bordered="false"
-        :header-style="{ border: 'none' }"
-        :body-style="{ height: '100%' }"
-        :title="t('information.form.title')"
-      >
-        <Information />
-      </a-card>
-      <a-card
-        class="flex-auto rounded"
-        :bordered="false"
-        :header-style="{ border: 'none' }"
-        :body-style="{ height: '100%' }"
-        :title="t('password.form.title')"
-      >
-        <Password />
-      </a-card>
-    </div>
-  </div>
-</template>
-
 <script lang="ts" setup>
-  import { useI18n } from 'vue-i18n';
-  import Information from './components/information.vue';
-  import Password from './components/password.vue';
+  import Filter from './components/filter.vue';
+  import Table from './components/table.vue';
+  import EditPanel from './components/edit-panel.vue';
+  import { provideSearchUser } from './hooks/search';
+  import { provideEditUser } from './hooks/edit';
 
-  const { t } = useI18n();
+  // 查询
+  provideSearchUser();
+
+  // 创建 更新
+  provideEditUser();
 </script>
 
 <script lang="ts">
   export default {
-    name: 'Profile',
+    name: 'User',
   };
 </script>
+
+<template>
+  <div class="h-full flex flex-col p-4 gap-4">
+    <Breadcrumb :items="['用户管理']" />
+
+    <Filter />
+    <Table />
+    <EditPanel />
+  </div>
+</template>

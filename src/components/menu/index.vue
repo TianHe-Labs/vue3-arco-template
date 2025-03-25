@@ -1,6 +1,5 @@
 <script lang="tsx">
   import { defineComponent, ref, h, compile, computed, inject } from 'vue';
-  import { useI18n } from 'vue-i18n';
   import {
     type RouteRecordRaw,
     type RouteMeta,
@@ -21,7 +20,6 @@
     },
     emit: ['collapse'],
     setup(props) {
-      const { t } = useI18n();
       const router = useRouter();
       const route = useRoute();
       const appStore = useAppStore();
@@ -122,7 +120,7 @@
                     key={element?.name}
                     v-slots={{
                       icon,
-                      title: () => h(compile(t(element?.meta?.locale || ''))),
+                      title: () => h(compile(element.meta?.title || '')),
                     }}
                   >
                     {travel(element?.children)}
@@ -136,7 +134,7 @@
                       toggleDrawerMenu({ isMenuClick: true });
                     }}
                   >
-                    {t(element?.meta?.locale || '')}
+                    {element?.meta?.title || ''}
                   </a-menu-item>
                 );
               nodes.push(node as never);

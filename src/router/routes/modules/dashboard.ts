@@ -1,13 +1,12 @@
 import { DEFAULT_LAYOUT } from '../base';
-import { AppRouteRecordRaw } from '../types';
 
-const DASHBOARD: AppRouteRecordRaw = {
+export default {
   path: '/dashboard',
   name: 'Dashboard',
   redirect: '/dashboard',
   component: DEFAULT_LAYOUT,
   meta: {
-    locale: 'menu.dashboard',
+    title: '仪表盘',
     icon: 'icon-dashboard',
     requiresAuth: true,
     order: 0,
@@ -19,7 +18,7 @@ const DASHBOARD: AppRouteRecordRaw = {
       name: 'Overview',
       component: () => import('@/views/dashboard/index.vue'),
       meta: {
-        locale: 'menu.dashboard.overview',
+        title: '概览',
         requiresAuth: true,
         roles: ['*'],
         activeMenu: 'Dashboard',
@@ -27,5 +26,3 @@ const DASHBOARD: AppRouteRecordRaw = {
     },
   ],
 };
-
-export default DASHBOARD;

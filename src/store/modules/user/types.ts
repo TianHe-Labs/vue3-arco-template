@@ -2,11 +2,12 @@
 export enum USERROLE {
   DEVELOPER = 'developer',
   ADMIN = 'admin',
-  USER = 'user',
+  COMMON = 'common',
 }
 
 export interface UserState {
-  username?: string;
+  id: string;
+  username: string;
   nickname?: string;
 
   password?: string;
