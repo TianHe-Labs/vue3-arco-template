@@ -43,7 +43,7 @@ export function queryServerMenuList() {
 // 更新用户信息（除密码）
 export type UpdateUserInfoParams = Omit<
   UserState,
-  'password' | 'accessToken' | 'refreshToken'
+  'id' | 'password' | 'accessToken' | 'refreshToken'
 >;
 export type UpdateUserInfoRes = Pick<UserState, 'username'>;
 

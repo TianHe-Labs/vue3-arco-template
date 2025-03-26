@@ -1,13 +1,13 @@
 import axios from 'axios';
-import type { TableData } from '@arco-design/web-vue/es/table/interface';
 
-export interface PopularRecord {
-  key: number;
-  clickNumber: string;
-  title: string;
-  increases: number;
+export interface QueryXxxxDistReq {
+  timespan?: number; // 统计时间区间
+}
+export interface QueryXxxxDist {
+  datetime: string; // 时间横轴
+  [property: string]: any; // 多个统计属性
 }
 
-export function queryPopularList(params: { type: string }) {
-  return axios.get<TableData[]>('/api/popular/list', { params });
+export function queryXxxxDist(params: QueryXxxxDistReq) {
+  return axios.get<QueryXxxxDist[]>('/api/xxxx/dist', { params });
 }

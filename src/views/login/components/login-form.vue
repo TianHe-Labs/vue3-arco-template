@@ -84,13 +84,13 @@
       <a-form-item
         field="username"
         hide-label
-        :rules="[{ required: true, message: '用户名称不可为空' }]"
+        :rules="[{ required: true, message: '用户名不可为空' }]"
         :validate-trigger="['change', 'blur']"
       >
         <a-input
           v-model="loginModel.username"
           allow-clear
-          placeholder="请输入用户名称"
+          placeholder="请输入用户名"
         >
           <template #prefix>
             <icon-user />

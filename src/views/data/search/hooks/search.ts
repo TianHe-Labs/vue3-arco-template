@@ -107,7 +107,7 @@ export function provideSearchXXX(): SearchXXXState {
       renderData.value = data.list;
       pagination.total = data.total;
     } catch (err: any) {
-      Message.error(err?.Message);
+      Message.error(err?.message);
     } finally {
       setLoading(false);
     }

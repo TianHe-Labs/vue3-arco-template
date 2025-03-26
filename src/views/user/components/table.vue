@@ -48,11 +48,10 @@
       title: '用户名',
       dataIndex: 'username',
       slotName: 'username',
-      fixed: 'left',
       headerCellClass: 'whitespace-nowrap',
     },
     {
-      title: '用户角色',
+      title: '角色权限',
       dataIndex: 'role',
       slotName: 'role',
       headerCellClass: 'whitespace-nowrap',
@@ -159,6 +158,12 @@
       <template #username="{ record }">
         <div class="font-semibold">{{ record?.username }}</div>
         <div v-if="record.nickname" class="text-xs">{{ record?.nickname }}</div>
+      </template>
+      <!-- 角色权限 -->
+      <template #role="{ record }">
+        <a-tag color="arcoblue" bordered>
+          {{ $t(`account.roles.${record.role}`) }}
+        </a-tag>
       </template>
       <!-- 操作 -->
       <template #actions="{ record }">

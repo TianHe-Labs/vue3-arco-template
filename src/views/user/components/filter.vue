@@ -16,11 +16,11 @@
 
   const fuzzyKeyOptions = [
     {
-      label: '用户名称',
+      label: '用户名',
       value: 'usernmae',
     },
     {
-      label: '显示昵称',
+      label: '用户昵称',
       value: 'nickname',
     },
     {
@@ -44,14 +44,14 @@
     <a-form :model="queryModel" auto-label-width>
       <div class="grid lg:grid-cols-2 xl:grid-cols-3 gap-x-4">
         <!-- 精确匹配 -->
-        <a-form-item field="role" label="用户角色">
+        <a-form-item field="role" label="角色权限">
           <a-select
             v-model="queryModel.role"
             :options="roleOptions"
             allow-clear
             allow-create
             allow-search
-            placeholder="请选择用户角色"
+            placeholder="请选择角色权限"
           />
         </a-form-item>
         <!-- 精确匹配 -->

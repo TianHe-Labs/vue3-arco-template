@@ -3,6 +3,8 @@ export default {
   'account.roles.admin': '管理员',
   'account.roles.common': '普通用户',
 
+  'dateRange.shortcuts': '近 {0} 天',
+
   'feedback.options.fix': '错误修复',
   'feedback.options.feat': '新增功能',
   'feedback.options.perf': '优化调整',

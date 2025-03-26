@@ -6,10 +6,10 @@
         <!-- <img alt="logo" src="~@/assets/logo.svg?url" width="24" /> -->
         <a-typography-text
           bold
-          type="primary"
           :style="{
             fontSize: '28px',
             fontFamily: 'YouSheBiaoTiHei',
+            color: 'rgba(var(--primary-7))',
           }"
         >
           {{ appName }}

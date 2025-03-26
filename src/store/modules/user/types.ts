@@ -6,13 +6,13 @@ export enum USERROLE {
 }
 
 export interface UserState {
-  id: string;
-  username: string;
+  id?: string;
+  username?: string;
   nickname?: string;
 
   password?: string;
 
-  role?: USERROLE.ADMIN;
+  role?: USERROLE;
 
   email?: string;
   phone?: string;

@@ -10,8 +10,11 @@ const users = [
   {
     id: '15012312300',
     username: 'admin',
+    nickname: '管理员',
     password: 'nslab321',
     role: USERROLE.ADMIN,
+    sector: '网络部',
+    status: '专注中...',
     accessToken:
       'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Im5pc3QifQ.95aGaCg7ovpUWSpoZdCoam6Mvr-vE374VjMfthTpKPo',
     refreshToken:
@@ -41,7 +44,7 @@ setupMock({
         const { accessToken, refreshToken } = foundItem;
         return successResponseWrap({ accessToken, refreshToken });
       }
-      return failureResponseWrap('用户名或密码错误！');
+      return failureResponseWrap('用户名或密码错误');
     });
 
     // 获取用户信息
@@ -49,10 +52,16 @@ setupMock({
       const foundItem = users[0];
 
       if (foundItem) {
-        const { username, role } = foundItem;
-        return successResponseWrap({ username, role });
+        const { username, nickname, role, sector, status } = foundItem;
+        return successResponseWrap({
+          username,
+          nickname,
+          role,
+          sector,
+          status,
+        });
       }
-      return failureResponseWrap('用户名或密码错误！');
+      return failureResponseWrap('用户名或密码错误');
     });
 
     // 后去用户服务端菜单

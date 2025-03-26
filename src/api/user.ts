@@ -23,7 +23,8 @@ export function queryUserList(params: QueryUserListReq & Pagination) {
 // 创建/更新
 // 创建时没有ID
 export type CreateOrUpdateUserReq = Partial<UserModel>;
-export type CreateOrUpdateUserRes = Pick<UserModel, 'id'>;
+export type CreateOrUpdateUserRes = Partial<UserModel>;
+// 创建用户时需要把密码返回
 
 export function createOrUpdateUser(data: CreateOrUpdateUserReq) {
   return axios.post('/api/user/create-update', data);

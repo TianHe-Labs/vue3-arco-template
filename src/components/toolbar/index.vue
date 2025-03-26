@@ -74,7 +74,8 @@
           :size="32"
           :style="{
             border: '3px solid var(--color-border-2)',
-            background: 'rgba(var(--primary-5))',
+            background:
+              'linear-gradient(217deg, rgba(var(--primary-5)), rgba(255, 0, 0, 0) 72%), linear-gradient(127deg, rgba(var(--primary-4)), rgba(0, 255, 0, 0) 72%), linear-gradient(336deg, rgba(var(--primary-3)), rgba(0, 0, 255, 0) 72%)',
           }"
         >
           <img v-if="userStore?.avatar" alt="avatar" :src="userStore?.avatar" />
@@ -86,8 +87,8 @@
         <div>
           <div
             :class="[
-              '-mt-1 font-medium text-text-1',
-              { 'text-xl': !userStore?.status },
+              '-mt-0.5 font-medium text-text-1',
+              { 'text-lg': !userStore?.status },
             ]"
           >
             {{ userStore.nickname || userStore.username }}

@@ -12,6 +12,13 @@ export function enum2Arr(obj: object) {
   return arr;
 }
 
+export function matchNumber(obj: any) {
+  if (typeof obj !== 'string') return NaN;
+  const matched = obj.match(/\d+/g);
+  if (!matched) return NaN;
+  return Number(matched.join(''));
+}
+
 export function example() {
   return true;
 }

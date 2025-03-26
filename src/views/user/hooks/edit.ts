@@ -8,6 +8,12 @@ import {
   createOrUpdateUser,
   deleteUser,
 } from '@/api/user';
+import { USERROLE } from '@/store/modules/user/types';
+
+interface SelectionState {
+  visible: boolean;
+  checked: string[];
+}
 
 interface SearchUserState {
   editPanelVisible: Ref<boolean>;
@@ -17,7 +23,7 @@ interface SearchUserState {
   handleOpenEditPanel: ($event: Event, record?: UserModel) => void;
   submitCreateOrUpdate: (opts?: any) => Promise<any>;
 
-  selectionState: { visible: boolean; checked: UserModel['id'][] };
+  selectionState: SelectionState;
   handleToggleSelection: () => void;
   submitDelete: (ids: UserModel['id'][]) => Promise<any>;
 }
@@ -34,7 +40,8 @@ export function provideEditUser(): SearchUserState {
   // 用 event 占据第一个参数
   // 在template中使用时，如果不传参数（创建），可以不用加括号
   const handleOpenEditPanel = ($event: Event, record?: UserModel) => {
-    editUserModel.value = { ...record };
+    // 创建时默认 普通用户
+    editUserModel.value = { role: USERROLE.COMMON, ...record };
     editPanelVisible.value = true;
   };
 
@@ -46,13 +53,8 @@ export function provideEditUser(): SearchUserState {
     try {
       const { data } = await createOrUpdateUser(editUserModel.value);
       if (data?.id) {
-        Message.success(
-          `已创建用户${
-            editUserModel.value?.nickname || editUserModel.value.username
-          }`
-        );
         // 将id返回，用于在前端逻辑中修改 renderData 用户列表，避免不必要的请求
-        return data.id;
+        return data;
       }
       return null;
     } catch (err: any) {
@@ -64,7 +66,7 @@ export function provideEditUser(): SearchUserState {
   };
 
   // 显示表格勾选
-  const selectionState = reactive({
+  const selectionState = reactive<SelectionState>({
     visible: false,
     checked: [],
   });

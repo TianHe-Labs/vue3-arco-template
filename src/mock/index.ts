@@ -1,5 +1,7 @@
 import Mock from 'mockjs';
 
+import './servers/dashboard';
+
 import './servers/account';
 
 import './servers/user';
