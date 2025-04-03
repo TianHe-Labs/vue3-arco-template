@@ -41,7 +41,7 @@
       Message.success(
         `已更新用户${
           editUserModel.value?.nickname || editUserModel.value.username
-        }`
+        }`,
       );
     } else {
       // 创建，会返回新用户密码
@@ -53,7 +53,7 @@
       Message.success(
         `已创建用户${
           editUserModel.value?.nickname || editUserModel.value.username
-        }`
+        }`,
       );
       // 弹窗显示新用户及其密码用于复制
       const content = `用户名：${data.username}  密码：${data.password}`;
@@ -163,7 +163,7 @@
         label="手机号码"
         :rules="[
           {
-            validator: (phone, callback) => {
+            validator: (phone: string, callback: any) => {
               if (phone && !isPhone(phone)) {
                 callback('手机号码格式不正确');
               }

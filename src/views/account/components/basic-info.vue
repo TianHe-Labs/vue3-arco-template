@@ -4,14 +4,14 @@
   import { Message, FormInstance } from '@arco-design/web-vue';
   import { /* isEmail, */ isPhone } from '@/utils/is';
   import { useUserStore } from '@/store';
-  import { UpdateUserInfoParams, updateUserInfo } from '@/api/account';
+  import { UpdateUserInfoReq, updateUserInfo } from '@/api/account';
 
   const { t } = useI18n();
 
   const userStore = useUserStore();
 
   const basicInfoFormRef = ref<FormInstance>();
-  const basicInfoFormModel = reactive<UpdateUserInfoParams>({
+  const basicInfoFormModel = reactive<UpdateUserInfoReq>({
     username: userStore.username,
     nickname: userStore.nickname,
     phone: userStore.phone,
@@ -124,7 +124,7 @@
       label="手机号码"
       :rules="[
         {
-          validator: (phone, callback) => {
+          validator: (phone: string, callback: any) => {
             if (phone && !isPhone(phone)) {
               callback('手机号码格式不正确');
             }

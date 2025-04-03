@@ -26,10 +26,10 @@ export function queryMessageList() {
 }
 
 // 标记已读，单个、批量二合一
-interface updateMessageStatusParams {
+export type UpdateMessageStatusReq = {
   ids: string[];
-}
+};
 
-export function updateMessageStatus(data: updateMessageStatusParams) {
+export function updateMessageStatus(data: UpdateMessageStatusReq) {
   return axios.put('/api/message/read', data);
 }

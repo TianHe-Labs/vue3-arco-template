@@ -76,7 +76,7 @@ const useOssStore = defineStore('oss', {
 
       // 使用HMAC-SHA1算法生成签名
       const signature = Base64.stringify(
-        hmacSha1(canonicalResource, this.$state.accessKeySecret)
+        hmacSha1(canonicalResource, this.$state.accessKeySecret),
       );
 
       // 构造完整的URL
@@ -87,7 +87,7 @@ const useOssStore = defineStore('oss', {
       }media${pathname}?OSSAccessKeyId=${
         this.$state.accessKeyId
       }&Expires=${expires}&Signature=${encodeURIComponent(
-        signature
+        signature,
       )}&security-token=${encodeURIComponent(this.$state.securityToken)}`;
 
       return signedUrl;
@@ -97,7 +97,7 @@ const useOssStore = defineStore('oss', {
   persist: {
     key: '__th_ls_oss__',
     storage: sessionStorage,
-    afterRestore: (ctx: PiniaPluginContext) => {
+    afterHydrate: (ctx: PiniaPluginContext) => {
       if (
         !ctx.store.accessKeyId ||
         new Date() >= new Date(ctx.store.$state.expiration) // 过期自动更新

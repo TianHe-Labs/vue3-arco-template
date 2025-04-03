@@ -3,7 +3,7 @@ import 'vue-router';
 declare module 'vue-router' {
   interface RouteMeta {
     requiresAuth: boolean; // 控制访问页面是否需要认证，不可缺省
-    title: string;
+    title?: string;
     icon?: string; // 页面路由图标
     roles?: string[]; // 控制页面访问权限
     hideInMenu?: boolean; // 是否在导航菜单中隐藏路由

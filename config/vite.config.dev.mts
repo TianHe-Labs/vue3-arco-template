@@ -1,6 +1,5 @@
 import { mergeConfig } from 'vite';
-import eslint from 'vite-plugin-eslint';
-import baseConfig from './vite.config.base';
+import baseConfig from './vite.config.base.mts';
 import { createProxy } from './utils';
 
 export default mergeConfig(
@@ -13,13 +12,6 @@ export default mergeConfig(
       },
       proxy: createProxy(),
     },
-    plugins: [
-      eslint({
-        cache: false,
-        include: ['src/**/*.ts', 'src/**/*.tsx', 'src/**/*.vue'],
-        exclude: ['node_modules'],
-      }),
-    ],
   },
   baseConfig
 );

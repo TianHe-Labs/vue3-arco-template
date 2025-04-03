@@ -3,10 +3,10 @@ import axios from 'axios';
 import { UserState } from '@/store/modules/user/types';
 
 // 登录
-export type LoginParams = Pick<UserState, 'username' | 'password'>;
+export type LoginReq = Pick<UserState, 'username' | 'password'>;
 export type LoginRes = Pick<UserState, 'accessToken' | 'refreshToken'>;
 
-export function login(data: LoginParams) {
+export function login(data: LoginReq) {
   // 有时候前端的有些字段和后端接口不一致
   // 为了避免大面积修改变量，可以只在接口这里做一下映射处理
   const cleanedData = { ...data, account: data.username };
@@ -14,13 +14,13 @@ export function login(data: LoginParams) {
 }
 
 // 刷新令牌
-export type UpdateRefreshTokenParams = Pick<UserState, 'refreshToken'>;
+export type UpdateRefreshTokenReq = Pick<UserState, 'refreshToken'>;
 export type UpdateRefreshTokenRes = Pick<UserState, 'accessToken'>;
 
-export function updateUserToken(params: UpdateRefreshTokenParams) {
+export function updateUserToken(data: UpdateRefreshTokenReq) {
   return axios.get<UpdateRefreshTokenRes>('/api/user/refresh', {
     headers: {
-      Authorization: `Bearer ${params.refreshToken}`,
+      Authorization: `Bearer ${data.refreshToken}`,
     },
   });
 }
@@ -41,13 +41,13 @@ export function queryServerMenuList() {
 }
 
 // 更新用户信息（除密码）
-export type UpdateUserInfoParams = Omit<
+export type UpdateUserInfoReq = Omit<
   UserState,
   'id' | 'password' | 'accessToken' | 'refreshToken'
 >;
 export type UpdateUserInfoRes = Pick<UserState, 'username'>;
 
-export function updateUserInfo(data: UpdateUserInfoParams) {
+export function updateUserInfo(data: UpdateUserInfoReq) {
   // 有时候前端的有些字段和后端接口不一致
   // 为了避免大面积修改变量，可以只在接口这里做一下映射处理
   const cleanedData = { ...data, account: data.username };
@@ -55,13 +55,13 @@ export function updateUserInfo(data: UpdateUserInfoParams) {
 }
 
 // 更新用户密码
-export interface UpdateUserPasswordParams {
+export type UpdateUserPasswordReq = {
   oldPassword: string;
   newPassword: string;
   confirmPassword?: string; // confirmPassword === newPassword 前端检查即可
-}
+};
 export type UpdateUserPasswordRes = Pick<UserState, 'username'>;
 
-export function updateUserPassword(data: UpdateUserPasswordParams) {
+export function updateUserPassword(data: UpdateUserPasswordReq) {
   return axios.post<UpdateUserPasswordRes>('/api/user/password/update', data);
 }

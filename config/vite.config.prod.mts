@@ -1,5 +1,5 @@
 import { mergeConfig } from 'vite';
-import baseConfig from './vite.config.base';
+import baseConfig from './vite.config.base.mts';
 import configCompressPlugin from './plugin/compress';
 import configVisualizerPlugin from './plugin/visualizer';
 import configArcoResolverPlugin from './plugin/arcoResolver';

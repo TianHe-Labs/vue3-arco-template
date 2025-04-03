@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia';
 import {
-  LoginParams,
+  LoginReq,
   login as loginApi,
   queryUserInfo as queryUserInfoApi,
   updateUserToken as updateUserTokenApi,
@@ -43,11 +43,11 @@ const useUserStore = defineStore('user', {
     },
 
     // 登录
-    async login(loginData: LoginParams) {
+    async login(loginData: LoginReq) {
       try {
         const { data } = await loginApi(loginData);
         const formatedData = mapKeys(data, (_: any, key: string) =>
-          camelCase(key)
+          camelCase(key),
         );
         if (!formatedData?.accessToken || !formatedData?.refreshToken) {
           throw new Error();
@@ -95,7 +95,7 @@ const useUserStore = defineStore('user', {
       try {
         const { data } = await updateUserTokenApi(params);
         const formatedData = mapKeys(data, (_: any, key: string) =>
-          camelCase(key)
+          camelCase(key),
         );
         if (!formatedData?.accessToken) {
           throw new Error();
@@ -110,7 +110,7 @@ const useUserStore = defineStore('user', {
   // 自动持久化
   persist: {
     key: '__th_ls_usr__',
-    paths: ['accessToken', 'refreshToken'],
+    pick: ['accessToken', 'refreshToken'],
   },
 });
 

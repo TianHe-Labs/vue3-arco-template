@@ -1,13 +1,13 @@
 <script lang="ts" setup>
   import { ref, reactive } from 'vue';
   import { Message, FormInstance } from '@arco-design/web-vue';
-  import { UpdateUserPasswordParams, updateUserPassword } from '@/api/account';
+  import { UpdateUserPasswordReq, updateUserPassword } from '@/api/account';
   import useUserLogout from '@/hooks/logout';
 
   const { logout } = useUserLogout();
 
   const passwordFormRef = ref<FormInstance>();
-  const passwordFormData = reactive<UpdateUserPasswordParams>({
+  const passwordFormData = reactive<UpdateUserPasswordReq>({
     oldPassword: '',
     newPassword: '',
     confirmPassword: '',
@@ -96,7 +96,7 @@
           message: '密码不可为空',
         },
         {
-          validator: (confirmPassword, callback) => {
+          validator: (confirmPassword: string, callback: any) => {
             if (confirmPassword !== passwordFormData.newPassword) {
               callback('与新密码不一致');
             }

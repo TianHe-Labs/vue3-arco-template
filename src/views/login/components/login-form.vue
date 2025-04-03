@@ -1,12 +1,18 @@
 <script lang="ts" setup>
-  import type { LoginParams } from '@/api/account';
-  import { ref, reactive } from 'vue';
+  import type { LoginReq } from '@/api/account';
+  import { ref, reactive, type Ref } from 'vue';
   import { useRouter } from 'vue-router';
   import { Message, ValidatedError } from '@arco-design/web-vue';
   import { useStorage } from '@vueuse/core';
   import { useUserStore } from '@/store';
   import useLoading from '@/hooks/loading';
   import { DEFAULT_ROUTE /* , DEFAULT_ROUTE_NAME */ } from '@/router/constants';
+
+  interface LoginConfig {
+    username: string;
+    password: string;
+    rememberPassword: boolean;
+  }
 
   const router = useRouter();
   const { loading, setLoading } = useLoading();
@@ -15,11 +21,11 @@
 
   const appName = import.meta.env.VITE_APP_NAME;
 
-  const loginConfig = useStorage('__th_ls_login_config__', {
+  const loginConfig = useStorage<LoginConfig>('__th_ls_login_config__', {
     username: '',
     password: '',
     rememberPassword: true,
-  });
+  }) as unknown as Ref<LoginConfig>;
 
   const loginModel = reactive({
     username: loginConfig.value.username,
@@ -39,7 +45,7 @@
     if (!errors) {
       setLoading(true);
       try {
-        await userStore.login(values as LoginParams);
+        await userStore.login(values as LoginReq);
         const { redirect, ...othersQuery } = router.currentRoute.value.query;
         router.push({
           path: (redirect as string) || DEFAULT_ROUTE.fullPath,
@@ -60,9 +66,6 @@
         setLoading(false);
       }
     }
-  };
-  const setRememberPassword = (value: boolean) => {
-    loginConfig.value.rememberPassword = value;
   };
 </script>
 
@@ -113,12 +116,8 @@
           </template>
         </a-input-password>
       </a-form-item>
-      <a-form-item hide-label row-class="mb-4" content-class="justify-between">
-        <a-checkbox
-          checked="rememberPassword"
-          :model-value="loginConfig.rememberPassword"
-          @change="setRememberPassword as any"
-        >
+      <a-form-item hide-label row-class="mb-4" content-class="!justify-between">
+        <a-checkbox v-model="loginConfig.rememberPassword">
           记住密码
         </a-checkbox>
         <a-link>忘记密码</a-link>
