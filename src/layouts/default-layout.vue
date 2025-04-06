@@ -56,7 +56,6 @@
     </a-layout>
   </a-scrollbar>
 
-  <!-- <MessageBox /> -->
   <!-- <FeedbackPanel /> -->
 </template>
 
@@ -68,13 +67,12 @@
   import Toolbar from '@/components/toolbar/index.vue';
   import Footer from '@/components/footer/index.vue';
   import TabBar from '@/components/tab-bar/index.vue';
-  // import { provideMessage } from '@/components/message-box/hooks';
-  // import MessageBox from '@/components/message-box/index.vue';
+  import { provideMessage } from '@/views/message/hooks/message';
   // import FeedbackPanel from '@/components/feedback-panel/index.vue';
   import PageLayout from './page-layout.vue';
 
   // 消息
-  // provideMessage();
+  provideMessage();
 
   // 反馈
   // const feedbackPanelVisible = ref<boolean>(false);
@@ -90,7 +88,7 @@
 
   const renderMenu = computed(() => appStore.menu && !appStore.topMenu);
   const hideMenu = computed(
-    () => appStore.hideMenu || breakpoints.smallerOrEqual('md').value
+    () => appStore.hideMenu || breakpoints.smallerOrEqual('md').value,
   );
   const footer = computed(() => appStore.footer);
   const menuWidth = computed(() => {

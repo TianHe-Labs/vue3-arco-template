@@ -18,3 +18,8 @@ export interface List<T> {
   total: number;
   list: T[];
 }
+
+interface SelectionState {
+  visible: boolean;
+  checked: string[];
+}

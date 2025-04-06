@@ -6,7 +6,8 @@ import './servers/account';
 
 import './servers/user';
 
-import '@/components/message-box/mock';
+import './servers/message';
+
 import './servers/feedback';
 
 Mock.setup({

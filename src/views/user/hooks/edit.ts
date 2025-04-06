@@ -6,14 +6,8 @@ import {
   CreateOrUpdateUserReq,
   UserModel,
   createOrUpdateUser,
-  deleteUser,
 } from '@/api/user';
 import { USERROLE } from '@/store/modules/user/types';
-
-interface SelectionState {
-  visible: boolean;
-  checked: string[];
-}
 
 interface SearchUserState {
   editPanelVisible: Ref<boolean>;
@@ -22,10 +16,6 @@ interface SearchUserState {
 
   handleOpenEditPanel: ($event: Event, record?: UserModel) => void;
   submitCreateOrUpdate: (opts?: any) => Promise<any>;
-
-  selectionState: SelectionState;
-  handleToggleSelection: () => void;
-  submitDelete: (ids: UserModel['id'][]) => Promise<any>;
 }
 
 const symbol = Symbol('EDIT');
@@ -65,50 +55,12 @@ export function provideEditUser(): SearchUserState {
     }
   };
 
-  // 显示表格勾选
-  const selectionState = reactive<SelectionState>({
-    visible: false,
-    checked: [],
-  });
-
-  const handleToggleSelection = () => {
-    selectionState.checked = [];
-    selectionState.visible = !selectionState.visible;
-  };
-
-  const submitDelete = async (ids: UserModel['id'][]) => {
-    setLoading(true);
-    try {
-      const { data } = await deleteUser({ ids });
-      if (data?.ids && data.ids?.length === 0) {
-        Message.success(`已删除${ids.length}个用户`);
-      } else {
-        Message.warning(
-          `已删除${ids.length - data.ids.length}个用户, ${
-            data?.ids?.length || 0
-          }个用户删除失败`
-        );
-      }
-      // 将成功的ids返回，用于在前端逻辑中修改 renderData 用户列表，避免不必要的请求
-      return difference(ids, data.ids);
-    } catch (err: any) {
-      Message.error(err?.message);
-      return [];
-    } finally {
-      setLoading(false);
-    }
-  };
-
   const returnState: SearchUserState = {
     editPanelVisible,
     loading,
     editUserModel,
     handleOpenEditPanel,
     submitCreateOrUpdate,
-
-    selectionState,
-    handleToggleSelection,
-    submitDelete,
   };
 
   provide(symbol, returnState);

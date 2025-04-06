@@ -29,18 +29,17 @@
       </a-button>
     </a-tooltip> -->
     <!-- 消息 -->
-    <!-- <a-tooltip mini content="消息通知">
+    <a-tooltip mini content="消息通知">
       <a-badge :count="renderStats?.total || 0" dot>
         <a-button
           class="nav-btn"
-
           shape="circle"
-          @click.stop="setPopoverVisible"
+          @click="router.push({ name: 'Message' })"
         >
           <icon-notification />
         </a-button>
       </a-badge>
-    </a-tooltip> -->
+    </a-tooltip>
     <!-- 全屏 -->
     <a-tooltip mini :content="isFullscreen ? '退出全屏' : '切换全屏'">
       <a-button class="nav-btn" shape="circle" @click="toggleFullScreen">
@@ -169,6 +168,23 @@
         </a-button>
       </div>
     </div>
+
+    <!-- 移动端fixed固定在屏幕右下角 -->
+    <a-badge
+      v-if="breakpoints.smallerOrEqual('md').value"
+      :count="renderStats?.total || 0"
+      dot
+      class="fixed right-5 bottom-20"
+    >
+      <a-button
+        class="fixed-btn"
+        size="large"
+        shape="circle"
+        @click="router.push({ name: 'Message' })"
+      >
+        <icon-notification />
+      </a-button>
+    </a-badge>
   </template>
 </template>
 
@@ -179,7 +195,7 @@
   import useLogout from '@/hooks/logout';
   import { useAppStore, useUserStore } from '@/store';
   import { isDevelopment } from '@/utils';
-  // import { useMessage } from '../message-box/hooks';
+  import { useMessage } from '@/views/message/hooks/message';
 
   withDefaults(
     defineProps<{
@@ -187,8 +203,11 @@
     }>(),
     {
       mode: 'horizontal',
-    }
+    },
   );
+
+  // 响应式
+  const breakpoints = inject('breakpoints') as any;
 
   const userStore = useUserStore();
 
@@ -219,7 +238,7 @@
   // const feedbackPanelVisible = inject('feedbackPanelVisible') as boolean;
 
   // 消息
-  // const { setPopoverVisible, renderStats } = useMessage();
+  const { renderStats } = useMessage();
 
   // 全屏
   const { isFullscreen, toggle: toggleFullScreen } = useFullscreen();

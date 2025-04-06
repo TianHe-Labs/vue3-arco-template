@@ -30,14 +30,13 @@ export function createOrUpdateUser(data: CreateOrUpdateUserReq) {
   return axios.post('/api/user/create-update', data);
 }
 
-// 删除
-// 兼容批量
+// 删除 兼容批量
 export interface DeleteUserReq {
   ids: UserModel['id'][];
 }
-// 返回结果虽然定义上与请求相同，但是它代表的是删除失败的ID
-// 以此来告诉用户哪些操作失败了
-export type DeleteUserRes = DeleteUserReq;
+export interface DeleteUserRes {
+  ids: UserModel['id'][]; // 删除成功的ID
+}
 
 export function deleteUser(data: DeleteUserReq) {
   return axios.delete('/api/user/delete', {

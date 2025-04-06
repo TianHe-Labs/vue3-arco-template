@@ -12,4 +12,8 @@ export default {
   'feedback.options.docs': '文档说明',
   'feedback.options.support': '技术协助',
   'feedback.options.other': '其他问题',
+
+  'message.type.total': '全部',
+  'message.type.notice': '通知消息',
+  'message.type.alert': '告警消息',
 };

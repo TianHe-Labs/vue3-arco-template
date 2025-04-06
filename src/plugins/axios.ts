@@ -8,6 +8,40 @@ import i18n from '@/locale';
 import { useUserStore } from '@/store';
 import useLogout from '@/hooks/logout';
 
+// 请求队列管理器
+class RequestQueue {
+  private queue: Array<{
+    config: InternalAxiosRequestConfig;
+    resolve: (value: any) => void;
+    reject: (reason?: any) => void;
+  }> = [];
+  private isRefreshing = false;
+
+  add(config: InternalAxiosRequestConfig) {
+    return new Promise((resolve, reject) => {
+      this.queue.push({ config, resolve, reject });
+    });
+  }
+
+  clear() {
+    this.queue = [];
+  }
+
+  getQueue() {
+    return this.queue;
+  }
+
+  setRefreshing(status: boolean) {
+    this.isRefreshing = status;
+  }
+
+  getIsRefreshing() {
+    return this.isRefreshing;
+  }
+}
+
+const requestQueue = new RequestQueue();
+
 if (import.meta.env.VITE_API_BASE) {
   // 自定义环境变量，手动指定 API Base
   axios.defaults.baseURL = import.meta.env.VITE_API_BASE;
@@ -38,7 +72,7 @@ axios.interceptors.request.use(
   (error) => {
     // do something
     return Promise.reject(error);
-  }
+  },
 );
 
 // add response interceptors
@@ -65,22 +99,59 @@ axios.interceptors.response.use(
 
     if (status === 401) {
       Message.error({
-        content: message /* || error?.message */ || t('401'),
+        content: message || t('401'),
         duration: 5 * 1000,
       });
       logout();
     } else if (status === 460) {
       // Access Token 过期
-      // 保存本次未成功的请求，在拿到新的 access token 后重发
-      // 这里最好使用一个队列，保存为成功的请求
-      const { url, method, data } = error.config as InternalAxiosRequestConfig;
-      // 获取新的 access token，重发请求
-      await userStore.updateUserToken();
-      return axios.request({ url, method, data });
+      const config = error.config as InternalAxiosRequestConfig;
+
+      // 如果正在刷新 token，将请求加入队列
+      if (requestQueue.getIsRefreshing()) {
+        return requestQueue.add(config);
+      }
+
+      // 设置刷新状态
+      requestQueue.setRefreshing(true);
+
+      try {
+        // 获取新的 access token
+        await userStore.updateUserToken();
+
+        // 重发队列中的所有请求
+        const queue = requestQueue.getQueue();
+        await Promise.all(
+          queue.map(async ({ config, resolve, reject }) => {
+            try {
+              const response = await axios.request(config);
+              resolve(response);
+              return response;
+            } catch (err) {
+              reject(err);
+              throw err;
+            }
+          }),
+        );
+
+        // 清空队列
+        requestQueue.clear();
+      } catch (err) {
+        // 如果刷新 token 失败，清空队列并登出
+        const queue = requestQueue.getQueue();
+        queue.forEach(({ reject }) => {
+          reject(err);
+        });
+        requestQueue.clear();
+        logout();
+        return Promise.reject(err);
+      } finally {
+        requestQueue.setRefreshing(false);
+      }
     } else if (status === 461) {
       // Refresh Token 过期
       Message.error({
-        content: message /* || error?.message */ || t('461'),
+        content: message || t('461'),
         duration: 5 * 1000,
       });
       logout();
@@ -96,5 +167,5 @@ axios.interceptors.response.use(
       return axios.request(error.config);
     } */
     return Promise.reject(new Error(message || t(status) || error.message));
-  }
+  },
 );

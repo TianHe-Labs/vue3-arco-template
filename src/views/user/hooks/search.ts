@@ -1,10 +1,15 @@
-import { provide, inject, Ref, reactive, ref } from 'vue';
-import { Message, PaginationProps } from '@arco-design/web-vue';
-import { watchDebounced } from '@vueuse/core';
+import { provide, inject, Ref, reactive, ref, watch } from 'vue';
+import { Message, Modal, PaginationProps } from '@arco-design/web-vue';
 import { useRoute, useRouter } from 'vue-router';
 import { isEmpty, isObject, omitBy, pick } from 'lodash';
 import useLoading from '@/hooks/loading';
-import { queryUserList, UserModel, QueryUserListReq } from '@/api/user';
+import {
+  queryUserList,
+  UserModel,
+  QueryUserListReq,
+  deleteUser,
+} from '@/api/user';
+import { SelectionState } from '@/global';
 
 interface FuzzyQueryModel {
   fuzzyWord: string;
@@ -23,6 +28,11 @@ interface SearchUserState {
   onPageChange: (current: number) => void;
   onPageSizeChange: (pageSize: number) => void;
   handleResetQueryModel: (keys?: string[]) => void;
+
+  selectionState: SelectionState;
+  toggleSelection: () => void;
+  confirmDeleteUser: (ids?: UserModel['id'][]) => Promise<void>;
+  handleDeleteUser: () => Promise<void>;
 }
 
 const symbol = Symbol('USER');
@@ -83,6 +93,7 @@ export function provideSearchUser(): SearchUserState {
   const renderData = ref<UserModel[]>([]);
 
   const fetchData = async (opts?: any) => {
+    // 控制是否显示 loading
     if (!opts?.hideLoading) {
       setLoading(true);
     }
@@ -94,7 +105,7 @@ export function provideSearchUser(): SearchUserState {
       // 过滤掉空值参数，剔除0, '', null, undefined / '',[]
       ...omitBy(
         queryModel.value,
-        (value) => !value || (isObject(value) && isEmpty(value))
+        (value) => !value || (isObject(value) && isEmpty(value)),
       ),
       // 处理合并全文检索参数
       ...(fuzzyQueryModel.value.fuzzyWord
@@ -153,10 +164,69 @@ export function provideSearchUser(): SearchUserState {
     window.history.pushState({}, '', url);
   };
 
+  // 显示勾选
+  const selectionState = reactive<SelectionState>({
+    visible: false,
+    checked: [],
+  });
+
+  const toggleSelection = () => {
+    selectionState.checked = [];
+    selectionState.visible = !selectionState.visible;
+  };
+
+  const confirmDeleteUser = async (ids?: UserModel['id'][]) => {
+    if (!ids || ids.length === 0) {
+      Message.warning('请选择要删除的用户');
+      return;
+    }
+    // 弹窗确认
+    Modal.confirm({
+      title: '警告',
+      titleAlign: 'start',
+      content: '确认删除用户？',
+      modalClass: '!p-5',
+      onOk: async () => {
+        try {
+          const { data } = await deleteUser({ ids });
+          if (data?.ids && data.ids?.length === ids?.length) {
+            // 直接在前端逻辑中移除已经被删除的用户，不再请求接口
+            renderData.value = renderData.value.filter(
+              (item) => !data?.ids?.includes(item.id),
+            );
+            Message.success(
+              `已删除${data?.ids?.length || ids?.length || 0}个用户`,
+            );
+          } else {
+            Message.warning(
+              `已删除${data.ids.length}个用户, ${
+                ids.length - data?.ids?.length
+              }个用户删除失败`,
+            );
+          }
+          toggleSelection();
+        } catch (err: any) {
+          Message.error(err?.message);
+        }
+      },
+    });
+  };
+
+  // 当调用不传入参数时，用 $event 来捕获事件，防止影响真正的参数
+  const handleDeleteUser = async () => {
+    if (selectionState.visible) {
+      // 如果勾选框显示，则删除
+      await confirmDeleteUser(selectionState.checked);
+    } else {
+      // 如果勾选框隐藏，则显示
+      toggleSelection();
+    }
+  };
+
   // 条件改变
   // 注意实际开发中，对于需要手动输入的筛选值，最好是通过输入框的会车事件来触发检索
   // 否则在用户输入过程中（筛选参数的变量已随之变化）就触发检索请求，影响用户体验
-  watchDebounced(
+  watch(
     // 对于fuzzyQueryModel只监听fuzzyKeys select
     // 至于fuzzyWord 由 input 事件手动触发（输入框回车、点击查询按钮）
     [queryModel, () => fuzzyQueryModel.value.fuzzyKeys],
@@ -164,10 +234,15 @@ export function provideSearchUser(): SearchUserState {
       // 重置分页
       pagination.current = 1;
       pagination.pageSize = 20;
-      router.push({ query: undefined });
       fetchData();
+
+      // 将分页持久化到地址栏中，防止刷新丢失分页，影响用户体验
+      const url = router.resolve({
+        query: { ...route.query, current: 1, pageSize: 20 },
+      }).href;
+      window.history.pushState({}, '', url);
     },
-    { debounce: 600, deep: true }
+    { deep: true },
   );
 
   const returnState: SearchUserState = {
@@ -182,6 +257,11 @@ export function provideSearchUser(): SearchUserState {
     handleResetQueryModel,
     onPageChange,
     onPageSizeChange,
+
+    selectionState,
+    toggleSelection,
+    confirmDeleteUser,
+    handleDeleteUser,
   };
 
   provide(symbol, returnState);

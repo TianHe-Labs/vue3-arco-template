@@ -1,49 +1,37 @@
 <script lang="ts" setup>
-  import { TableColumnData, Modal, Message } from '@arco-design/web-vue';
-  import { differenceBy } from 'lodash';
+  import { computed } from 'vue';
+  import { TableColumnData } from '@arco-design/web-vue';
   import { UserModel } from '@/api/user';
   import { useSearchUser } from '../hooks/search';
   import { useEditUser } from '../hooks/edit';
 
-  const { loading, pagination, renderData, onPageChange, onPageSizeChange } =
-    useSearchUser();
-
   const {
-    handleOpenEditPanel,
+    loading,
+    pagination,
+    renderData,
+    onPageChange,
+    onPageSizeChange,
     selectionState,
-    handleToggleSelection,
-    submitDelete,
-  } = useEditUser();
+    toggleSelection,
+    confirmDeleteUser,
+    handleDeleteUser,
+  } = useSearchUser();
 
-  // 响应函数
-  const handleDelete = async ($event: Event, record?: UserModel) => {
-    const ids = record && record?.id ? [record.id] : selectionState.checked;
-    if (!ids || ids.length === 0) {
-      Message.warning('未选择要删除的用户');
-      return;
-    }
-    Modal.confirm({
-      title: '警告',
-      titleAlign: 'start',
-      content: '确认删除用户？',
-      modalClass: '!p-5',
-      onOk: async () => {
-        const failedIds = await submitDelete(ids);
-        // 直接在前端逻辑中移除已经被删除的用户，不再请求接口
-        renderData.value = differenceBy(renderData.value, failedIds, 'id');
-      },
-    });
-  };
+  const { handleOpenEditPanel } = useEditUser();
 
-  const renderColumns: TableColumnData[] = [
-    {
-      title: '#',
-      dataIndex: 'index',
-      slotName: 'index',
-      align: 'center',
-      fixed: 'left',
-      width: 50,
-    },
+  const renderColumns = computed<TableColumnData[]>(() => [
+    ...(selectionState.visible
+      ? []
+      : [
+          {
+            title: '#',
+            dataIndex: 'index',
+            slotName: 'index',
+            align: 'center',
+            fixed: 'left',
+            width: 50,
+          },
+        ]),
     {
       title: '用户名',
       dataIndex: 'username',
@@ -83,7 +71,7 @@
       width: 110,
       headerCellClass: 'whitespace-nowrap',
     },
-  ];
+  ]);
 </script>
 
 <template>
@@ -91,33 +79,26 @@
     <template #extra>
       <div class="flex gap-3">
         <!-- 删除 -->
-        <template v-if="selectionState.visible">
-          <a-button size="small" @click="handleToggleSelection">取消</a-button>
-          <a-button
-            type="primary"
-            status="danger"
-            size="small"
-            class="!px-2"
-            @click="handleDelete"
-          >
-            提交删除
-          </a-button>
-        </template>
+        <a-button
+          v-if="selectionState.visible"
+          size="small"
+          @click="toggleSelection"
+          >取消操作</a-button
+        >
         <!-- 起始状态 -->
         <a-button
-          v-else
-          type="primary"
+          :type="selectionState.visible ? 'primary' : 'outline'"
           status="danger"
           size="small"
           class="!px-2"
-          @click="handleToggleSelection"
+          @click="handleDeleteUser"
         >
           批量删除
         </a-button>
 
         <!-- 新增 -->
         <a-button
-          type="primary"
+          type="outline"
           size="small"
           class="!px-2"
           @click="handleOpenEditPanel"
@@ -170,7 +151,7 @@
         <div class="flex items-center gap-2">
           <a-button
             size="small"
-            type="primary"
+            type="outline"
             class="!px-2"
             @click="handleOpenEditPanel($event, record)"
           >
@@ -178,9 +159,9 @@
           </a-button>
           <a-button
             status="danger"
-            type="primary"
+            type="outline"
             size="small"
-            @click="handleDelete($event, record)"
+            @click="confirmDeleteUser([record.id])"
           >
             <template #icon>
               <icon-delete />
