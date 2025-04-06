@@ -3,8 +3,6 @@ import qs from 'query-string';
 import setupMock, { successResponseWrap } from '@/plugins/setup-mock';
 import { MockRequest } from '@/mock/types';
 
-const readIds: string[] = [];
-
 const messages = Mock.mock({
   'list|55': [
     {
@@ -12,7 +10,7 @@ const messages = Mock.mock({
       'title': Random.csentence(12, 20),
       'content': Random.cparagraph(),
       'type|1': ['notice', 'alert'],
-      'readAt': Random.datetime(),
+      'readAt': undefined,
       'createdAt': Random.datetime(),
       'updatedAt': Random.datetime(),
     },
@@ -27,10 +25,7 @@ setupMock({
       const p = current as number;
       const ps = pageSize as number;
       return successResponseWrap({
-        list: messages.list.slice((p - 1) * ps, p * ps).map((item: any) => ({
-          ...item,
-          readAt: readIds.indexOf(item.id) === -1 ? 0 : 1,
-        })),
+        list: messages.list.slice((p - 1) * ps, p * ps),
         total: messages.list.length,
       });
     });
@@ -48,8 +43,7 @@ setupMock({
     // 标记已读
     Mock.mock(new RegExp('/api/message/readAt'), (params: MockRequest) => {
       const { ids } = JSON.parse(params?.body as string);
-      readIds.push(...(ids || []));
-      return successResponseWrap(true);
+      return successResponseWrap({ ids, readAt: new Date() });
     });
   },
 });

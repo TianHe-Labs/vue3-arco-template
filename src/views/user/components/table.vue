@@ -119,7 +119,6 @@
       :columns="renderColumns"
       :data="renderData"
       :scroll="{ x: 1200 }"
-      :stripe="true"
       :row-selection="
         selectionState.visible
           ? { type: 'checkbox', showCheckedAll: true, onlyCurrent: false }

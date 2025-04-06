@@ -172,7 +172,6 @@
       :pagination="pagination"
       :columns="renderColumns"
       :data="renderData"
-      :stripe="true"
       :scroll="{ x: 1200 }"
       :row-selection="
         selectionState.visible
@@ -195,10 +194,13 @@
       </template>
       <!-- 消息 -->
       <template #content="{ record }">
-        <a-typography-text bold>
+        <a-typography-text bold :type="record.readAt ? 'secondary' : 'default'">
           {{ record.title }}
         </a-typography-text>
-        <a-typography-paragraph class="!mb-0">
+        <a-typography-paragraph
+          class="!mb-0"
+          :type="record.readAt ? 'secondary' : 'default'"
+        >
           {{ record.content }}
         </a-typography-paragraph>
       </template>
@@ -222,3 +224,9 @@
     </a-table>
   </a-card>
 </template>
+
+<style lang="less" scoped>
+  :deep(.arco-typography-secondary) {
+    color: var(--color-text-3) !important;
+  }
+</style>
