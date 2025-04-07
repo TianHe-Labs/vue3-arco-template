@@ -192,10 +192,10 @@
   import { computed, inject } from 'vue';
   import { useDark, useToggle, useFullscreen } from '@vueuse/core';
   import { useRouter } from 'vue-router';
-  import useLogout from '@/hooks/logout';
+  import useLogout from '@/composables/logout';
   import { useAppStore, useUserStore } from '@/store';
   import { isDevelopment } from '@/utils';
-  import { useMessage } from '@/views/message/hooks/message';
+  import { useMessage } from '@/views/message/composables/message';
 
   withDefaults(
     defineProps<{

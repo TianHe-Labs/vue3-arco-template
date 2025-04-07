@@ -2,7 +2,7 @@
   import { ref, reactive } from 'vue';
   import { Message, FormInstance } from '@arco-design/web-vue';
   import { UpdateUserPasswordReq, updateUserPassword } from '@/api/account';
-  import useUserLogout from '@/hooks/logout';
+  import useUserLogout from '@/composables/logout';
 
   const { logout } = useUserLogout();
 

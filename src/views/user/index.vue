@@ -2,8 +2,8 @@
   import Filter from './components/filter.vue';
   import Table from './components/table.vue';
   import EditPanel from './components/edit-panel.vue';
-  import { provideSearchUser } from './hooks/search';
-  import { provideEditUser } from './hooks/edit';
+  import { provideSearchUser } from './composables/search';
+  import { provideEditUser } from './composables/edit';
 
   // 查询
   provideSearchUser();

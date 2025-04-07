@@ -33,9 +33,9 @@
 <script lang="ts" setup>
   import { reactive, ref } from 'vue';
   import { isEmpty, mapValues, mergeWith } from 'lodash';
-  import useLoading from '@/hooks/loading';
+  import useLoading from '@/composables/loading';
   import { ToolTipFormatterParams } from '@/global';
-  import useChartOption from '@/hooks/chart-option';
+  import useChartOption from '@/composables/chart-option';
   import {
     queryXxxxDist,
     QueryXxxxDistReq,
@@ -106,7 +106,7 @@
       (data || [])
         .sort(
           (prev, next) =>
-            matchNumber(prev?.datetime) - matchNumber(next?.datetime)
+            matchNumber(prev?.datetime) - matchNumber(next?.datetime),
         )
         .forEach((item: QueryXxxxDist) => {
           const { datetime, ...values } = item;
@@ -150,7 +150,7 @@
             <span class="tooltip-value">
               ${Number(el.value).toLocaleString()}
             </span>
-          </div>`
+          </div>`,
       )
       .join('');
   };

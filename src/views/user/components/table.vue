@@ -2,8 +2,8 @@
   import { computed } from 'vue';
   import { TableColumnData } from '@arco-design/web-vue';
   import { UserModel } from '@/api/user';
-  import { useSearchUser } from '../hooks/search';
-  import { useEditUser } from '../hooks/edit';
+  import { useSearchUser } from '../composables/search';
+  import { useEditUser } from '../composables/edit';
 
   const {
     loading,

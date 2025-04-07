@@ -1,6 +1,6 @@
 <script lang="ts" setup>
   import { Message, TableColumnData } from '@arco-design/web-vue';
-  import { useMessage } from '../hooks/message';
+  import { useMessage } from '../composables/message';
   import { dayjs } from '@/utils/format';
   import { computed, ref } from 'vue';
 
@@ -47,6 +47,7 @@
         dataIndex: 'content',
         slotName: 'content',
         headerCellClass: 'whitespace-nowrap',
+        bodyCellClass: 'cursor-pointer',
       },
       {
         title: '时间',

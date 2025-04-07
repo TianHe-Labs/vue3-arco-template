@@ -2,7 +2,7 @@
   import { useI18n } from 'vue-i18n';
   import { enum2Arr } from '@/utils/transform';
   import { USERROLE } from '@/store/modules/user/types';
-  import { useSearchUser } from '../hooks/search';
+  import { useSearchUser } from '../composables/search';
 
   const { queryModel, fuzzyQueryModel, fetchData, handleResetQueryModel } =
     useSearchUser();

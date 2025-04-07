@@ -6,7 +6,7 @@ import axios, {
 import { Message } from '@arco-design/web-vue';
 import i18n from '@/locale';
 import { useUserStore } from '@/store';
-import useLogout from '@/hooks/logout';
+import useLogout from '@/composables/logout';
 
 // 请求队列管理器
 class RequestQueue {

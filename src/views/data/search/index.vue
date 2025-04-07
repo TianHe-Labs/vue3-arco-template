@@ -1,7 +1,7 @@
 <script lang="ts" setup>
   import Filter from './components/filter.vue';
   import Table from './components/table.vue';
-  import { provideSearchXXX } from './hooks/search';
+  import { provideSearchXXX } from './composables/search';
 
   provideSearchXXX();
 </script>

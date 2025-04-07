@@ -1,40 +1,44 @@
 import { provide, inject, Ref, reactive, ref, watch } from 'vue';
-import { Message, PaginationProps } from '@arco-design/web-vue';
+import { Message, Modal, PaginationProps } from '@arco-design/web-vue';
 import { useRoute, useRouter } from 'vue-router';
 import { isEmpty, isObject, omitBy, pick } from 'lodash';
-import useLoading from '@/hooks/loading';
-import useRequest from '@/hooks/request';
+import useLoading from '@/composables/loading';
 import {
-  queryXxxxList,
-  XxxxModel,
-  QueryXxxxListReq,
-  QueryXxxxListRes,
-} from '@/api/xxxx';
-import { Pagination } from '@/global';
+  queryUserList,
+  UserModel,
+  QueryUserListReq,
+  deleteUser,
+} from '@/api/user';
+import { SelectionState } from '@/global';
 
 interface FuzzyQueryModel {
   fuzzyWord: string;
   fuzzyKeys: string[];
 }
 
-interface SearchXXXState {
+interface SearchUserState {
   loading: Ref<boolean>;
   pagination: PaginationProps;
-  queryModel: Ref<QueryXxxxListReq>;
+  queryModel: Ref<QueryUserListReq>;
   fuzzyKeys: string[];
   fuzzyQueryModel: Ref<FuzzyQueryModel>;
-  renderData: Ref<XxxxModel[]>;
+  renderData: Ref<UserModel[]>;
 
   fetchData: (opts?: any) => Promise<void>;
   onPageChange: (current: number) => void;
   onPageSizeChange: (pageSize: number) => void;
   handleResetQueryModel: (keys?: string[]) => void;
+
+  selectionState: SelectionState;
+  toggleSelection: () => void;
+  confirmDeleteUser: (ids?: UserModel['id'][]) => Promise<void>;
+  handleDeleteUser: () => Promise<void>;
 }
 
-const symbol = Symbol('SEARCH');
+const symbol = Symbol('USER');
 
 // 用于（指定属性的）全文关键词检索
-const fuzzyKeys = ['name', 'description'];
+const fuzzyKeys = ['usernmae', 'nickname', 'email', 'phone'];
 const resetFuzzyQueryModel = (): FuzzyQueryModel => {
   return {
     fuzzyWord: '', // 匹配的具体值
@@ -43,11 +47,14 @@ const resetFuzzyQueryModel = (): FuzzyQueryModel => {
 };
 
 // 用于指定属性的精确筛选
-const resetQueryModel = (keys?: string[]): QueryXxxxListReq => {
+const resetQueryModel = (keys?: string[]): QueryUserListReq => {
   const defaultModel = {
-    id: undefined,
-    name: undefined,
-    tags: [],
+    username: undefined,
+    nickname: undefined,
+    email: undefined,
+    phone: undefined,
+    role: undefined,
+    sector: undefined,
   };
 
   if (keys && keys.length) {
@@ -56,7 +63,7 @@ const resetQueryModel = (keys?: string[]): QueryXxxxListReq => {
   return defaultModel;
 };
 
-export function provideSearchXXX(): SearchXXXState {
+export function provideSearchUser(): SearchUserState {
   const { loading, setLoading } = useLoading();
 
   // 响应式
@@ -78,12 +85,12 @@ export function provideSearchXXX(): SearchXXXState {
   });
 
   // 精确筛选条件
-  const queryModel = ref<QueryXxxxListReq>(resetQueryModel());
+  const queryModel = ref<QueryUserListReq>(resetQueryModel());
   // 全文检索条件
   const fuzzyQueryModel = ref<FuzzyQueryModel>(resetFuzzyQueryModel());
 
   // 检索结果
-  const renderData = ref<XxxxModel[]>([]);
+  const renderData = ref<UserModel[]>([]);
 
   const fetchData = async (opts?: any) => {
     // 控制是否显示 loading
@@ -110,11 +117,11 @@ export function provideSearchXXX(): SearchXXXState {
     };
 
     try {
-      const { data } = await queryXxxxList(cleanedParams);
+      const { data } = await queryUserList(cleanedParams);
       renderData.value = data.list;
       pagination.total = data.total;
     } catch (err: any) {
-      Message.error(err.message);
+      Message.error(err?.Message);
     } finally {
       setLoading(false);
     }
@@ -157,6 +164,65 @@ export function provideSearchXXX(): SearchXXXState {
     window.history.pushState({}, '', url);
   };
 
+  // 显示勾选
+  const selectionState = reactive<SelectionState>({
+    visible: false,
+    checked: [],
+  });
+
+  const toggleSelection = () => {
+    selectionState.checked = [];
+    selectionState.visible = !selectionState.visible;
+  };
+
+  const confirmDeleteUser = async (ids?: UserModel['id'][]) => {
+    if (!ids || ids.length === 0) {
+      Message.warning('请选择要删除的用户');
+      return;
+    }
+    // 弹窗确认
+    Modal.confirm({
+      title: '警告',
+      titleAlign: 'start',
+      content: '确认删除用户？',
+      modalClass: '!p-5',
+      onOk: async () => {
+        try {
+          const { data } = await deleteUser({ ids });
+          if (data?.ids && data.ids?.length === ids?.length) {
+            // 直接在前端逻辑中移除已经被删除的用户，不再请求接口
+            renderData.value = renderData.value.filter(
+              (item) => !data?.ids?.includes(item.id),
+            );
+            Message.success(
+              `已删除${data?.ids?.length || ids?.length || 0}个用户`,
+            );
+          } else {
+            Message.warning(
+              `已删除${data.ids.length}个用户, ${
+                ids.length - data?.ids?.length
+              }个用户删除失败`,
+            );
+          }
+          toggleSelection();
+        } catch (err: any) {
+          Message.error(err?.message);
+        }
+      },
+    });
+  };
+
+  // 当调用不传入参数时，用 $event 来捕获事件，防止影响真正的参数
+  const handleDeleteUser = async () => {
+    if (selectionState.visible) {
+      // 如果勾选框显示，则删除
+      await confirmDeleteUser(selectionState.checked);
+    } else {
+      // 如果勾选框隐藏，则显示
+      toggleSelection();
+    }
+  };
+
   // 条件改变
   // 注意实际开发中，对于需要手动输入的筛选值，最好是通过输入框的会车事件来触发检索
   // 否则在用户输入过程中（筛选参数的变量已随之变化）就触发检索请求，影响用户体验
@@ -179,7 +245,7 @@ export function provideSearchXXX(): SearchXXXState {
     { deep: true },
   );
 
-  const returnState: SearchXXXState = {
+  const returnState: SearchUserState = {
     loading,
     pagination,
     queryModel,
@@ -191,6 +257,11 @@ export function provideSearchXXX(): SearchXXXState {
     handleResetQueryModel,
     onPageChange,
     onPageSizeChange,
+
+    selectionState,
+    toggleSelection,
+    confirmDeleteUser,
+    handleDeleteUser,
   };
 
   provide(symbol, returnState);
@@ -198,6 +269,6 @@ export function provideSearchXXX(): SearchXXXState {
   return returnState;
 }
 
-export function useSearchXXX(): SearchXXXState {
-  return inject(symbol) as SearchXXXState;
+export function useSearchUser(): SearchUserState {
+  return inject(symbol) as SearchUserState;
 }

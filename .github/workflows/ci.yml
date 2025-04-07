@@ -81,7 +81,7 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           context: .
-          file: Lite.Dockerfile
+          file: Dockerfile
           push: true
           tags: |
             ${{ env.REGISTRY_DOMAIN }}/${{env.REGISTRY_NAMESPACE}}/${{ env.IMAGE_NAME }}:latest

@@ -1,7 +1,7 @@
 import { provide, inject, Ref, ref, reactive } from 'vue';
 import { Message } from '@arco-design/web-vue';
 import { difference, isEmpty } from 'lodash';
-import useLoading from '@/hooks/loading';
+import useLoading from '@/composables/loading';
 import {
   CreateOrUpdateUserReq,
   UserModel,

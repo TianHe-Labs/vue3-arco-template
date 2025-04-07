@@ -5,7 +5,7 @@
   import { Message, ValidatedError } from '@arco-design/web-vue';
   import { useStorage } from '@vueuse/core';
   import { useUserStore } from '@/store';
-  import useLoading from '@/hooks/loading';
+  import useLoading from '@/composables/loading';
   import { DEFAULT_ROUTE /* , DEFAULT_ROUTE_NAME */ } from '@/router/constants';
 
   interface LoginConfig {

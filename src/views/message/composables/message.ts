@@ -2,13 +2,17 @@ import { provide, inject, Ref, reactive, ref, watch } from 'vue';
 import { Message, Modal, PaginationProps } from '@arco-design/web-vue';
 import { useRoute, useRouter } from 'vue-router';
 import { isEmpty, isObject, omitBy, pick } from 'lodash';
-import useLoading from '@/hooks/loading';
+import useLoading from '@/composables/loading';
 import {
-  queryUserList,
-  UserModel,
-  QueryUserListReq,
-  deleteUser,
-} from '@/api/user';
+  queryMessageList,
+  MessageModel,
+  QueryMessageListReq,
+  updateMessageReadAt,
+  deleteMessage,
+  QueryMessageStatRes,
+  queryMessageStat,
+  QueryMessageStatReq,
+} from '@/api/message';
 import { SelectionState } from '@/global';
 
 interface FuzzyQueryModel {
@@ -16,29 +20,32 @@ interface FuzzyQueryModel {
   fuzzyKeys: string[];
 }
 
-interface SearchUserState {
+interface MessageState {
   loading: Ref<boolean>;
   pagination: PaginationProps;
-  queryModel: Ref<QueryUserListReq>;
+  queryModel: Ref<QueryMessageListReq>;
   fuzzyKeys: string[];
   fuzzyQueryModel: Ref<FuzzyQueryModel>;
-  renderData: Ref<UserModel[]>;
+  renderStats: Ref<QueryMessageStatRes>;
+  renderData: Ref<MessageModel[]>;
 
   fetchData: (opts?: any) => Promise<void>;
+  fetchStats: (params?: QueryMessageStatReq) => Promise<void>;
   onPageChange: (current: number) => void;
   onPageSizeChange: (pageSize: number) => void;
   handleResetQueryModel: (keys?: string[]) => void;
 
   selectionState: SelectionState;
   toggleSelection: () => void;
-  confirmDeleteUser: (ids?: UserModel['id'][]) => Promise<void>;
-  handleDeleteUser: () => Promise<void>;
+
+  handleMarkRead: () => Promise<void>;
+  handleDelete: () => Promise<void>;
 }
 
-const symbol = Symbol('USER');
+const symbol = Symbol('MESSAGE');
 
 // 用于（指定属性的）全文关键词检索
-const fuzzyKeys = ['usernmae', 'nickname', 'email', 'phone'];
+const fuzzyKeys = ['title', 'content'];
 const resetFuzzyQueryModel = (): FuzzyQueryModel => {
   return {
     fuzzyWord: '', // 匹配的具体值
@@ -47,14 +54,10 @@ const resetFuzzyQueryModel = (): FuzzyQueryModel => {
 };
 
 // 用于指定属性的精确筛选
-const resetQueryModel = (keys?: string[]): QueryUserListReq => {
+const resetQueryModel = (keys?: string[]): QueryMessageListReq => {
   const defaultModel = {
-    username: undefined,
-    nickname: undefined,
-    email: undefined,
-    phone: undefined,
-    role: undefined,
-    sector: undefined,
+    type: undefined,
+    unread: undefined,
   };
 
   if (keys && keys.length) {
@@ -63,7 +66,7 @@ const resetQueryModel = (keys?: string[]): QueryUserListReq => {
   return defaultModel;
 };
 
-export function provideSearchUser(): SearchUserState {
+export function provideMessage(): MessageState {
   const { loading, setLoading } = useLoading();
 
   // 响应式
@@ -85,12 +88,27 @@ export function provideSearchUser(): SearchUserState {
   });
 
   // 精确筛选条件
-  const queryModel = ref<QueryUserListReq>(resetQueryModel());
+  const queryModel = ref<QueryMessageListReq>(resetQueryModel());
   // 全文检索条件
   const fuzzyQueryModel = ref<FuzzyQueryModel>(resetFuzzyQueryModel());
 
+  // 统计
+  const renderStats = ref<QueryMessageStatRes>({} as QueryMessageStatRes);
+
   // 检索结果
-  const renderData = ref<UserModel[]>([]);
+  const renderData = ref<MessageModel[]>([]);
+
+  const fetchStats = async (params?: QueryMessageStatReq) => {
+    try {
+      const { data } = await queryMessageStat(params || {});
+      renderStats.value = data;
+    } catch (err: any) {
+      Message.error(err.message);
+    }
+  };
+
+  // 获取统计数据
+  fetchStats();
 
   const fetchData = async (opts?: any) => {
     // 控制是否显示 loading
@@ -105,7 +123,7 @@ export function provideSearchUser(): SearchUserState {
       // 过滤掉空值参数，剔除0, '', null, undefined / '',[]
       ...omitBy(
         queryModel.value,
-        (value) => !value || (isObject(value) && isEmpty(value)),
+        (value, key) => !value || (isObject(value) && isEmpty(value)),
       ),
       // 处理合并全文检索参数
       ...(fuzzyQueryModel.value.fuzzyWord
@@ -117,20 +135,17 @@ export function provideSearchUser(): SearchUserState {
     };
 
     try {
-      const { data } = await queryUserList(cleanedParams);
+      const { data } = await queryMessageList(cleanedParams);
       renderData.value = data.list;
       pagination.total = data.total;
     } catch (err: any) {
-      Message.error(err?.Message);
+      Message.error(err.message);
     } finally {
       setLoading(false);
     }
   };
 
-  fetchData();
-
   const router = useRouter();
-
   // 重置
   const handleResetQueryModel = (keys?: string[]) => {
     router.push({ query: {} });
@@ -164,59 +179,92 @@ export function provideSearchUser(): SearchUserState {
     window.history.pushState({}, '', url);
   };
 
-  // 显示勾选
+  // 选中消息
+  // 显示表格勾选
   const selectionState = reactive<SelectionState>({
     visible: false,
     checked: [],
   });
-
   const toggleSelection = () => {
     selectionState.checked = [];
     selectionState.visible = !selectionState.visible;
   };
 
-  const confirmDeleteUser = async (ids?: UserModel['id'][]) => {
+  // 标记已读，不传参数则全部标记
+  const markMessageRead = async (ids?: MessageModel['id'][]) => {
     if (!ids || ids.length === 0) {
-      Message.warning('请选择要删除的用户');
+      Message.warning('请选择要标记已读的消息');
+      return;
+    }
+    try {
+      const { data } = await updateMessageReadAt({ ids });
+      renderData.value = renderData.value.map((item) => {
+        return {
+          ...item,
+          ...(data?.ids?.includes(item.id) ? { readAt: data.readAt } : {}),
+        };
+      });
+      Message.success(
+        `已将${data?.ids?.length || ids?.length || 0}条消息标记为已读`,
+      );
+      toggleSelection();
+    } catch (err: any) {
+      Message.error(err.message);
+    }
+  };
+
+  // 删除，不传参数则全部删除
+  const confirmDeleteMessage = async (ids?: MessageModel['id'][]) => {
+    if (!ids || ids.length === 0) {
+      Message.warning('请选择要删除的消息');
       return;
     }
     // 弹窗确认
     Modal.confirm({
       title: '警告',
+      content: '确定要删除消息？',
       titleAlign: 'start',
-      content: '确认删除用户？',
       modalClass: '!p-5',
       onOk: async () => {
         try {
-          const { data } = await deleteUser({ ids });
+          const { data } = await deleteMessage({ ids });
           if (data?.ids && data.ids?.length === ids?.length) {
             // 直接在前端逻辑中移除已经被删除的用户，不再请求接口
             renderData.value = renderData.value.filter(
               (item) => !data?.ids?.includes(item.id),
             );
             Message.success(
-              `已删除${data?.ids?.length || ids?.length || 0}个用户`,
+              `已删除${data?.ids?.length || ids?.length || 0}条消息`,
             );
           } else {
             Message.warning(
-              `已删除${data.ids.length}个用户, ${
+              `已删除${data?.ids?.length}条消息, ${
                 ids.length - data?.ids?.length
-              }个用户删除失败`,
+              }条消息删除失败`,
             );
           }
           toggleSelection();
         } catch (err: any) {
-          Message.error(err?.message);
+          Message.error(err.message);
         }
       },
     });
   };
 
-  // 当调用不传入参数时，用 $event 来捕获事件，防止影响真正的参数
-  const handleDeleteUser = async () => {
+  const handleMarkRead = async () => {
+    if (selectionState.visible) {
+      // 如果勾选框显示，则标记已读
+      await markMessageRead(selectionState.checked);
+    } else {
+      // 如果勾选框隐藏，则显示
+      toggleSelection();
+    }
+  };
+
+  const handleDelete = async () => {
     if (selectionState.visible) {
       // 如果勾选框显示，则删除
-      await confirmDeleteUser(selectionState.checked);
+      await confirmDeleteMessage(selectionState.checked);
     } else {
       // 如果勾选框隐藏，则显示
       toggleSelection();
@@ -245,23 +293,26 @@ export function provideSearchUser(): SearchUserState {
     { deep: true },
   );
 
-  const returnState: SearchUserState = {
+  const returnState: MessageState = {
     loading,
     pagination,
     queryModel,
     fuzzyKeys,
     fuzzyQueryModel,
+    renderStats,
     renderData,
 
     fetchData,
+    fetchStats,
     handleResetQueryModel,
     onPageChange,
     onPageSizeChange,
 
     selectionState,
     toggleSelection,
-    confirmDeleteUser,
-    handleDeleteUser,
+
+    handleMarkRead,
+    handleDelete,
   };
 
   provide(symbol, returnState);
@@ -269,6 +320,6 @@ export function provideSearchUser(): SearchUserState {
   return returnState;
 }
 
-export function useSearchUser(): SearchUserState {
-  return inject(symbol) as SearchUserState;
+export function useMessage(): MessageState {
+  return inject(symbol) as MessageState;
 }

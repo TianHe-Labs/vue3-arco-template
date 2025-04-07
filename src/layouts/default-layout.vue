@@ -67,7 +67,7 @@
   import Toolbar from '@/components/toolbar/index.vue';
   import Footer from '@/components/footer/index.vue';
   import TabBar from '@/components/tab-bar/index.vue';
-  import { provideMessage } from '@/views/message/hooks/message';
+  import { provideMessage } from '@/views/message/composables/message';
   // import FeedbackPanel from '@/components/feedback-panel/index.vue';
   import PageLayout from './page-layout.vue';
 

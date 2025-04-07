@@ -1,6 +1,6 @@
 <script lang="ts" setup>
   import { TableColumnData } from '@arco-design/web-vue';
-  import { useSearchXXX } from '../hooks/search';
+  import { useSearchXXX } from '../composables/search';
 
   const {
     loading,
@@ -25,7 +25,6 @@
       dataIndex: 'name',
       slotName: 'name',
       fixed: 'left',
-      width: 90,
       headerCellClass: 'whitespace-nowrap',
     },
     {
@@ -83,17 +82,19 @@
             class="!text-base before:content-['#']"
           >
             <span :data-name="tag" class="truncate">{{ tag }}</span>
-            <template #icon>
-              <icon-filter />
-            </template>
           </a-tag>
         </div>
       </template>
       <!-- 操作 -->
-      <template #actions>
+      <template #actions="{ record }">
         <div class="flex items-center gap-2">
-          <a-button size="small" type="primary">详情</a-button>
-          <a-button status="danger" size="small" type="primary">
+          <router-link
+            :to="{ name: 'XxxxDetail', params: { id: record.id } }"
+            target="_blank"
+          >
+            <a-button size="small" type="outline" class="!px-2">详情</a-button>
+          </router-link>
+          <a-button status="danger" size="small" type="outline" class="!px-2">
             <template #icon>
               <icon-delete />
             </template>

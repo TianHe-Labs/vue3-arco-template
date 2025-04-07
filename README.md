@@ -23,7 +23,7 @@
 
 - **User Authentication**: api/user, store/user
 
-- **User Permission**: router/guard, hooks/permission
+- **User Permission**: router/guard, composables/permission
 
 - **Rich icon library**: UnoCSS/Iconify
   ```html
@@ -89,7 +89,6 @@
 
     // deleteX
     DELETE /api/X // body: { ids: [] }
-    DELETE /api/X/{id}
     ...
     ```
 
@@ -99,7 +98,7 @@
 
   - **directives**: Vue3 directive, eg: ``v-permission``
 
-  - **hooks**: common hooks, eg: ``chart-option``, ``loading``, ``logout``, ``permission``
+  - **composables**: common composables, eg: ``chart-option``, ``loading``, ``logout``, ``permission``
 
   - **layouts**: common layout components
 

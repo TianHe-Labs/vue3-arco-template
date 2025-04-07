@@ -7,8 +7,8 @@
   import { USERROLE } from '@/store/modules/user/types';
   import { enum2Arr } from '@/utils/transform';
   import { isPhone } from '@/utils/is';
-  import { useEditUser } from '../hooks/edit';
-  import { useSearchUser } from '../hooks/search';
+  import { useEditUser } from '../composables/edit';
+  import { useSearchUser } from '../composables/search';
 
   const { renderData } = useSearchUser();
 

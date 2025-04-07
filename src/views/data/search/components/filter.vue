@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-  import { useSearchXXX } from '../hooks/search';
+  import { useSearchXXX } from '../composables/search';
 
   const { queryModel, fuzzyQueryModel, fetchData, handleResetQueryModel } =
     useSearchXXX();

@@ -1,7 +1,7 @@
 import type { Router, RouteRecordNormalized } from 'vue-router';
 import NProgress from 'nprogress'; // progress bar
 
-import usePermission from '@/hooks/permission';
+import usePermission from '@/composables/permission';
 import { useUserStore, useAppStore } from '@/store';
 import { appRoutes } from '../routes';
 import { WHITE_LIST, NOT_FOUND } from '../constants';
@@ -31,7 +31,7 @@ export default function setupPermissionGuard(router: Router) {
 
         if (element?.children) {
           appMenus.push(
-            ...(element.children as unknown as RouteRecordNormalized[])
+            ...(element.children as unknown as RouteRecordNormalized[]),
           );
         }
       }
