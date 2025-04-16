@@ -10,7 +10,10 @@
 
   const userStore = useUserStore();
 
+  // 绑定表单实例
   const basicInfoFormRef = ref<FormInstance>();
+
+  // 表单数据
   const basicInfoFormModel = reactive<UpdateUserInfoReq>({
     username: userStore.username,
     nickname: userStore.nickname,

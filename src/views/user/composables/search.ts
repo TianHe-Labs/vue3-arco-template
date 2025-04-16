@@ -90,7 +90,7 @@ export function provideSearchUser(): SearchUserState {
     bufferSize: 1,
   });
 
-  // 表单
+  // 绑定表单实例
   const queryFormRef = ref<FormInstance>();
 
   // 精确筛选条件
@@ -239,8 +239,9 @@ export function provideSearchUser(): SearchUserState {
   };
 
   // 条件改变
-  // 注意实际开发中，对于需要手动输入的筛选值，最好是通过输入框的会车事件来触发检索
+  // 对于需要 <a-input /> 手动输入的筛选值，通过输入框的回车 press-enter 事件来触发检索
   // 否则在用户输入过程中（筛选参数的变量已随之变化）就触发检索请求，影响用户体验
+  // 同时注意，使用也要开启 allow-clear 属性，绑定 <a-input /> 的 clear 事件
   watch(
     // 对于fuzzyQueryModel只监听fuzzyKeys select
     // 至于fuzzyWord 由 input 事件手动触发（输入框回车、点击查询按钮）

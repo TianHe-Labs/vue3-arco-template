@@ -6,7 +6,9 @@
 
   const { logout } = useUserLogout();
 
+  // 绑定表单实例
   const passwordFormRef = ref<FormInstance>();
+  // 表单数据
   const passwordFormData = reactive<UpdateUserPasswordReq>({
     oldPassword: '',
     newPassword: '',
