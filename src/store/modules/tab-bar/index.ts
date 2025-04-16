@@ -11,7 +11,7 @@ import { TabBarState, TagProps } from './types';
 const formatTag = (route: RouteLocationNormalized): TagProps => {
   const { name, meta, fullPath, query } = route;
   return {
-    title: meta.title || '',
+    title: meta.locale || '',
     name: String(name),
     fullPath,
     query,
