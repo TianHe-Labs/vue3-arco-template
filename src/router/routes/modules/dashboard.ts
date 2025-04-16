@@ -6,7 +6,7 @@ export default {
   redirect: '/dashboard',
   component: DEFAULT_LAYOUT,
   meta: {
-    title: '仪表盘',
+    locale: 'menu.dashboard',
     icon: 'icon-dashboard',
     requiresAuth: true,
     order: 0,
@@ -18,7 +18,7 @@ export default {
       name: 'Overview',
       component: () => import('@/views/dashboard/index.vue'),
       meta: {
-        title: '概览',
+        locale: 'menu.dashboard.overview',
         requiresAuth: true,
         roles: ['*'],
         activeMenu: 'Dashboard',

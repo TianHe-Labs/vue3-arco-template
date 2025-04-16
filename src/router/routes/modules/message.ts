@@ -6,7 +6,7 @@ export default {
   redirect: '/message',
   component: DEFAULT_LAYOUT,
   meta: {
-    title: '消息通知',
+    locale: 'menu.message',
     icon: 'icon-message',
     requiresAuth: true,
     order: 8,
@@ -18,7 +18,7 @@ export default {
       name: 'MessageList',
       component: () => import('@/views/message/index.vue'),
       meta: {
-        title: '消息列表',
+        locale: 'menu.message.list',
         requiresAuth: true,
         roles: ['*'],
         activeMenu: 'Message',

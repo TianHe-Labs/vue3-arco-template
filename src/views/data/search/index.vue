@@ -8,7 +8,7 @@
 
 <template>
   <div class="h-full flex flex-col gap-4 p-4">
-    <Breadcrumb :items="['XX检索']" />
+    <Breadcrumb :items="['menu.data.search']" />
     <Filter />
     <Table />
   </div>

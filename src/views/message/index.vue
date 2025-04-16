@@ -4,7 +4,7 @@
 
 <template>
   <div class="h-full flex flex-col gap-4 p-4">
-    <Breadcrumb :items="['消息通知']" />
+    <Breadcrumb :items="['menu.message']" />
     <Table />
   </div>
 </template>

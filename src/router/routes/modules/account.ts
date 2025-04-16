@@ -6,7 +6,7 @@ export default {
   redirect: '/account',
   component: DEFAULT_LAYOUT,
   meta: {
-    title: '用户中心',
+    locale: 'menu.account',
     icon: 'icon-user',
     requiresAuth: true,
     order: 7,
@@ -17,7 +17,7 @@ export default {
       name: 'AccountIndex',
       component: () => import('@/views/account/index.vue'),
       meta: {
-        title: '用户中心',
+        locale: 'menu.account.index',
         requiresAuth: true,
         roles: ['*'],
         activeMenu: 'Account',

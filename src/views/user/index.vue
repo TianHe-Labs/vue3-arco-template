@@ -20,7 +20,7 @@
 
 <template>
   <div class="h-full flex flex-col p-4 gap-4">
-    <Breadcrumb :items="['用户管理']" />
+    <Breadcrumb :items="['menu.user']" />
 
     <Filter />
     <Table />

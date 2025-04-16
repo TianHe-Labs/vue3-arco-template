@@ -6,6 +6,7 @@
     useRoute,
     useRouter,
   } from 'vue-router';
+  import { useI18n } from 'vue-i18n';
   import { useAppStore } from '@/store';
   import { listenerRouteChange } from '@/plugins/route-listener';
   import { openWindow, regexUrl } from '@/utils';
@@ -22,12 +23,15 @@
     setup(props) {
       const router = useRouter();
       const route = useRoute();
+
+      const { t } = useI18n();
+
       const appStore = useAppStore();
       const { menuTree } = useMenuTree();
 
       // 移动端抽屉菜单
       const toggleDrawerMenu = inject('toggleDrawerMenu') as (
-        opts?: any
+        opts?: any,
       ) => void;
 
       const breakpoints = inject('breakpoints') as any;
@@ -94,7 +98,7 @@
         const { requiresAuth, activeMenu, hideInMenu } = newRoute.meta;
         if (requiresAuth && (!hideInMenu || activeMenu)) {
           const menuOpenKeys = findMenuOpenKeys(
-            (activeMenu || newRoute.name) as string
+            (activeMenu || newRoute.name) as string,
           );
 
           const keySet = new Set([...menuOpenKeys, ...openKeys.value]);
@@ -120,7 +124,7 @@
                     key={element?.name}
                     v-slots={{
                       icon,
-                      title: () => h(compile(element.meta?.title || '')),
+                      title: () => h(compile(t(element.meta?.locale || ''))),
                     }}
                   >
                     {travel(element?.children)}
@@ -134,7 +138,7 @@
                       toggleDrawerMenu({ isMenuClick: true });
                     }}
                   >
-                    {element?.meta?.title || ''}
+                    {t(element?.meta?.locale || '')}
                   </a-menu-item>
                 );
               nodes.push(node as never);

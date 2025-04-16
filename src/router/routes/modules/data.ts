@@ -6,7 +6,7 @@ export default {
   redirect: '/xxxx',
   component: DEFAULT_LAYOUT,
   meta: {
-    title: '数据管理',
+    locale: 'menu.data',
     icon: 'icon-search',
     requiresAuth: true,
     order: 2,
@@ -18,7 +18,7 @@ export default {
       name: 'XxxxSearch',
       component: () => import('@/views/data/search/index.vue'),
       meta: {
-        title: '数据查询',
+        locale: 'menu.data.search',
         requiresAuth: true,
         roles: ['*'],
         activeMenu: 'Xxxx',
@@ -30,7 +30,7 @@ export default {
       props: true,
       component: () => import('@/views/data/detail/index.vue'),
       meta: {
-        title: '数据查询',
+        locale: 'menu.data.detail',
         requiresAuth: true,
         roles: ['*'],
         activeMenu: 'Xxxx',
