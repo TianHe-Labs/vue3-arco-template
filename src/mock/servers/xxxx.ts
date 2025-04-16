@@ -28,5 +28,12 @@ setupMock({
         total: xxxxs.list.length,
       });
     });
+    // 删除
+    Mock.mock(new RegExp('/api/xxxx/delete'), (params: MockRequest) => {
+      const { ids } = JSON.parse(params.body as string);
+      return successResponseWrap({
+        ids,
+      });
+    });
   },
 });

@@ -1,6 +1,8 @@
 <script lang="ts" setup>
+  import { computed } from 'vue';
   import { TableColumnData } from '@arco-design/web-vue';
   import { useSearchXXX } from '../composables/search';
+  import { useDeleteXxxx } from '../composables/delete';
 
   const {
     loading,
@@ -9,17 +11,29 @@
     renderData,
     onPageChange,
     onPageSizeChange,
+    onUpdateRenderData,
   } = useSearchXXX();
 
-  const renderColumns: TableColumnData[] = [
-    {
-      title: '#',
-      dataIndex: 'index',
-      slotName: 'index',
-      align: 'center',
-      fixed: 'left',
-      width: 50,
-    },
+  const {
+    selectionState,
+    toggleSelection,
+    handleConfirmDeleteXxxx,
+    handleBatchDeleteXxxx,
+  } = useDeleteXxxx();
+
+  const renderColumns = computed<TableColumnData[]>(() => [
+    ...(selectionState.visible
+      ? []
+      : [
+          {
+            title: '#',
+            dataIndex: 'index',
+            slotName: 'index',
+            align: 'center',
+            fixed: 'left',
+            width: 50,
+          },
+        ]),
     {
       title: '名称',
       dataIndex: 'name',
@@ -47,12 +61,34 @@
       width: 110,
       headerCellClass: 'whitespace-nowrap',
     },
-  ];
+  ]);
 </script>
 
 <template>
   <a-card :bordered="false" title="检索结果">
+    <template #extra>
+      <div class="flex gap-3">
+        <!-- 删除 -->
+        <a-button
+          v-if="selectionState.visible"
+          size="small"
+          @click="toggleSelection(false)"
+          >取消操作</a-button
+        >
+        <!-- 起始状态 -->
+        <a-button
+          :type="selectionState.visible ? 'primary' : 'outline'"
+          status="danger"
+          size="small"
+          class="!px-2"
+          @click="handleBatchDeleteXxxx(onUpdateRenderData)"
+        >
+          批量删除
+        </a-button>
+      </div>
+    </template>
     <a-table
+      v-model:selected-keys="selectionState.checked"
       row-key="id"
       :loading="loading"
       :bordered="false"
@@ -60,6 +96,11 @@
       :columns="renderColumns"
       :data="renderData"
       :scroll="{ x: 1200 }"
+      :row-selection="
+        selectionState.visible
+          ? { type: 'checkbox', showCheckedAll: true, onlyCurrent: false }
+          : undefined
+      "
       filter-icon-align-left
       @page-change="onPageChange"
       @page-size-change="onPageSizeChange"
@@ -94,7 +135,13 @@
           >
             <a-button size="small" type="outline" class="!px-2">详情</a-button>
           </router-link>
-          <a-button status="danger" size="small" type="outline" class="!px-2">
+          <a-button
+            status="danger"
+            size="small"
+            type="outline"
+            class="!px-2"
+            @click="handleConfirmDeleteXxxx([record.id], onUpdateRenderData)"
+          >
             <template #icon>
               <icon-delete />
             </template>

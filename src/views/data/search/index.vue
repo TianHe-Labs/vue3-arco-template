@@ -2,8 +2,13 @@
   import Filter from './components/filter.vue';
   import Table from './components/table.vue';
   import { provideSearchXXX } from './composables/search';
+  import { provideDeleteXxxx } from './composables/delete';
 
+  // 搜索
   provideSearchXXX();
+
+  // 删除
+  provideDeleteXxxx();
 </script>
 
 <template>

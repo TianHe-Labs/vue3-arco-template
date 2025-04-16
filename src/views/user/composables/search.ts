@@ -8,13 +8,8 @@ import {
 import { useRoute, useRouter } from 'vue-router';
 import { isEmpty, isObject, omitBy, pick } from 'lodash';
 import useLoading from '@/composables/loading';
-import {
-  queryUserList,
-  UserModel,
-  QueryUserListReq,
-  deleteUser,
-} from '@/api/user';
-import { SelectionState } from '@/global';
+import { queryUserList, UserModel, QueryUserListReq } from '@/api/user';
+
 interface FuzzyQueryModel {
   fuzzyWord: string;
   fuzzyKeys: string[];
@@ -33,11 +28,6 @@ interface SearchUserState {
   onPageChange: (current: number) => void;
   onPageSizeChange: (pageSize: number) => void;
   handleResetQueryModel: (keys?: string[]) => void;
-
-  selectionState: SelectionState;
-  toggleSelection: () => void;
-  confirmDeleteUser: (ids?: UserModel['id'][]) => Promise<void>;
-  handleDeleteUser: () => Promise<void>;
 
   onUpdateRenderData: (data: {
     type: 'update' | 'create';
@@ -183,84 +173,35 @@ export function provideSearchUser(): SearchUserState {
     window.history.pushState({}, '', url);
   };
 
-  // 显示勾选
-  const selectionState = reactive<SelectionState>({
-    visible: false,
-    checked: [],
-  });
-
-  const toggleSelection = () => {
-    selectionState.checked = [];
-    selectionState.visible = !selectionState.visible;
-  };
-
-  const confirmDeleteUser = async (ids?: UserModel['id'][]) => {
-    if (!ids || ids.length === 0) {
-      Message.warning('请选择要删除的用户');
-      return;
-    }
-    // 弹窗确认
-    Modal.confirm({
-      title: '警告',
-      titleAlign: 'start',
-      content: '确认删除用户？',
-      modalClass: '!p-5',
-      onOk: async () => {
-        try {
-          const { data } = await deleteUser({ ids });
-          if (data?.ids && data.ids?.length === ids?.length) {
-            // 直接在前端逻辑中移除已经被删除的用户，不再请求接口
-            renderData.value = renderData.value.filter(
-              (item) => !data?.ids?.includes(item.id),
-            );
-            Message.success(
-              `已删除${data?.ids?.length || ids?.length || 0}个用户`,
-            );
-          } else {
-            Message.warning(
-              `已删除${data.ids.length}个用户, ${
-                ids.length - data?.ids?.length
-              }个用户删除失败`,
-            );
-          }
-          toggleSelection();
-        } catch (err: any) {
-          Message.error(err?.message);
-        }
-      },
-    });
-  };
-
-  // 当调用不传入参数时，用 $event 来捕获事件，防止影响真正的参数
-  const handleDeleteUser = async () => {
-    if (selectionState.visible) {
-      // 如果勾选框显示，则删除
-      await confirmDeleteUser(selectionState.checked);
-    } else {
-      // 如果勾选框隐藏，则显示
-      toggleSelection();
-    }
-  };
-
   // 响应更新列表
   const onUpdateRenderData = (data: {
-    type: 'update' | 'create';
-    data: UserModel;
+    type: 'update' | 'create' | 'delete';
+    data: UserModel | UserModel['id'][];
   }) => {
-    if (data.type === 'update') {
-      // 更新
-      renderData.value = renderData.value.map((item) => {
-        if (item.id === data.data.id) {
-          return {
-            ...item,
-            ...data.data,
-          };
-        }
-        return item;
-      });
-    } else {
-      // 创建
-      renderData.value.unshift(data.data);
+    switch (data.type) {
+      case 'update':
+        // 更新
+        renderData.value = renderData.value.map((item) => {
+          if (item.id === (data.data as UserModel).id) {
+            return {
+              ...item,
+              ...(data.data as UserModel),
+            };
+          }
+          return item;
+        });
+        break;
+      case 'create':
+        // 创建
+        renderData.value.unshift(data.data as UserModel);
+        break;
+      case 'delete':
+        renderData.value = renderData.value.filter(
+          (item) => !(data.data as UserModel['id'][]).includes(item.id),
+        );
+        break;
+      default:
+        break;
     }
   };
 
@@ -300,11 +241,6 @@ export function provideSearchUser(): SearchUserState {
     handleResetQueryModel,
     onPageChange,
     onPageSizeChange,
-
-    selectionState,
-    toggleSelection,
-    confirmDeleteUser,
-    handleDeleteUser,
 
     onUpdateRenderData,
   };

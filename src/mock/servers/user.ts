@@ -62,5 +62,12 @@ setupMock({
         password: reqBody.username,
       });
     });
+    // 删除
+    Mock.mock(new RegExp('/api/user/delete'), (req: MockRequest) => {
+      const { ids } = JSON.parse(req?.body as string);
+      return successResponseWrap({
+        ids,
+      });
+    });
   },
 });

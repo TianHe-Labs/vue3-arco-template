@@ -26,3 +26,17 @@ export function queryXxxxList(params: QueryXxxxListReq & Pagination) {
     },
   });
 }
+
+// 删除 兼容批量
+export interface DeleteXxxxReq {
+  ids: XxxxModel['id'][];
+}
+export interface DeleteXxxxRes {
+  ids: XxxxModel['id'][]; // 删除成功的ID
+}
+
+export function deleteXxxx(data: DeleteXxxxReq) {
+  return axios.delete('/api/xxxx/delete', {
+    data,
+  });
+}

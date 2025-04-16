@@ -40,7 +40,7 @@ export function provideEditUser(): SearchUserState {
     editPanelVisible.value = true;
   };
 
-  const handleSubmitEdit = async (callback: any /* emits: any */) => {
+  const handleSubmitEdit = async (callback?: any /* emits: any */) => {
     // 必要的表单校验
     const errors = await editUserFormRef.value?.validate();
     if (errors && Object.keys(errors).length > 0) {
@@ -136,7 +136,7 @@ export function provideEditUser(): SearchUserState {
       // emits('update:data', updatedData);
 
       // 使用 callback 来更新列表
-      callback(updatedData);
+      callback?.(updatedData);
       return true;
     } catch (err: any) {
       Message.error(err?.message);

@@ -1,22 +1,32 @@
 <script lang="ts" setup>
   import { computed } from 'vue';
   import { TableColumnData } from '@arco-design/web-vue';
+  import { useUserStore } from '@/store';
   import { useSearchUser } from '../composables/search';
   import { useEditUser } from '../composables/edit';
-
+  import { useDeleteUser } from '../composables/delete';
+  // 搜索
   const {
     loading,
     pagination,
     renderData,
     onPageChange,
     onPageSizeChange,
-    selectionState,
-    toggleSelection,
-    confirmDeleteUser,
-    handleDeleteUser,
+    onUpdateRenderData,
   } = useSearchUser();
 
+  // 编辑
   const { handleOpenEditPanel } = useEditUser();
+
+  // 删除
+  const {
+    selectionState,
+    toggleSelection,
+    handleConfirmDeleteUser,
+    handleBatchDeleteUser,
+  } = useDeleteUser();
+
+  const userStore = useUserStore();
 
   const renderColumns = computed<TableColumnData[]>(() => [
     ...(selectionState.visible
@@ -81,7 +91,7 @@
         <a-button
           v-if="selectionState.visible"
           size="small"
-          @click="toggleSelection"
+          @click="toggleSelection(false)"
           >取消操作</a-button
         >
         <!-- 起始状态 -->
@@ -90,7 +100,7 @@
           status="danger"
           size="small"
           class="!px-2"
-          @click="handleDeleteUser"
+          @click="handleBatchDeleteUser(onUpdateRenderData)"
         >
           批量删除
         </a-button>
@@ -159,7 +169,8 @@
             status="danger"
             type="outline"
             size="small"
-            @click="confirmDeleteUser([record.id])"
+            :disabled="record.id === userStore?.id"
+            @click="handleConfirmDeleteUser([record.id], onUpdateRenderData)"
           >
             <template #icon>
               <icon-delete />

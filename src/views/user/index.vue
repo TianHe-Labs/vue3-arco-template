@@ -4,9 +4,13 @@
   import EditPanel from './components/edit-panel.vue';
   import { provideSearchUser } from './composables/search';
   import { provideEditUser } from './composables/edit';
+  import { provideDeleteUser } from './composables/delete';
 
   // 查询
   provideSearchUser();
+
+  // 删除
+  provideDeleteUser();
 
   // 编辑
   provideEditUser();

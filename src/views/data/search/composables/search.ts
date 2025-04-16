@@ -25,6 +25,11 @@ interface SearchXXXState {
   onPageChange: (current: number) => void;
   onPageSizeChange: (pageSize: number) => void;
   handleResetQueryModel: (keys?: string[]) => void;
+
+  onUpdateRenderData: (data: {
+    type: 'update' | 'create' | 'delete';
+    data: XxxxModel | XxxxModel['id'][];
+  }) => void;
 }
 
 const symbol = Symbol('SEARCH');
@@ -162,6 +167,35 @@ export function provideSearchXXX(): SearchXXXState {
     window.history.pushState({}, '', url);
   };
 
+  const onUpdateRenderData = (data: {
+    type: 'update' | 'create' | 'delete';
+    data: XxxxModel | XxxxModel['id'][];
+  }) => {
+    switch (data.type) {
+      case 'update':
+        renderData.value = renderData.value.map((item) => {
+          if (item.id === (data.data as XxxxModel).id) {
+            return {
+              ...item,
+              ...(data.data as XxxxModel),
+            };
+          }
+          return item;
+        });
+        break;
+      case 'create':
+        renderData.value.unshift(data.data as XxxxModel);
+        break;
+      case 'delete':
+        renderData.value = renderData.value.filter(
+          (item) => !(data.data as XxxxModel['id'][]).includes(item.id),
+        );
+        break;
+      default:
+        break;
+    }
+  };
+
   // 条件改变
   // 对于需要 <a-input /> 手动输入的筛选值，通过输入框的回车 press-enter 事件来触发检索
   // 否则在用户输入过程中（筛选参数的变量已随之变化）就触发检索请求，影响用户体验
@@ -198,6 +232,8 @@ export function provideSearchXXX(): SearchXXXState {
     handleResetQueryModel,
     onPageChange,
     onPageSizeChange,
+
+    onUpdateRenderData,
   };
 
   provide(symbol, returnState);
