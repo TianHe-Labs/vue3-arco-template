@@ -1,8 +1,13 @@
 <script lang="ts" setup>
   import { useSearchXXX } from '../composables/search';
 
-  const { queryModel, fuzzyQueryModel, fetchData, handleResetQueryModel } =
-    useSearchXXX();
+  const {
+    queryFormRef,
+    queryModel,
+    fuzzyQueryModel,
+    fetchData,
+    handleResetQueryModel,
+  } = useSearchXXX();
 
   // const fuzzyKeyOptions = fuzzyKeys.map((value) => ({
   //   label: value,
@@ -23,10 +28,10 @@
 
 <template>
   <a-card :bordered="false">
-    <a-form :model="queryModel" auto-label-width>
+    <a-form ref="queryFormRef" :model="queryModel" auto-label-width>
       <div class="grid lg:grid-cols-2 xl:grid-cols-3 gap-x-4">
         <!-- 精确匹配 -->
-        <a-form-item field="id" label="ID">
+        <a-form-item field="id" label="ID" :rules="[]">
           <a-select
             v-model="queryModel.id"
             allow-clear
@@ -50,7 +55,6 @@
         <a-form-item
           label="关键字检索"
           class="lg:col-span-2 xl:col-span-3"
-          row-class="!mb-0"
           content-class="flex-wrap gap-2"
         >
           <a-input
@@ -105,7 +109,7 @@
       </div>
     </a-form>
 
-    <a-divider />
+    <a-divider class="!mt-0" />
 
     <div class="h-full flex gap-4">
       <!-- 占位将左、右多个元素分别挤压到两侧，减少标签嵌套 -->

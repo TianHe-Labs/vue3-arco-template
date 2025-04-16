@@ -1,5 +1,10 @@
 import { provide, inject, Ref, reactive, ref, watch } from 'vue';
-import { Message, Modal, PaginationProps } from '@arco-design/web-vue';
+import {
+  FormInstance,
+  Message,
+  Modal,
+  PaginationProps,
+} from '@arco-design/web-vue';
 import { useRoute, useRouter } from 'vue-router';
 import { isEmpty, isObject, omitBy, pick } from 'lodash';
 import useLoading from '@/composables/loading';
@@ -19,6 +24,7 @@ interface FuzzyQueryModel {
 interface SearchUserState {
   loading: Ref<boolean>;
   pagination: PaginationProps;
+  queryFormRef: Ref<FormInstance>;
   queryModel: Ref<QueryUserListReq>;
   fuzzyKeys: string[];
   fuzzyQueryModel: Ref<FuzzyQueryModel>;
@@ -84,6 +90,9 @@ export function provideSearchUser(): SearchUserState {
     bufferSize: 1,
   });
 
+  // 表单
+  const queryFormRef = ref<FormInstance>();
+
   // 精确筛选条件
   const queryModel = ref<QueryUserListReq>(resetQueryModel());
   // 全文检索条件
@@ -93,6 +102,12 @@ export function provideSearchUser(): SearchUserState {
   const renderData = ref<UserModel[]>([]);
 
   const fetchData = async (opts?: any) => {
+    // 必要的表单校验
+    const errors = await queryFormRef.value?.validate();
+    if (errors && Object.keys(errors).length > 0) {
+      return;
+    }
+
     // 控制是否显示 loading
     if (!opts?.hideLoading) {
       setLoading(true);
@@ -248,6 +263,7 @@ export function provideSearchUser(): SearchUserState {
   const returnState: SearchUserState = {
     loading,
     pagination,
+    queryFormRef,
     queryModel,
     fuzzyKeys,
     fuzzyQueryModel,

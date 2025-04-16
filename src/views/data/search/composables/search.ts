@@ -1,15 +1,10 @@
 import { provide, inject, Ref, reactive, ref, watch } from 'vue';
-import { Message, PaginationProps } from '@arco-design/web-vue';
+import { FormInstance, Message, PaginationProps } from '@arco-design/web-vue';
 import { useRoute, useRouter } from 'vue-router';
 import { isEmpty, isObject, omitBy, pick } from 'lodash';
 import useLoading from '@/composables/loading';
-import useRequest from '@/composables/request';
-import {
-  queryXxxxList,
-  XxxxModel,
-  QueryXxxxListReq,
-  QueryXxxxListRes,
-} from '@/api/xxxx';
+// import useRequest from '@/composables/request';
+import { queryXxxxList, XxxxModel, QueryXxxxListReq } from '@/api/xxxx';
 import { Pagination } from '@/global';
 
 interface FuzzyQueryModel {
@@ -20,6 +15,7 @@ interface FuzzyQueryModel {
 interface SearchXXXState {
   loading: Ref<boolean>;
   pagination: PaginationProps;
+  queryFormRef: Ref<FormInstance>;
   queryModel: Ref<QueryXxxxListReq>;
   fuzzyKeys: string[];
   fuzzyQueryModel: Ref<FuzzyQueryModel>;
@@ -77,6 +73,9 @@ export function provideSearchXXX(): SearchXXXState {
     bufferSize: 1,
   });
 
+  // 表单
+  const queryFormRef = ref<FormInstance>();
+
   // 精确筛选条件
   const queryModel = ref<QueryXxxxListReq>(resetQueryModel());
   // 全文检索条件
@@ -86,6 +85,12 @@ export function provideSearchXXX(): SearchXXXState {
   const renderData = ref<XxxxModel[]>([]);
 
   const fetchData = async (opts?: any) => {
+    // 必要的表单校验
+    const errors = await queryFormRef.value?.validate();
+    if (errors && Object.keys(errors).length > 0) {
+      return;
+    }
+
     // 控制是否显示 loading
     if (!opts?.hideLoading) {
       setLoading(true);
@@ -182,6 +187,7 @@ export function provideSearchXXX(): SearchXXXState {
   const returnState: SearchXXXState = {
     loading,
     pagination,
+    queryFormRef,
     queryModel,
     fuzzyKeys,
     fuzzyQueryModel,

@@ -4,8 +4,13 @@
   import { USERROLE } from '@/store/modules/user/types';
   import { useSearchUser } from '../composables/search';
 
-  const { queryModel, fuzzyQueryModel, fetchData, handleResetQueryModel } =
-    useSearchUser();
+  const {
+    queryFormRef,
+    queryModel,
+    fuzzyQueryModel,
+    fetchData,
+    handleResetQueryModel,
+  } = useSearchUser();
 
   const { t } = useI18n();
 
@@ -41,10 +46,10 @@
 
 <template>
   <a-card :bordered="false">
-    <a-form :model="queryModel" auto-label-width>
+    <a-form ref="queryFormRef" :model="queryModel" auto-label-width>
       <div class="grid lg:grid-cols-2 xl:grid-cols-3 gap-x-4">
         <!-- 精确匹配 -->
-        <a-form-item field="role" label="角色权限">
+        <a-form-item field="role" label="角色权限" :rules="[]">
           <a-select
             v-model="queryModel.role"
             :options="roleOptions"
@@ -55,7 +60,7 @@
           />
         </a-form-item>
         <!-- 精确匹配 -->
-        <a-form-item field="sector" label="所属部门">
+        <a-form-item field="sector" label="所属部门" :rules="[]">
           <a-select
             v-model="queryModel.sector"
             :options="['网络部', '事业部', '市场部']"
@@ -70,7 +75,6 @@
         <a-form-item
           label="关键字检索"
           class="lg:col-span-2 xl:col-span-3"
-          row-class="!mb-0"
           content-class="flex-wrap gap-2"
         >
           <a-input
@@ -126,7 +130,7 @@
       </div>
     </a-form>
 
-    <a-divider />
+    <a-divider class="!mt-0" />
 
     <div class="h-full flex gap-4">
       <!-- 占位将左、右多个元素分别挤压到两侧，减少标签嵌套 -->
