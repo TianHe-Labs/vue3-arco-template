@@ -1,4 +1,4 @@
-import { provide, inject, Ref, reactive, ref, watch } from 'vue';
+import { provide, inject, Ref, reactive, ref, watch, shallowRef } from 'vue';
 import { FormInstance, Message, PaginationProps } from '@arco-design/web-vue';
 import { useRoute, useRouter } from 'vue-router';
 import { isEmpty, isObject, omitBy, pick } from 'lodash';
@@ -74,7 +74,7 @@ export function provideSearchXXX(): SearchXXXState {
   });
 
   // 绑定表单实例
-  const queryFormRef = ref<FormInstance>();
+  const queryFormRef = shallowRef<FormInstance>();
 
   // 精确筛选条件
   const queryModel = ref<QueryXxxxListReq>(resetQueryModel());

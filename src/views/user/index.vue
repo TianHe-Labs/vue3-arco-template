@@ -8,7 +8,7 @@
   // 查询
   provideSearchUser();
 
-  // 创建 更新
+  // 编辑
   provideEditUser();
 </script>
 

@@ -1,7 +1,6 @@
 <script lang="ts" setup>
   import { computed } from 'vue';
   import { TableColumnData } from '@arco-design/web-vue';
-  import { UserModel } from '@/api/user';
   import { useSearchUser } from '../composables/search';
   import { useEditUser } from '../composables/edit';
 

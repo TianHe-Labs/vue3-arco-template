@@ -1,4 +1,4 @@
-import { provide, inject, Ref, reactive, ref, watch } from 'vue';
+import { provide, inject, Ref, reactive, ref, watch, shallowRef } from 'vue';
 import {
   FormInstance,
   Message,
@@ -15,7 +15,6 @@ import {
   deleteUser,
 } from '@/api/user';
 import { SelectionState } from '@/global';
-
 interface FuzzyQueryModel {
   fuzzyWord: string;
   fuzzyKeys: string[];
@@ -39,6 +38,11 @@ interface SearchUserState {
   toggleSelection: () => void;
   confirmDeleteUser: (ids?: UserModel['id'][]) => Promise<void>;
   handleDeleteUser: () => Promise<void>;
+
+  onUpdateRenderData: (data: {
+    type: 'update' | 'create';
+    data: UserModel;
+  }) => void;
 }
 
 const symbol = Symbol('USER');
@@ -91,7 +95,7 @@ export function provideSearchUser(): SearchUserState {
   });
 
   // 绑定表单实例
-  const queryFormRef = ref<FormInstance>();
+  const queryFormRef = shallowRef<FormInstance>();
 
   // 精确筛选条件
   const queryModel = ref<QueryUserListReq>(resetQueryModel());
@@ -238,6 +242,28 @@ export function provideSearchUser(): SearchUserState {
     }
   };
 
+  // 响应更新列表
+  const onUpdateRenderData = (data: {
+    type: 'update' | 'create';
+    data: UserModel;
+  }) => {
+    if (data.type === 'update') {
+      // 更新
+      renderData.value = renderData.value.map((item) => {
+        if (item.id === data.data.id) {
+          return {
+            ...item,
+            ...data.data,
+          };
+        }
+        return item;
+      });
+    } else {
+      // 创建
+      renderData.value.unshift(data.data);
+    }
+  };
+
   // 条件改变
   // 对于需要 <a-input /> 手动输入的筛选值，通过输入框的回车 press-enter 事件来触发检索
   // 否则在用户输入过程中（筛选参数的变量已随之变化）就触发检索请求，影响用户体验
@@ -279,6 +305,8 @@ export function provideSearchUser(): SearchUserState {
     toggleSelection,
     confirmDeleteUser,
     handleDeleteUser,
+
+    onUpdateRenderData,
   };
 
   provide(symbol, returnState);

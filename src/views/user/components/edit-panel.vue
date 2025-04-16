@@ -1,93 +1,16 @@
 <script lang="ts" setup>
-  import { shallowRef } from 'vue';
-  import { FormInstance, Message, Modal } from '@arco-design/web-vue';
   import { useI18n } from 'vue-i18n';
-  import { omit } from 'lodash';
-  import { useClipboard } from '@vueuse/core';
   import { USERROLE } from '@/store/modules/user/types';
   import { enum2Arr } from '@/utils/transform';
   import { isPhone } from '@/utils/is';
   import { useEditUser } from '../composables/edit';
   import { useSearchUser } from '../composables/search';
+  const { onUpdateRenderData } = useSearchUser();
 
-  const { renderData } = useSearchUser();
-
-  const { editPanelVisible, editUserModel, submitCreateOrUpdate } =
+  const { editPanelVisible, editUserFormRef, editUserModel, handleSubmitEdit } =
     useEditUser();
 
-  const editUserFormRef = shallowRef<FormInstance>();
-
-  const handleCreateOrUpdate = async () => {
-    const errors = await editUserFormRef.value?.validate();
-    if (errors && Object.keys(errors).length > 0) {
-      return false;
-    }
-    const data = await submitCreateOrUpdate();
-    if (!data || !data?.id) {
-      return false;
-    }
-    if (editUserModel.value?.id) {
-      // 更新
-      renderData.value = renderData.value.map((item) => {
-        if (item.id === editUserModel.value.id) {
-          return {
-            ...item,
-            ...editUserModel.value,
-          };
-        }
-        return item;
-      });
-
-      Message.success(
-        `已更新用户${
-          editUserModel.value?.nickname || editUserModel.value.username
-        }`,
-      );
-    } else {
-      // 创建，会返回新用户密码
-      renderData.value.unshift({
-        ...editUserModel.value,
-        ...omit(data, 'password'),
-      });
-
-      Message.success(
-        `已创建用户${
-          editUserModel.value?.nickname || editUserModel.value.username
-        }`,
-      );
-      // 弹窗显示新用户及其密码用于复制
-      const content = `用户名：${data.username}  密码：${data.password}`;
-      Modal.info({
-        title: '提示',
-        titleAlign: 'start',
-        content,
-        modalClass: '!p-5',
-        okText: '复制',
-        hideCancel: true,
-        onBeforeOk: () => {
-          const { isSupported, copy } = useClipboard();
-          try {
-            if (isSupported.value) {
-              copy(content);
-              Message.success('已复制到剪切板');
-              return true;
-            }
-            Message.warning('浏览器不支持，请手动复制到剪切板');
-            return false;
-          } catch (err: any) {
-            // 使用ID来避免出现多个消息提示
-            Message.error({
-              id: 'error-message',
-              content: err?.message,
-            });
-            return false;
-          }
-        },
-      });
-    }
-    return true;
-  };
-
+  // 非业务逻辑，仅页面显示
   const { t } = useI18n();
   const roleOptions = enum2Arr(USERROLE).map((value) => ({
     label: t(`account.roles.${value}`),
@@ -100,7 +23,7 @@
     v-model:visible="editPanelVisible"
     title-align="start"
     :title="!!editUserModel.id ? '修改用户' : '创建用户'"
-    @before-ok="handleCreateOrUpdate"
+    @before-ok="handleSubmitEdit(onUpdateRenderData)"
   >
     <a-form ref="editUserFormRef" :model="editUserModel" auto-label-width>
       <a-form-item
