@@ -45,7 +45,7 @@
 </script>
 
 <template>
-  <a-card :bordered="false">
+  <a-card :bordered="false" :body-style="{ paddingTop: '20px' }">
     <a-form ref="queryFormRef" :model="queryModel" auto-label-width>
       <div class="grid lg:grid-cols-2 xl:grid-cols-3 gap-x-4">
         <!-- 精确匹配 -->

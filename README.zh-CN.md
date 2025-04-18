@@ -111,7 +111,7 @@
 
   - **plugins**: 如 `axios`, `emitter`
 
-  - **router**: ``routes` 分页面路由配置, `guard` 全局路由守卫
+  - **router**: `routes` 分页面路由配置, `guard` 全局路由守卫
 
   - **store**: 全局数据存储，如 `app`(主题等), `tab-bar`(多页面), `user`(登录、用户信息等), `oss`(阿里云 OSS STS)
 
