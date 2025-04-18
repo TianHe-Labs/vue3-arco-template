@@ -1,6 +1,5 @@
 <script lang="ts" setup>
   import { InputInstance } from '@arco-design/web-vue';
-  import { cloneDeep } from 'lodash';
   import { nextTick, ref, PropType } from 'vue';
 
   // v-model 双向绑定
@@ -10,9 +9,7 @@
   const props = defineProps({
     // 大小
     size: {
-      type: String as PropType<
-        'small' | 'medium' | 'large' | 'mini' | undefined
-      >,
+      type: String as PropType<'small' | 'medium' | 'large' | undefined>,
       default: 'small',
     },
     // 是否唯一值
@@ -33,7 +30,7 @@
     // 最大显示数量
     displayCount: {
       type: Number,
-      default: 1, // -1 表示不限制显示数量
+      default: -1, // -1 表示不限制显示数量
     },
     // 单位
     displayUnit: {
@@ -60,6 +57,11 @@
     addButtonText: {
       type: String,
       default: '新增',
+    },
+    // 是否垂直排列标签
+    vertical: {
+      type: Boolean,
+      default: false,
     },
   });
 
@@ -139,16 +141,23 @@
 </script>
 
 <template>
-  <div class="flex flex-wrap items-center gap-2">
+  <div :class="['flex flex-wrap gap-2', { 'flex-col items-start': vertical }]">
     <!-- displayCount 限制显示数量 -->
     <a-tag
-      v-for="itx in model.slice(0, displayCount)"
+      v-for="itx in model.slice(
+        0,
+        displayCount === -1 ? model.length : displayCount,
+      )"
       :key="itx"
       closable
-      class="!h-full self-stretch"
+      :class="['!self-stretch', { 'w-full': vertical }]"
+      :style="{
+        'min-height':
+          size === 'small' ? '28px' : size === 'medium' ? '32px' : '36px',
+      }"
       @close="handleRemove(itx)"
     >
-      {{ formatTag(itx) }}
+      <span class="flex-auto">{{ formatTag(itx) }}</span>
     </a-tag>
     <!-- 超过 displayCount 限制显示数量 -->
     <a-tag
@@ -182,3 +191,9 @@
     </a-button>
   </div>
 </template>
+
+<style lang="less" scoped>
+  :deep(.arco-tag) {
+    position: relative;
+  }
+</style>

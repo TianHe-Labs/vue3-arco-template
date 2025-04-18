@@ -47,10 +47,10 @@
       <DynamicTag
         v-model="tags"
         ref="dynamicTagRef"
-        custom-mode
+        :custom-mode="false"
         :format-tag="formatTagLabel"
+        :vertical="true"
         @add-button-click="handleAddButtonClick"
-        class="!w-800px"
       />
 
       <div> 当前时间：{{ dayjs().format('YYYY-MM-DD HH:mm:ss') }} </div>
