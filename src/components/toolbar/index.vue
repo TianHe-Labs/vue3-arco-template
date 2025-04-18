@@ -30,7 +30,7 @@
     </a-tooltip> -->
     <!-- 消息 -->
     <a-tooltip mini content="消息通知">
-      <a-badge :count="renderStats?.total || 0" dot>
+      <a-badge :count="renderStats?.unread || 0" dot>
         <a-button
           class="nav-btn"
           shape="circle"

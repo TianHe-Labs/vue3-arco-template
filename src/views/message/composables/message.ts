@@ -239,6 +239,8 @@ export function provideMessage(): MessageState {
         );
         break;
     }
+    // 重新获取统计数据
+    fetchStats();
   };
 
   // 条件改变

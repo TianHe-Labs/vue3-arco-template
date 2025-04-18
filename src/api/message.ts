@@ -44,7 +44,7 @@ export function queryMessageList(params: QueryMessageListReq & Pagination) {
 export interface QueryMessageStatReq {
   unread?: boolean; // 是否只统计未读消息
 }
-export type QueryMessageStatRes = { total?: number } & {
+export type QueryMessageStatRes = { total?: number; unread: number } & {
   [key in MessageType]: number; // 按类型统计
 };
 export function queryMessageStat(params: QueryMessageStatReq) {

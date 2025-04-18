@@ -14,6 +14,15 @@ const messages = Mock.mock({
       'createdAt': Random.datetime(),
       'updatedAt': Random.datetime(),
     },
+    {
+      'id|8': /[A-Z][a-z][-][0-9]/,
+      'title': Random.csentence(12, 20),
+      'content': Random.cparagraph(),
+      'type|1': ['notice', 'alert'],
+      'readAt': Random.datetime(),
+      'createdAt': Random.datetime(),
+      'updatedAt': Random.datetime(),
+    },
   ],
 });
 
@@ -22,11 +31,15 @@ setupMock({
     // 列表
     Mock.mock(new RegExp('/api/message/list'), (params: MockRequest) => {
       const { current = 1, pageSize = 10 } = qs.parseUrl(params.url).query;
+      const { unread = false } = JSON.parse(params?.body as string);
       const p = current as number;
       const ps = pageSize as number;
+      const list = unread
+        ? messages.list.filter((item: any) => !item.readAt)
+        : messages.list;
       return successResponseWrap({
-        list: messages.list.slice((p - 1) * ps, p * ps),
-        total: messages.list.length,
+        list: list.slice((p - 1) * ps, p * ps),
+        total: list.length,
       });
     });
 
@@ -35,6 +48,7 @@ setupMock({
       const list = messages.list;
       return successResponseWrap({
         total: list.length,
+        unread: list.filter((item: any) => !item.readAt).length,
         notice: list.filter((item: any) => item.type === 'notice').length,
         alert: list.filter((item: any) => item.type === 'alert').length,
       });
