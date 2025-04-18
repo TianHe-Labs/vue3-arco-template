@@ -5,6 +5,8 @@ import { List, Pagination } from '@/global';
 // 消息类型，通知、告警
 export type MessageType = 'notice' | 'alert';
 
+export const messageTypes: MessageType[] = ['notice', 'alert'] as const;
+
 // 消息模型
 export interface MessageModel {
   id: string;
@@ -18,8 +20,10 @@ export interface MessageModel {
 
 // 获取消息列表，时间倒序，最新的在前
 export interface QueryMessageListReq {
-  type?: MessageType; // 消息类型，通知、告警
+  types?: MessageType[]; // 消息类型，通知、告警
   unread?: boolean; // 是否只查询未读消息
+  readRange?: string[] | Date[]; // 阅读时间范围，格式：YYYY-MM-DD
+  createdRange?: string[] | Date[]; // 创建时间范围，格式：YYYY-MM-DD
 }
 export type QueryMessageListRes = List<MessageModel>;
 
@@ -40,7 +44,7 @@ export function queryMessageList(params: QueryMessageListReq & Pagination) {
 export interface QueryMessageStatReq {
   unread?: boolean; // 是否只统计未读消息
 }
-export type QueryMessageStatRes = { total: number } & {
+export type QueryMessageStatRes = { total?: number } & {
   [key in MessageType]: number; // 按类型统计
 };
 export function queryMessageStat(params: QueryMessageStatReq) {
@@ -56,7 +60,7 @@ export interface UpdateMessageReadAtRes {
   readAt: string | Date; // 标记成功的最新时间
 }
 export function updateMessageReadAt(data: UpdateMessageReadAtReq) {
-  return axios.put<UpdateMessageReadAtRes>('/api/message/readAt', data);
+  return axios.put<UpdateMessageReadAtRes>('/api/message/readAt/update', data);
 }
 
 // 删除消息，单批量
@@ -67,5 +71,5 @@ export interface DeleteMessageRes {
   ids: string[]; // 删除成功的id
 }
 export function deleteMessage(data: DeleteMessageReq) {
-  return axios.delete<DeleteMessageRes>('/api/message', { data });
+  return axios.delete<DeleteMessageRes>('/api/message/delete', { data });
 }

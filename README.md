@@ -1,5 +1,7 @@
 # Vue3 Template on ArcoDesign & UnoCSS
 
+[English](README.md) | [中文](README.zh-CN.md)
+
 ## ArcoDesign
 
 - **Doc**: [Arco Design Vue](https://arco.design/vue/docs)
@@ -13,6 +15,7 @@
 - **presetWebFonts**: [Web Fonts](https://unocss.dev/presets/web-fonts)
 
 - **presetIcons**: [Icons](https://unocss.dev/presets/icons), [Iconify](https://icon-sets.iconify.design/)
+
   ```html
   <!-- example -->
 
@@ -21,11 +24,12 @@
 
 ## Features
 
-- **User Authentication**: api/user, store/user
+- **User Authentication**: api/account, store/user
 
 - **User Permission**: router/guard, composables/permission
 
 - **Rich icon library**: UnoCSS/Iconify
+
   ```html
   <!-- example -->
 
@@ -33,6 +37,7 @@
   ```
 
 - **Responsive**: CSS(UnoCSS Variants), JS(@vueuse/core useBreakpoints, provide in App.vue)
+
   ```js
   // App.vue
   const breakpoints = useBreakpoints(breakpointsTailwind);
@@ -43,6 +48,7 @@
   ```
 
 - **Theme Mode**: light mode & dark mode, combining Arco Design with UnoCSS ensures consistency
+
   ```html
   <!-- [light:]<class name> -->
   <div text-primary></div>
@@ -56,7 +62,7 @@
 
 - **Mock Data**: mockjs
 
-- **Auto Lint**: hucky, lint-staged, *code lint*(eslint, prettier, stylelint), *commit lint*(commmitlint)
+- **Auto Lint**: hucky, lint-staged, _code lint_(eslint, prettier, stylelint), _commit lint_(commmitlint)
 
 - **CI/CD**: Github Actions
 
@@ -64,7 +70,7 @@
 
 - **.github/workflows**
 
-- **.husky**: ``pre-comment(lint-staged)``, ``commit-msg``([Conventional Commits](https://www.conventionalcommits.org/zh-hans/v1.0.0/))
+- **.husky**: `pre-comment(lint-staged)`, `commit-msg`([Conventional Commits](https://www.conventionalcommits.org/zh-hans/v1.0.0/))
 
 - **config**: [Vite Config](https://cn.vitejs.dev/config/) (Current: Vite@^^5.2.13 installed)
 
@@ -92,27 +98,27 @@
     ...
     ```
 
-  - **assets**: static files, eg: ``json``, ``css``, ``less``, ``image``, ``video``
+  - **assets**: static files, eg: `json`, `css`, `less`, `image`, `video`
 
   - **components**: common components, inclues some global components(index.ts)
 
-  - **directives**: Vue3 directive, eg: ``v-permission``
+  - **directives**: Vue3 directive, eg: `v-permission`
 
-  - **composables**: common composables, eg: ``chart-option``, ``loading``, ``logout``, ``permission``
+  - **composables**: common composables, eg: `chart-option`, `loading`, `logout`, `permission`
 
   - **layouts**: common layout components
 
-  - **locale**: ``i18n``仅用于显示内容与实际数据的映射，不做系统级国际化
+  - **locale**: `i18n`仅用于显示内容与实际数据的映射，不做系统级国际化
 
   - **mock**: mock data in development
 
-  - **plugins**: eg: ``axios``, ``emitter``
+  - **plugins**: eg: `axios`, `emitter`
 
-  - **router**: ``routes``, ``global route guard``
+  - **router**: `routes` Route Config, `guard` Global Guard
 
-  - **store**: global data store, eg: ``app``(theme, ...),  ``tab-bar``(multi page), ``user``(login, userinfo, ...), ``oss``(ali oss sts)
+  - **store**: global data store, eg: `app`(theme, ...), `tab-bar`(multi page), `user`(login, userinfo, ...), `oss`(ali oss sts)
 
-  - **utils**: tool function, eg: ``formatX``(preset dayjs), ``hasX``, ``isY``, ``canZ``, ``transformA``, ``index``(Unclassifiable fragmentary functions & Unified entry for various types of functions)
+  - **utils**: tool function, eg: `formatX`(preset dayjs), `hasX`, `isY`, `canZ`, `transformA`, `index`(Unclassifiable fragmentary functions & Unified entry for various types of functions)
 
   - **views**: Vue3 view
 
@@ -120,17 +126,15 @@
 
   - **global.d.ts**: global type definition
 
-  - **env.d.ts**: env type defintion, eg: ``VITE_APP_NAME``, ``VITE_DEV_PROXY``
+  - **env.d.ts**: env type defintion, eg: `VITE_APP_NAME`, `VITE_DEV_PROXY`
 
   - **main.ts**: entry
 
   - **settings.json**: app settings (only accessible in development)
 
-- **.env**: common environment, .env.development only in development(*gitignore*), .env.production only in production(*gitignore*)
+- **.env**: common environment, .env.development only in development(_gitignore_), .env.production only in production(_gitignore_)
 
-- **.eslintignore**
-
-- **.eslintrc**: eslint config
+- **eslint.config.js**: eslint config
 
 - **.gitignore**
 

@@ -1,40 +1,8 @@
-<template>
-  <!-- 堆叠柱图/曲线/面积图分布示例 -->
-  <a-spin :loading="loading">
-    <a-card
-      title="Xxxx分布"
-      :bordered="false"
-      :header-style="{ borderBottom: 'none', paddingBottom: 0 }"
-      :body-style="{ paddingTop: 0 }"
-      class="rounded"
-    >
-      <template #extra>
-        <!-- 时间 -->
-        <a-select
-          v-model="queryModel.timespan"
-          :bordered="false"
-          :options="[3, 7, 15, 30]"
-          allow-create
-          size="mini"
-          class="!w-76px !px-1 !text-right !text-primary"
-          @change="fetchData"
-        >
-          <!-- 选择框展示内容 -->
-          <template #label="{ data }">
-            <span>{{ $t('dateRange.shortcuts', [data.value]) }}</span>
-          </template>
-        </a-select>
-      </template>
-      <Chart style="height: 350px" :option="chartOption" />
-    </a-card>
-  </a-spin>
-</template>
-
 <script lang="ts" setup>
   import { reactive, ref } from 'vue';
   import { isEmpty, mapValues, mergeWith } from 'lodash';
   import useLoading from '@/composables/loading';
-  import { ToolTipFormatterParams } from '@/global';
+  import { ToolTipFormatterParams } from '@/global.d';
   import useChartOption from '@/composables/chart-option';
   import {
     queryXxxxDist,
@@ -233,3 +201,35 @@
     };
   });
 </script>
+
+<template>
+  <!-- 堆叠柱图/曲线/面积图分布示例 -->
+  <a-spin :loading="loading">
+    <a-card
+      title="Xxxx分布"
+      :bordered="false"
+      :header-style="{ borderBottom: 'none', paddingBottom: 0 }"
+      :body-style="{ paddingTop: 0 }"
+      class="rounded"
+    >
+      <template #extra>
+        <!-- 时间 -->
+        <a-select
+          v-model="queryModel.timespan"
+          :bordered="false"
+          :options="[3, 7, 15, 30]"
+          allow-create
+          size="mini"
+          class="!w-76px !px-1 !text-right !text-primary"
+          @change="fetchData"
+        >
+          <!-- 选择框展示内容 -->
+          <template #label="{ data }">
+            <span>{{ $t('dateRange.shortcuts', [data.value]) }}</span>
+          </template>
+        </a-select>
+      </template>
+      <Chart style="height: 350px" :option="chartOption" />
+    </a-card>
+  </a-spin>
+</template>

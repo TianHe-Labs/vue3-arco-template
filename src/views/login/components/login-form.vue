@@ -93,7 +93,7 @@
         <a-input
           v-model="loginModel.username"
           allow-clear
-          placeholder="请输入用户名"
+          placeholder="输入用户名"
         >
           <template #prefix>
             <icon-user />
@@ -109,7 +109,7 @@
         <a-input-password
           v-model="loginModel.password"
           allow-clear
-          placeholder="请输入登录密码"
+          placeholder="输入登录密码"
         >
           <template #prefix>
             <icon-lock />

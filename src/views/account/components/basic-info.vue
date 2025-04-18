@@ -73,7 +73,7 @@
       <a-input
         v-model="basicInfoFormModel.username"
         allow-clear
-        placeholder="请输入用户名"
+        placeholder="输入用户名"
       />
     </a-form-item>
     <!-- 用户昵称 -->
@@ -94,7 +94,7 @@
       <a-input
         v-model="basicInfoFormModel.nickname"
         allow-clear
-        placeholder="请输入用户昵称"
+        placeholder="输入用户昵称"
       />
     </a-form-item>
     <!-- 邮箱 -->
@@ -118,7 +118,7 @@
       <a-input
         v-model="basicInfoFormModel.email"
         allow-clear
-        placeholder="请输入电子邮箱，如xxx@example.com"
+        placeholder="输入电子邮箱，如xxx@example.com"
       />
     </a-form-item>
     <!-- 手机 -->
@@ -138,7 +138,7 @@
       <a-input
         v-model="basicInfoFormModel.phone"
         allow-clear
-        placeholder="请输入手机号码，如178xxxxxxxx"
+        placeholder="输入手机号码，如178xxxxxxxx"
       />
     </a-form-item>
     <!-- 部门 -->
@@ -146,7 +146,7 @@
       <a-input
         v-model="basicInfoFormModel.sector"
         allow-clear
-        placeholder="请输入所属部门"
+        placeholder="输入所属部门"
       />
     </a-form-item>
     <!-- 状态 -->
@@ -154,7 +154,7 @@
       <a-input
         v-model="basicInfoFormModel.status"
         allow-clear
-        placeholder="请输入当前状态"
+        placeholder="输入当前状态"
       />
     </a-form-item>
     <a-form-item row-class="mt-4" content-class="gap-4">

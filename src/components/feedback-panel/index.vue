@@ -41,7 +41,7 @@
           v-model="feedbackModel.type"
           allow-clear
           :options="typeOptions"
-          placeholder="请选择反馈问题类型"
+          placeholder="选择反馈问题类型"
         />
       </a-form-item>
       <a-form-item
@@ -60,7 +60,7 @@
           v-model="feedbackModel.content"
           allow-clear
           :auto-size="{ minRows: 8, maxRows: 12 }"
-          placeholder="请输入反馈问题详情"
+          placeholder="输入反馈问题详情"
         />
       </a-form-item>
       <!-- <a-form-item

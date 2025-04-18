@@ -2,6 +2,23 @@
 
 import { isNumber } from './is';
 
+/**
+ * 将枚举对象转换为数组
+ * @example
+ * enum Status {
+ *   Active = 1,
+ *   Inactive = 2
+ * }
+ * const arr = enum2Arr(Status); // [1, 2]
+ *
+ * enum Direction {
+ *   Up = 'UP',
+ *   Down = 'DOWN'
+ * }
+ * const arr = enum2Arr(Direction); // ['UP', 'DOWN']
+ * @param obj 枚举对象
+ * @returns 包含枚举值的数组
+ */
 export function enum2Arr(obj: object) {
   // 当枚举值是数字时，Object.values 会将枚举键页列举出来，因此需要排除掉
   const arr = Object.values(obj);

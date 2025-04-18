@@ -41,9 +41,18 @@ setupMock({
     });
 
     // 标记已读
-    Mock.mock(new RegExp('/api/message/readAt'), (params: MockRequest) => {
+    Mock.mock(
+      new RegExp('/api/message/readAt/update'),
+      (params: MockRequest) => {
+        const { ids } = JSON.parse(params?.body as string);
+        return successResponseWrap({ ids, readAt: new Date() });
+      },
+    );
+
+    // 删除
+    Mock.mock(new RegExp('/api/message/delete'), (params: MockRequest) => {
       const { ids } = JSON.parse(params?.body as string);
-      return successResponseWrap({ ids, readAt: new Date() });
+      return successResponseWrap({ ids });
     });
   },
 });

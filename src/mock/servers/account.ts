@@ -37,7 +37,7 @@ setupMock({
       }
 
       const foundItem = users.find(
-        (u) => u.username === username && u.password === password
+        (u) => u.username === username && u.password === password,
       );
 
       if (foundItem) {

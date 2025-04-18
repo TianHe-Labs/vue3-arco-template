@@ -40,14 +40,14 @@
         <a-input
           v-model="editUserModel.username"
           allow-clear
-          placeholder="请输入用户名"
+          placeholder="输入用户名"
         />
       </a-form-item>
       <a-form-item field="nickname" label="用户昵称">
         <a-input
           v-model="editUserModel.nickname"
           allow-clear
-          placeholder="请输入用户昵称"
+          placeholder="输入用户昵称"
         />
       </a-form-item>
       <a-form-item field="role" label="角色权限">
@@ -55,7 +55,7 @@
           v-model="editUserModel.role"
           :options="roleOptions"
           allow-clear
-          placeholder="请选择角色权限"
+          placeholder="选择角色权限"
         />
       </a-form-item>
       <a-form-item
@@ -78,7 +78,7 @@
         <a-input
           v-model="editUserModel.email"
           allow-clear
-          placeholder="请输入电子邮箱"
+          placeholder="输入电子邮箱"
         />
       </a-form-item>
       <a-form-item
@@ -97,7 +97,7 @@
         <a-input
           v-model="editUserModel.phone"
           allow-clear
-          placeholder="请输入手机号码"
+          placeholder="输入手机号码"
         />
       </a-form-item>
     </a-form>

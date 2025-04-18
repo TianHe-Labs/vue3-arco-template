@@ -22,7 +22,7 @@
   const fuzzyKeyOptions = [
     {
       label: '用户名',
-      value: 'usernmae',
+      value: 'username',
     },
     {
       label: '用户昵称',
@@ -56,7 +56,7 @@
             allow-clear
             allow-create
             allow-search
-            placeholder="请选择角色权限"
+            placeholder="选择角色权限"
           />
         </a-form-item>
         <!-- 精确匹配 -->
@@ -67,20 +67,20 @@
             allow-clear
             allow-create
             allow-search
-            placeholder="请选择所属部门"
+            placeholder="选择所属部门"
           />
         </a-form-item>
 
         <!-- 指定属性的全文检索 -->
         <a-form-item
-          label="关键字检索"
+          label="全文检索"
           class="lg:col-span-2 xl:col-span-3"
           content-class="flex-wrap gap-2"
         >
           <a-input
             v-model="fuzzyQueryModel.fuzzyWord"
             allow-clear
-            placeholder="请输入检索关键字"
+            placeholder="输入检索关键字"
             @press-enter="fetchData"
           >
             <template #suffix>
@@ -97,7 +97,7 @@
                 :allow-search="false"
                 :show-extra-options="false"
                 :options="fuzzyKeyOptions"
-                placeholde="请选择关键字要匹配的属性"
+                placeholde="选择关键字要匹配的属性"
                 class="!hidden !lg:flex !p-0 flex-none !w-240px custom-select"
               >
                 <template #arrow-icon>
@@ -116,7 +116,7 @@
             :allow-search="false"
             :show-extra-options="false"
             :options="fuzzyKeyOptions"
-            placeholde="请选择关键字要匹配的属性"
+            placeholde="选择关键字要匹配的属性"
             class="!lg:hidden"
           >
             <template #arrow-icon>

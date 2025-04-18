@@ -169,26 +169,27 @@ export function provideSearchXXX(): SearchXXXState {
 
   const onUpdateRenderData = (data: {
     type: 'update' | 'create' | 'delete';
-    data: XxxxModel | XxxxModel['id'][];
+    record?: XxxxModel;
+    ids?: XxxxModel['id'][];
   }) => {
     switch (data.type) {
       case 'update':
         renderData.value = renderData.value.map((item) => {
-          if (item.id === (data.data as XxxxModel).id) {
+          if (item.id === data.record?.id) {
             return {
               ...item,
-              ...(data.data as XxxxModel),
+              ...(data.record as XxxxModel),
             };
           }
           return item;
         });
         break;
       case 'create':
-        renderData.value.unshift(data.data as XxxxModel);
+        renderData.value.unshift(data.record as XxxxModel);
         break;
       case 'delete':
         renderData.value = renderData.value.filter(
-          (item) => !(data.data as XxxxModel['id'][]).includes(item.id),
+          (item) => !data?.ids?.includes(item.id),
         );
         break;
       default:

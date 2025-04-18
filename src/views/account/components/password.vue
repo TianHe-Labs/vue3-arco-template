@@ -64,7 +64,7 @@
       <a-input-password
         v-model="passwordFormData.oldPassword"
         allow-clear
-        placeholder="请输入当前密码"
+        placeholder="输入当前密码"
       />
     </a-form-item>
     <!-- 新密码 -->
@@ -85,7 +85,7 @@
       <a-input-password
         v-model="passwordFormData.newPassword"
         allow-clear
-        placeholder="请输入新密码"
+        placeholder="输入新密码"
       />
     </a-form-item>
     <!-- 确认新密码 -->
@@ -109,7 +109,7 @@
       <a-input-password
         v-model="passwordFormData.confirmPassword"
         allow-clear
-        placeholder="请再次输入新密码"
+        placeholder="再次输入新密码"
       />
     </a-form-item>
     <a-form-item row-class="mt-4" content-class="gap-4">

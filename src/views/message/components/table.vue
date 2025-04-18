@@ -3,21 +3,19 @@
   import { useMessage } from '../composables/message';
   import { dayjs } from '@/utils/format';
   import { computed, ref } from 'vue';
+  import { useOperation } from '../composables/operation';
 
   const {
     loading,
     pagination,
+    queryPanelVisible,
+    toggleQueryPanel,
     queryModel,
-    fuzzyQueryModel,
     renderData,
-    renderStats,
     fetchData,
     onPageChange,
     onPageSizeChange,
-    selectionState,
-    toggleSelection,
-    handleMarkRead,
-    handleDelete,
+    onUpdateRenderData,
   } = useMessage();
 
   // 顶部栏只显示消息数量，所以 provideMessage 在最顶层调用
@@ -26,7 +24,13 @@
   // 获取数据
   fetchData();
 
-  const popupVisible = ref<boolean>(false);
+  // 操作
+  const {
+    selectionState,
+    toggleSelection,
+    handleBatchReadMessage,
+    handleBatchDeleteMessage,
+  } = useOperation();
 
   const renderColumns = computed<TableColumnData[]>(() => {
     return [
@@ -58,8 +62,8 @@
       },
       // {
       //   title: '操作',
-      //   dataIndex: 'actions',
-      //   slotName: 'actions',
+      //   dataIndex: 'operations',
+      //   slotName: 'operations',
       //   fixed: 'right',
       //   width: 110,
       //   headerCellClass: 'whitespace-nowrap',
@@ -78,18 +82,12 @@
     }"
   >
     <template #title>
-      <a-tabs
-        v-model:active-key="queryModel.type"
-        type="rounded"
-        justify
-        hide-content
-      >
-        <a-tab-pane
-          v-for="(count, type) in renderStats"
-          :key="type === 'total' ? undefined : type"
-          :title="$t(`message.type.${type}`)"
-        />
-      </a-tabs>
+      <div class="flex items-center gap-2">
+        <a-typography-text>消息列表</a-typography-text>
+        <a-checkbox v-model="queryModel.unread">
+          <span class="text-text-3 hover:text-text-2">仅显示未读</span>
+        </a-checkbox>
+      </div>
     </template>
     <template #extra>
       <div class="flex items-center gap-3">
@@ -98,7 +96,7 @@
           status="normal"
           size="small"
           class="!px-2"
-          @click="toggleSelection"
+          @click="toggleSelection(false)"
         >
           取消操作
         </a-button>
@@ -107,7 +105,7 @@
           :type="selectionState.visible ? 'primary' : 'outline'"
           size="small"
           class="!px-2"
-          @click="handleMarkRead"
+          @click="handleBatchReadMessage(onUpdateRenderData)"
         >
           标记已读
         </a-button>
@@ -116,53 +114,20 @@
           status="danger"
           size="small"
           class="!px-2"
-          @click="handleDelete"
+          @click="handleBatchDeleteMessage(onUpdateRenderData)"
         >
           删除
         </a-button>
-        <!-- 筛选入口 -->
-        <!-- 搜索 -->
-        <!-- <a-input
-          v-model="fuzzyQueryModel.fuzzyWord"
-          allow-clear
-          placeholder="请输入标题或内容检索关键字后回车"
-          class="!w-400px"
-          @press-enter="fetchData"
-        /> -->
-        <a-dropdown
-          v-model:popup-visible="popupVisible"
-          trigger="click"
-          position="br"
-          :unmount-on-close="false"
+
+        <a-button
+          :type="queryPanelVisible ? 'primary' : 'outline'"
+          size="small"
+          @click="toggleQueryPanel"
         >
-          <a-button :type="popupVisible ? 'primary' : 'outline'" size="small">
-            <template #icon>
-              <icon-filter />
-            </template>
-          </a-button>
-          <template #content>
-            <a-form-item hide-label row-class="!px-3 !my-2">
-              <a-button
-                long
-                :type="queryModel.unread ? 'outline' : undefined"
-                class="!justify-start !pl-2"
-              >
-                <a-checkbox v-model="queryModel.unread">
-                  <span class="text-text-3 hover:text-text-1">仅显示未读</span>
-                </a-checkbox>
-              </a-button>
-            </a-form-item>
-            <a-form-item hide-label row-class="!px-3 !my-2">
-              <a-input
-                v-model="fuzzyQueryModel.fuzzyWord"
-                allow-clear
-                placeholder="请输入标题或内容检索关键字后回车"
-                class="!w-320px"
-                @press-enter="fetchData"
-              />
-            </a-form-item>
+          <template #icon>
+            <icon-filter />
           </template>
-        </a-dropdown>
+        </a-button>
       </div>
     </template>
     <a-table
@@ -215,7 +180,7 @@
         </div>
       </template>
       <!-- 操作 -->
-      <!-- <template #actions>
+      <!-- <template #operations>
         <div class="flex items-center gap-2">
           <a-button status="danger" size="small" type="text" class="!px-1">
             删除

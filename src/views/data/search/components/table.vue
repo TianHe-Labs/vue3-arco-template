@@ -55,8 +55,8 @@
     },
     {
       title: '操作',
-      dataIndex: 'actions',
-      slotName: 'actions',
+      dataIndex: 'operations',
+      slotName: 'operations',
       fixed: 'right',
       width: 110,
       headerCellClass: 'whitespace-nowrap',
@@ -127,7 +127,7 @@
         </div>
       </template>
       <!-- 操作 -->
-      <template #actions="{ record }">
+      <template #operations="{ record }">
         <div class="flex items-center gap-2">
           <router-link
             :to="{ name: 'XxxxDetail', params: { id: record.id } }"

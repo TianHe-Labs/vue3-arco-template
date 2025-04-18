@@ -38,7 +38,7 @@ interface SearchUserState {
 const symbol = Symbol('USER');
 
 // 用于（指定属性的）全文关键词检索
-const fuzzyKeys = ['usernmae', 'nickname', 'email', 'phone'];
+const fuzzyKeys = ['username', 'nickname', 'email', 'phone'];
 const resetFuzzyQueryModel = (): FuzzyQueryModel => {
   return {
     fuzzyWord: '', // 匹配的具体值
@@ -176,16 +176,17 @@ export function provideSearchUser(): SearchUserState {
   // 响应更新列表
   const onUpdateRenderData = (data: {
     type: 'update' | 'create' | 'delete';
-    data: UserModel | UserModel['id'][];
+    record?: UserModel;
+    ids?: UserModel['id'][];
   }) => {
     switch (data.type) {
       case 'update':
         // 更新
         renderData.value = renderData.value.map((item) => {
-          if (item.id === (data.data as UserModel).id) {
+          if (item.id === data.record?.id) {
             return {
               ...item,
-              ...(data.data as UserModel),
+              ...(data.record as UserModel),
             };
           }
           return item;
@@ -193,11 +194,11 @@ export function provideSearchUser(): SearchUserState {
         break;
       case 'create':
         // 创建
-        renderData.value.unshift(data.data as UserModel);
+        renderData.value.unshift(data.record as UserModel);
         break;
       case 'delete':
         renderData.value = renderData.value.filter(
-          (item) => !(data.data as UserModel['id'][]).includes(item.id),
+          (item) => !data?.ids?.includes(item.id),
         );
         break;
       default:

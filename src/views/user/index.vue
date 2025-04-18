@@ -16,12 +16,6 @@
   provideEditUser();
 </script>
 
-<script lang="ts">
-  export default {
-    name: 'User',
-  };
-</script>
-
 <template>
   <div class="h-full flex flex-col p-4 gap-4">
     <Breadcrumb :items="['menu.user']" />
@@ -31,3 +25,9 @@
     <EditPanel />
   </div>
 </template>
+
+<script lang="ts">
+  export default {
+    name: 'User',
+  };
+</script>

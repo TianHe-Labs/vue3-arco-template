@@ -59,7 +59,7 @@ export function provideEditUser(): SearchUserState {
       if (editUserModel.value?.id) {
         updatedData = {
           type: 'update',
-          data: {
+          record: {
             ...editUserModel.value,
           },
         };
@@ -85,7 +85,7 @@ export function provideEditUser(): SearchUserState {
         // 创建 会返回新用户密码
         updatedData = {
           type: 'create',
-          data: {
+          record: {
             ...editUserModel.value,
             ...omit(data, 'password'),
           },
@@ -118,7 +118,7 @@ export function provideEditUser(): SearchUserState {
                 Message.success('已复制到剪切板');
                 return true;
               }
-              Message.warning('浏览器不支持，请手动复制到剪切板');
+              Message.warning('浏览器不支持，须手动复制到剪切板');
               return false;
             } catch (err: any) {
               // 使用ID来避免出现多个消息提示

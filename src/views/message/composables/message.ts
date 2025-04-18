@@ -1,9 +1,16 @@
-import { provide, inject, Ref, reactive, ref, watch } from 'vue';
-import { Message, Modal, PaginationProps } from '@arco-design/web-vue';
+import { provide, inject, Ref, reactive, ref, watch, shallowRef } from 'vue';
+import {
+  FormInstance,
+  Message,
+  Modal,
+  PaginationProps,
+} from '@arco-design/web-vue';
 import { useRoute, useRouter } from 'vue-router';
 import { isEmpty, isObject, omitBy, pick } from 'lodash';
 import useLoading from '@/composables/loading';
+import { dayjs } from '@/utils/format';
 import {
+  messageTypes,
   queryMessageList,
   MessageModel,
   QueryMessageListReq,
@@ -23,6 +30,9 @@ interface FuzzyQueryModel {
 interface MessageState {
   loading: Ref<boolean>;
   pagination: PaginationProps;
+  queryPanelVisible: Ref<boolean>;
+  toggleQueryPanel: () => void;
+  queryFormRef: Ref<FormInstance>;
   queryModel: Ref<QueryMessageListReq>;
   fuzzyKeys: string[];
   fuzzyQueryModel: Ref<FuzzyQueryModel>;
@@ -35,11 +45,10 @@ interface MessageState {
   onPageSizeChange: (pageSize: number) => void;
   handleResetQueryModel: (keys?: string[]) => void;
 
-  selectionState: SelectionState;
-  toggleSelection: () => void;
-
-  handleMarkRead: () => Promise<void>;
-  handleDelete: () => Promise<void>;
+  onUpdateRenderData: (data: {
+    type: 'update' | 'delete';
+    data: MessageModel | MessageModel['id'][];
+  }) => void;
 }
 
 const symbol = Symbol('MESSAGE');
@@ -56,8 +65,10 @@ const resetFuzzyQueryModel = (): FuzzyQueryModel => {
 // 用于指定属性的精确筛选
 const resetQueryModel = (keys?: string[]): QueryMessageListReq => {
   const defaultModel = {
-    type: undefined,
-    unread: undefined,
+    types: messageTypes, // 消息类型，通知、告警，默认全部
+    unread: true, // 是否只查询未读消息
+    readRange: undefined, // 阅读时间范围
+    createdRange: undefined, // 生成时间范围
   };
 
   if (keys && keys.length) {
@@ -86,6 +97,17 @@ export function provideMessage(): MessageState {
     hideOnSinglePage: true,
     bufferSize: 1,
   });
+
+  // 筛选条件面板
+  const queryPanelVisible = ref<boolean>(false);
+
+  // 切换筛选条件面板
+  const toggleQueryPanel = () => {
+    queryPanelVisible.value = !queryPanelVisible.value;
+  };
+
+  // 表单实例
+  const queryFormRef = shallowRef<FormInstance>();
 
   // 精确筛选条件
   const queryModel = ref<QueryMessageListReq>(resetQueryModel());
@@ -179,95 +201,43 @@ export function provideMessage(): MessageState {
     window.history.pushState({}, '', url);
   };
 
-  // 选中消息
-  // 显示表格勾选
-  const selectionState = reactive<SelectionState>({
-    visible: false,
-    checked: [],
-  });
-  const toggleSelection = () => {
-    selectionState.checked = [];
-    selectionState.visible = !selectionState.visible;
-  };
-
-  // 标记已读，不传参数则全部标记
-  const markMessageRead = async (ids?: MessageModel['id'][]) => {
-    if (!ids || ids.length === 0) {
-      Message.warning('请选择要标记已读的消息');
-      return;
-    }
-    try {
-      const { data } = await updateMessageReadAt({ ids });
-      renderData.value = renderData.value.map((item) => {
-        return {
-          ...item,
-          ...(data?.ids?.includes(item.id) ? { readAt: data.readAt } : {}),
-        };
-      });
-      Message.success(
-        `已将${data?.ids?.length || ids?.length || 0}条消息标记为已读`,
-      );
-      toggleSelection();
-    } catch (err: any) {
-      Message.error(err.message);
-    }
-  };
-
-  // 删除，不传参数则全部删除
-  const confirmDeleteMessage = async (ids?: MessageModel['id'][]) => {
-    if (!ids || ids.length === 0) {
-      Message.warning('请选择要删除的消息');
-      return;
-    }
-    // 弹窗确认
-    Modal.confirm({
-      title: '警告',
-      content: '确定要删除消息？',
-      titleAlign: 'start',
-      modalClass: '!p-5',
-      onOk: async () => {
-        try {
-          const { data } = await deleteMessage({ ids });
-          if (data?.ids && data.ids?.length === ids?.length) {
-            // 直接在前端逻辑中移除已经被删除的用户，不再请求接口
-            renderData.value = renderData.value.filter(
-              (item) => !data?.ids?.includes(item.id),
-            );
-            Message.success(
-              `已删除${data?.ids?.length || ids?.length || 0}条消息`,
-            );
-          } else {
-            Message.warning(
-              `已删除${data?.ids?.length}条消息, ${
-                ids.length - data?.ids?.length
-              }条消息删除失败`,
-            );
+  // 响应更新列表
+  const onUpdateRenderData = (data: {
+    type: 'read' | 'update' | 'delete';
+    record?: MessageModel;
+    ids?: MessageModel['id'][];
+    readAt?: string | Date;
+  }) => {
+    switch (data.type) {
+      case 'read':
+        // 标记已读
+        renderData.value = renderData.value.map((item) => {
+          return {
+            ...item,
+            ...(data?.ids?.includes(item.id)
+              ? { readAt: data?.readAt || dayjs().toDate() }
+              : {}),
+          };
+        });
+        break;
+      case 'update':
+        // 更新
+        renderData.value = renderData.value.map((item) => {
+          if (item.id === data.record?.id) {
+            return {
+              ...item,
+              ...(data.record as MessageModel),
+            };
           }
-          toggleSelection();
-        } catch (err: any) {
-          Message.error(err.message);
-        }
-      },
-    });
-  };
-
-  const handleMarkRead = async () => {
-    if (selectionState.visible) {
-      // 如果勾选框显示，则标记已读
-      await markMessageRead(selectionState.checked);
-    } else {
-      // 如果勾选框隐藏，则显示
-      toggleSelection();
-    }
-  };
-
-  const handleDelete = async () => {
-    if (selectionState.visible) {
-      // 如果勾选框显示，则删除
-      await confirmDeleteMessage(selectionState.checked);
-    } else {
-      // 如果勾选框隐藏，则显示
-      toggleSelection();
+          return item;
+        });
+        break;
+      case 'delete':
+        // 删除
+        renderData.value = renderData.value.filter(
+          (item) => !data?.ids?.includes(item.id),
+        );
+        break;
     }
   };
 
@@ -296,6 +266,9 @@ export function provideMessage(): MessageState {
   const returnState: MessageState = {
     loading,
     pagination,
+    queryPanelVisible,
+    toggleQueryPanel,
+    queryFormRef,
     queryModel,
     fuzzyKeys,
     fuzzyQueryModel,
@@ -308,11 +281,7 @@ export function provideMessage(): MessageState {
     onPageChange,
     onPageSizeChange,
 
-    selectionState,
-    toggleSelection,
-
-    handleMarkRead,
-    handleDelete,
+    onUpdateRenderData,
   };
 
   provide(symbol, returnState);

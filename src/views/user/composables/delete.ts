@@ -33,7 +33,7 @@ export function provideDeleteUser() {
     callback?: any,
   ) => {
     if (!ids || ids.length === 0) {
-      Message.warning('请选择要删除的用户');
+      Message.warning('选择要删除的用户');
       return;
     }
     // 弹窗确认
@@ -49,7 +49,7 @@ export function provideDeleteUser() {
             // 直接在前端逻辑中移除已经被删除的用户，不再请求接口
             callback?.({
               type: 'delete',
-              data: data?.ids,
+              ids: data?.ids,
             });
             Message.success(
               `已删除${data?.ids?.length || ids?.length || 0}个用户`,
