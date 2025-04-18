@@ -59,7 +59,7 @@
 
 - **模拟数据**: mockjs
 
-- **自动代码检查**: hucky, lint-staged, _代码检查_(eslint, prettier, stylelint), _提交信息检查_(commmitlint)
+- **自动代码检查**: hucky, lint-staged, _代码检查_(eslint, prettier, stylelint), _提交信息检查_(commitlint)
 
 - **CI/CD**: Github Actions
 

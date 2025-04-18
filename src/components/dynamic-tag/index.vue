@@ -1,5 +1,6 @@
 <script lang="ts" setup>
   import { InputInstance } from '@arco-design/web-vue';
+  import { cloneDeep } from 'lodash';
   import { nextTick, ref, PropType } from 'vue';
 
   // v-model 双向绑定
@@ -129,11 +130,11 @@
   };
 
   const handleRemove = (key: string) => {
-    model.value = model.value.filter((itx) => itx !== key);
+    const newModel = model.value.filter((itx) => itx !== key);
     if (props.uniqueValue) {
-      model.value = [...new Set(model.value)];
+      model.value = [...new Set(newModel)];
     }
-    emits('change', model.value);
+    emits('change', newModel);
   };
 </script>
 
@@ -141,7 +142,7 @@
   <div class="flex flex-wrap items-center gap-2">
     <!-- displayCount 限制显示数量 -->
     <a-tag
-      v-for="itx of model.slice(0, displayCount)"
+      v-for="itx in model.slice(0, displayCount)"
       :key="itx"
       closable
       class="!h-full self-stretch"

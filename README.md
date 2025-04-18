@@ -62,7 +62,7 @@
 
 - **Mock Data**: mockjs
 
-- **Auto Lint**: hucky, lint-staged, _code lint_(eslint, prettier, stylelint), _commit lint_(commmitlint)
+- **Auto Lint**: hucky, lint-staged, _code lint_(eslint, prettier, stylelint), _commit lint_(commitlint)
 
 - **CI/CD**: Github Actions
 

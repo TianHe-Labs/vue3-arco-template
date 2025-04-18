@@ -38,6 +38,8 @@
     <StackBarDist />
 
     <div class="flex flex-col gap-4 p-4 bg-bg-2">
+      {{ tags }}
+
       <ExtendedInputTag v-model="tags" />
 
       <!-- 开启 customMode 属性，监听 add-button-click 事件 -->
