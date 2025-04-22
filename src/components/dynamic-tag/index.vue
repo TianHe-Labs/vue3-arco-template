@@ -183,7 +183,8 @@
       :validate-status="validateStatus"
       :help="validateStatus === 'error' ? '格式校验不通过' : ''"
       hide-label
-      row-class="relative !mb-0"
+      row-class="relative !w-max !mb-0"
+      content-class="!h-min !min-h-min"
     >
       <a-input
         ref="inputRef"
