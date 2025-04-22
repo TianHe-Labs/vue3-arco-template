@@ -67,7 +67,15 @@ const useUserStore = defineStore('user', {
     async queryUserInfo() {
       try {
         const { data } = await queryUserInfoApi();
-        this.setUserInfo({ ...data, role: data?.role || USERROLE.ADMIN });
+        // 有时候前端的有些字段和后端接口不一致
+        // 为了避免大面积修改变量，可以只在接口这里做一下映射处理
+        const cleanedData = {
+          role: USERROLE.ADMIN,
+          ...data,
+          account: data.username,
+          nickname: data?.name,
+        };
+        this.setUserInfo(cleanedData);
       } catch (err: any) {
         if (err?.isAxiosError) {
           // axios 拦截统一处理了返回结果

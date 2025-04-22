@@ -29,7 +29,7 @@ export function updateUserToken(data: UpdateRefreshTokenReq) {
 export type QueryUserInfoRes = Omit<
   UserState,
   'password' | 'accessToken' | 'refreshToken'
->;
+> & { [key: string]: any };
 
 export function queryUserInfo() {
   return axios.get<QueryUserInfoRes>('/api/user/info');
@@ -50,7 +50,11 @@ export type UpdateUserInfoRes = Pick<UserState, 'username'>;
 export function updateUserInfo(data: UpdateUserInfoReq) {
   // 有时候前端的有些字段和后端接口不一致
   // 为了避免大面积修改变量，可以只在接口这里做一下映射处理
-  const cleanedData = { ...data, account: data.username };
+  const cleanedData = {
+    ...data,
+    account: data.username,
+    name: data.nickname,
+  };
   return axios.put<UpdateUserInfoRes>('/api/user/info/update', cleanedData);
 }
 

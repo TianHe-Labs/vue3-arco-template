@@ -73,6 +73,7 @@
   const showInput = ref<boolean>(false);
   const inputRef = ref<InputInstance>();
   const inputVal = ref<string>('');
+  const validateStatus = ref<'success' | 'warning' | 'error' | 'validating'>();
 
   // 暴露给父组件的方法
   defineExpose({
@@ -120,7 +121,16 @@
       inputVal.value = '';
       return;
     }
-    if (inputVal.value && props.validate(inputVal.value)) {
+    if (inputVal.value) {
+      if (!props.validate(inputVal.value)) {
+        validateStatus.value = 'error';
+        nextTick(() => {
+          if (inputRef.value) {
+            inputRef.value?.focus();
+          }
+        });
+        return;
+      }
       model.value.push(inputVal.value);
       if (props.uniqueValue) {
         model.value = [...new Set(model.value)];
@@ -167,16 +177,24 @@
       ... 共 {{ model.length }} {{ displayUnit }}
     </a-tag>
 
-    <a-input
+    <a-form-item
       v-if="showInput"
-      ref="inputRef"
-      v-model.trim="inputVal"
       :size="size"
-      :placeholder="placeholder"
-      class="!min-w-60px !w-auto !flex-auto"
-      @keyup.enter="handleAdd"
-      @blur="handleAdd"
-    />
+      :validate-status="validateStatus"
+      :help="validateStatus === 'error' ? '格式校验不通过' : ''"
+      hide-label
+      row-class="relative !mb-0"
+    >
+      <a-input
+        ref="inputRef"
+        v-model.trim="inputVal"
+        :size="size"
+        :placeholder="placeholder"
+        class="!min-w-60px !w-auto !flex-auto"
+        @keyup.enter="handleAdd"
+        @blur="handleAdd"
+      />
+    </a-form-item>
     <a-button
       v-else
       :size="size"
@@ -195,5 +213,11 @@
 <style lang="less" scoped>
   :deep(.arco-tag) {
     position: relative;
+  }
+
+  :deep(.arco-form-item-message) {
+    position: absolute !important;
+    top: 100% !important;
+    left: 0 !important;
   }
 </style>
