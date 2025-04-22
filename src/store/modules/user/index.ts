@@ -72,7 +72,7 @@ const useUserStore = defineStore('user', {
         const cleanedData = {
           role: USERROLE.ADMIN,
           ...data,
-          account: data.username,
+          username: data.account,
           nickname: data?.name,
         };
         this.setUserInfo(cleanedData);
