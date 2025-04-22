@@ -28,7 +28,8 @@ interface SearchXXXState {
 
   onUpdateRenderData: (data: {
     type: 'update' | 'create' | 'delete';
-    data: XxxxModel | XxxxModel['id'][];
+    record?: XxxxModel;
+    ids?: XxxxModel['id'][];
   }) => void;
 }
 

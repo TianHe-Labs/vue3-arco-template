@@ -30,8 +30,9 @@ interface SearchUserState {
   handleResetQueryModel: (keys?: string[]) => void;
 
   onUpdateRenderData: (data: {
-    type: 'update' | 'create';
-    data: UserModel;
+    type: 'update' | 'create' | 'delete';
+    record?: UserModel;
+    ids?: UserModel['id'][];
   }) => void;
 }
 
