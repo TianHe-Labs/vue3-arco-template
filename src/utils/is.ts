@@ -60,6 +60,10 @@ export function isEmail(obj: any): boolean {
   return /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(obj);
 }
 
+export function isDomain(obj: any): boolean {
+  return /^[a-zA-Z0-9]+([-.][a-z0-9]+)*\.[a-z]{2,6}$/.test(obj);
+}
+
 export function isIpv4(obj: any): boolean {
   return /^(\d{1,3}\.){3}\d{1,3}$/.test(obj);
 }
