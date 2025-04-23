@@ -70,10 +70,10 @@ const useUserStore = defineStore('user', {
         // 有时候前端的有些字段和后端接口不一致
         // 为了避免大面积修改变量，可以只在接口这里做一下映射处理
         const cleanedData = {
+          username: data?.account,
+          nickname: data?.name,
           role: USERROLE.ADMIN,
           ...data,
-          username: data.account,
-          nickname: data?.name,
         };
         this.setUserInfo(cleanedData);
       } catch (err: any) {
