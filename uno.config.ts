@@ -30,6 +30,10 @@ export default defineConfig({
     presetIcons(), // iconify 图标集成 https://unocss.dev/presets/icons#options
   ],
   blocklist: ['container'],
+  shortcuts: {
+    'float-button': 'bg-bg-5 border border-solid border-border-2 shadow-md',
+  },
+
   theme: {
     colors: {
       // ArcoDesign 变量

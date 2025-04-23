@@ -12,5 +12,7 @@
   "tabBar": false,
   "menuFromServer": false,
   "serverMenus": [],
-  "footer": true
+  "footer": true,
+  "feedbackEnabled": true,
+  "messageEnabled": true
 }

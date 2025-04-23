@@ -9,7 +9,7 @@ export default {
     locale: 'menu.user',
     icon: 'icon-user-group',
     requiresAuth: true,
-    order: 9,
+    order: 8,
     hideChildrenInMenu: true,
   },
   children: [

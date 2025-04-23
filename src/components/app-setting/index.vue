@@ -21,7 +21,8 @@
   >
     <template #title>页面配置</template>
     <Block :options="contentOptions" title="内容区域" />
-    <Block :options="otherOptions" title="其他设置" />
+    <Block :options="themeOptions" title="主题设置" />
+    <Block :options="moduleOptions" title="功能设置" />
     <a-alert :show-icon="false">
       配置之后仅是临时生效，要想真正作用于项目，点击下方的 "复制配置"
       按钮，将配置替换到 settings.json 中即可。
@@ -75,11 +76,23 @@
       defaultValue: appStore.menuWidth,
     },
   ]);
-  const otherOptions = computed(() => [
+  const themeOptions = computed(() => [
     {
       name: 'colorWeak',
       label: '色弱模式',
       defaultValue: appStore.colorWeak,
+    },
+  ]);
+  const moduleOptions = computed(() => [
+    {
+      name: 'feedbackEnabled',
+      label: '问题反馈',
+      defaultValue: appStore.feedbackEnabled,
+    },
+    {
+      name: 'messageEnabled',
+      label: '消息通知',
+      defaultValue: appStore.messageEnabled,
     },
   ]);
 

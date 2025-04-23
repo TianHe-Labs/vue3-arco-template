@@ -31,11 +31,14 @@
           :closable="false"
           :header="false"
           :footer="false"
-          placement="left"
+          height="60vh"
+          placement="bottom"
           mask-closable
           @cancel="drawerCancel"
         >
-          <Menu style="padding-bottom: 'var(--toolbar-vertical-height)'" />
+          <Menu
+            style="padding-bottom: calc(var(--toolbar-vertical-height) + 20px)"
+          />
           <Toolbar
             mode="vertical"
             style="
@@ -56,7 +59,11 @@
     </a-layout>
   </a-scrollbar>
 
-  <!-- <FeedbackPanel /> -->
+  <MobileEntry
+    v-if="!appStore.navbar || breakpoints.smallerOrEqual('md').value"
+  />
+
+  <FeedbackPanel v-if="appStore.feedbackEnabled" />
 </template>
 
 <script lang="ts" setup>
@@ -67,16 +74,16 @@
   import Toolbar from '@/components/toolbar/index.vue';
   import Footer from '@/components/footer/index.vue';
   import TabBar from '@/components/tab-bar/index.vue';
+  import { provideFeedback } from '@/components/feedback-panel/composables/feedback';
   import { provideMessage } from '@/views/message/composables/message';
-  // import FeedbackPanel from '@/components/feedback-panel/index.vue';
   import PageLayout from './page-layout.vue';
-
+  import MobileEntry from '@/components/mobile-entry/index.vue';
+  import FeedbackPanel from '@/components/feedback-panel/index.vue';
   // 消息
   provideMessage();
 
   // 反馈
-  // const feedbackPanelVisible = ref<boolean>(false);
-  // provide('feedbackPanelVisible', feedbackPanelVisible);
+  provideFeedback();
 
   // 响应式
   const breakpoints = inject('breakpoints') as any;
@@ -130,7 +137,7 @@
 <style>
   :root {
     --nav-height: 64px;
-    --toolbar-vertical-height: 90px;
+    --toolbar-vertical-height: 84px;
   }
 </style>
 

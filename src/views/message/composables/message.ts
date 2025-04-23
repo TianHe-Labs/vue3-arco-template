@@ -122,7 +122,7 @@ export function provideMessage(): MessageState {
   };
 
   // 获取统计数据
-  fetchStats();
+  // fetchStats();
 
   const fetchData = async (opts?: any) => {
     // 控制是否显示 loading

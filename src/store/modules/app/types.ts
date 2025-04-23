@@ -15,7 +15,7 @@ export interface AppState {
   menuFromServer: boolean;
   serverMenus: RouteRecordNormalized[];
   footer: boolean;
-  [key: string]: unknown;
+  [key: string]: any;
 }
 
 export {};

@@ -24,17 +24,12 @@
       />
     </div>
     <!-- 导航栏：右侧 -->
-    <div class="flex gap-4 items-center right-side">
+    <div class="flex items-center right-side">
       <Toolbar v-if="breakpoints.greater('md').value" />
-      <a-button
-        v-else
-        type="text"
-        size="small"
-        style="color: var(--color-text-1)"
-        @click="toggleDrawerMenu"
-      >
+      <a-button v-else shape="circle" class="nav-btn" @click="toggleTheme()">
         <template #icon>
-          <icon-menu :size="22" />
+          <icon-moon-fill v-if="theme === 'dark'" size="large" />
+          <icon-sun-fill v-else size="large" />
         </template>
       </a-button>
     </div>
@@ -43,24 +38,34 @@
 
 <script lang="ts" setup>
   import { computed, inject } from 'vue';
-  import { useI18n } from 'vue-i18n';
   import { useAppStore } from '@/store';
   import Menu from '@/components/menu/index.vue';
   import Toolbar from '@/components/toolbar/index.vue';
 
   const breakpoints = inject('breakpoints') as any;
 
-  const { t } = useI18n();
-
-  const appName = import.meta.env.VITE_APP_NAME || t('');
+  const appName = import.meta.env.VITE_APP_NAME || '';
 
   const appStore = useAppStore();
 
+  // 主题
+  const theme = computed(() => {
+    return appStore.theme;
+  });
+  const isDark = useDark({
+    selector: 'body',
+    attribute: 'arco-theme',
+    valueDark: 'dark',
+    valueLight: 'light',
+    storageKey: 'arco-theme',
+    onChanged(dark: boolean) {
+      appStore.toggleTheme(dark);
+    },
+  });
+  const toggleTheme = useToggle(isDark);
+
   // 导航菜单
   const topMenu = computed(() => appStore.topMenu && appStore.menu);
-
-  // 移动端抽屉菜单
-  const toggleDrawerMenu = inject('toggleDrawerMenu') as () => void;
 </script>
 
 <style lang="less" scoped>

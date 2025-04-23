@@ -75,21 +75,6 @@ body {
   }
 }
 
-.arco-table-cell {
-  .circle {
-    display: inline-block;
-    width: 6px;
-    height: 6px;
-    margin-right: 4px;
-    background-color: rgb(var(--blue-6));
-    border-radius: 50%;
-
-    &.pass {
-      background-color: rgb(var(--green-6));
-    }
-  }
-}
-
 .arco-modal-simple {
   // padding: 20px !important;
   .arco-modal-footer {
@@ -103,8 +88,11 @@ body {
   justify-content: flex-end !important;
 }
 
-.fixed-btn {
-  background: var(--color-bg-5) !important;
-  border: 1px solid var(--color-fill-3) !important;
-  box-shadow: 0 2px 12px #0000001a;
+.nav-btn {
+  color: rgb(var(--gray-8));
+  background-color: transparent !important;
+
+  &:hover {
+    background-color: rgb(var(--gray-2)) !important;
+  }
 }

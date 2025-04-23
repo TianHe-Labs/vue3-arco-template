@@ -1,42 +1,33 @@
 <template>
   <div v-if="mode === 'horizontal'" class="flex gap-5 items-center toolbar">
-    <!-- 搜索 -->
-    <!-- <a-tooltip mini content="搜索">
-        <a-button class="nav-btn"  shape="circle">
-          <template #icon>
-            <icon-search />
-          </template>
-        </a-button>
-      </a-tooltip> -->
     <!-- 主题 -->
-    <a-tooltip mini :content="theme === 'light' ? '切换为暗色' : '切换为亮色'">
-      <a-button class="nav-btn" shape="circle" @click="handleToggleTheme">
+    <a-tooltip mini :content="$t(`theme.${theme}.switch`)">
+      <a-button class="nav-btn" shape="circle" @click="toggleTheme()">
         <template #icon>
-          <icon-moon-fill v-if="theme === 'dark'" />
-          <icon-sun-fill v-else />
+          <icon-moon-fill v-if="theme === 'dark'" size="medium" />
+          <icon-sun-fill v-else size="medium" />
         </template>
       </a-button>
     </a-tooltip>
     <!-- 反馈 -->
-    <!-- <a-tooltip mini content="问题反馈
+    <a-tooltip v-if="appStore.feedbackEnabled" mini content="问题反馈">
       <a-button
-        class="nav-btn"
-
         shape="circle"
-        @click.stop="feedbackPanelVisible = !feedbackPanelVisible"
+        class="nav-btn"
+        @click.stop="toggleFeedbackPanel()"
       >
-        <icon-customer-service />
+        <icon-customer-service size="medium" />
       </a-button>
-    </a-tooltip> -->
+    </a-tooltip>
     <!-- 消息 -->
-    <a-tooltip mini content="消息通知">
+    <a-tooltip v-if="appStore.messageEnabled" mini content="消息通知">
       <a-badge :count="renderStats?.unread || 0" dot>
         <a-button
           class="nav-btn"
           shape="circle"
           @click="router.push({ name: 'Message' })"
         >
-          <icon-notification />
+          <icon-notification size="medium" />
         </a-button>
       </a-badge>
     </a-tooltip>
@@ -44,8 +35,8 @@
     <a-tooltip mini :content="isFullscreen ? '退出全屏' : '切换全屏'">
       <a-button class="nav-btn" shape="circle" @click="toggleFullScreen">
         <template #icon>
-          <icon-fullscreen-exit v-if="isFullscreen" />
-          <icon-fullscreen v-else />
+          <icon-fullscreen-exit v-if="isFullscreen" size="medium" />
+          <icon-fullscreen v-else size="medium" />
         </template>
       </a-button>
     </a-tooltip>
@@ -58,7 +49,7 @@
         @click="setVisible"
       >
         <template #icon>
-          <icon-settings />
+          <icon-settings size="medium" />
         </template>
       </a-button>
     </a-tooltip>
@@ -86,7 +77,7 @@
         <div>
           <div
             :class="[
-              '-mt-0.5 font-medium text-text-1',
+              'font-medium text-text-1',
               { 'text-lg': !userStore?.status },
             ]"
           >
@@ -109,7 +100,7 @@
         <a-doption>
           <a-space @click="router.push({ name: 'Account' })">
             <icon-user />
-            <span> 账号设置 </span>
+            <span>{{ $t('menu.account') }}</span>
           </a-space>
         </a-doption>
         <a-doption>
@@ -122,69 +113,37 @@
     </a-dropdown>
   </div>
   <template v-else>
-    <div class="flex flex-col gap-4 toolbar">
-      <!-- 搜索 -->
-      <a-input class="rounded-2xl" size="small" placeholder="搜索" />
-
-      <!-- 主题 -->
+    <div class="flex flex-col gap-3 px-2 toolbar">
+      <!-- 账号设置 -->
       <a-button
         long
-        size="small"
-        shape="round"
-        class="justify-start"
-        @click="handleToggleTheme"
+        size="large"
+        class="nav-btn justify-start !px-3"
+        @click="
+          () => {
+            router.push({ name: 'Account' });
+            toggleDrawerMenu();
+          }
+        "
       >
         <template #icon>
-          <icon-moon-fill v-if="theme === 'dark'" />
-          <icon-sun-fill v-else />
+          <icon-user size="medium" />
         </template>
-        {{ theme === 'light' ? '切换为暗色' : '切换为亮色' }}
+        {{ $t('menu.account') }}
       </a-button>
-
-      <div class="grid grid-cols-2 gap-3">
-        <!-- 账号设置 -->
-        <a-button
-          size="small"
-          shape="round"
-          class="justify-start"
-          @click="
-            () => {
-              router.push({ name: 'Account' });
-              toggleDrawerMenu();
-            }
-          "
-        >
-          <template #icon>
-            <icon-user />
-          </template>
-          账号设置
-        </a-button>
-        <!-- 退出登录 -->
-        <a-button size="small" shape="round" @click="handleLogout">
-          <template #icon>
-            <icon-export />
-          </template>
-          退出登录
-        </a-button>
-      </div>
-    </div>
-
-    <!-- 移动端fixed固定在屏幕右下角 -->
-    <a-badge
-      v-if="breakpoints.smallerOrEqual('md').value"
-      :count="renderStats?.total || 0"
-      dot
-      class="fixed right-5 bottom-20"
-    >
+      <!-- 退出登录 -->
       <a-button
-        class="fixed-btn"
+        long
         size="large"
-        shape="circle"
-        @click="router.push({ name: 'Message' })"
+        class="nav-btn justify-start !px-3"
+        @click="handleLogout"
       >
-        <icon-notification />
+        <template #icon>
+          <icon-export size="medium" />
+        </template>
+        退出登录
       </a-button>
-    </a-badge>
+    </div>
   </template>
 </template>
 
@@ -192,10 +151,11 @@
   import { computed, inject } from 'vue';
   import { useDark, useToggle, useFullscreen } from '@vueuse/core';
   import { useRouter } from 'vue-router';
-  import useLogout from '@/composables/logout';
   import { useAppStore, useUserStore } from '@/store';
   import { isDevelopment } from '@/utils';
   import { useMessage } from '@/views/message/composables/message';
+  import { useFeedback } from '@/components/feedback-panel/composables/feedback';
+  import useLogout from '@/composables/logout';
 
   withDefaults(
     defineProps<{
@@ -230,15 +190,15 @@
     },
   });
   const toggleTheme = useToggle(isDark);
-  const handleToggleTheme = () => {
-    toggleTheme();
-  };
 
   // 反馈
-  // const feedbackPanelVisible = inject('feedbackPanelVisible') as boolean;
+  const { toggleFeedbackPanel } = useFeedback();
 
   // 消息
-  const { renderStats } = useMessage();
+  const { renderStats, fetchStats } = useMessage();
+  if (appStore.messageEnabled) {
+    fetchStats();
+  }
 
   // 全屏
   const { isFullscreen, toggle: toggleFullScreen } = useFullscreen();
@@ -258,17 +218,3 @@
   // 移动端抽屉菜单
   const toggleDrawerMenu = inject('toggleDrawerMenu') as () => void;
 </script>
-
-<style lang="less" scoped>
-  .toolbar {
-    .nav-btn {
-      color: rgb(var(--gray-8));
-      font-size: 16px;
-      background-color: transparent;
-
-      &:hover {
-        background-color: rgb(var(--gray-2));
-      }
-    }
-  }
-</style>
