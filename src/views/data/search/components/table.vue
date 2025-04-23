@@ -65,7 +65,11 @@
 </script>
 
 <template>
-  <a-card :bordered="false" title="检索结果">
+  <a-card
+    title="检索结果"
+    :bordered="false"
+    :header-style="{ borderBottom: 'none', paddingBottom: '0px' }"
+  >
     <template #extra>
       <div class="flex gap-3">
         <!-- 删除 -->

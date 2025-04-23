@@ -131,7 +131,7 @@ export function provideSearchUser(): SearchUserState {
       renderData.value = data.list;
       pagination.total = data.total;
     } catch (err: any) {
-      Message.error(err?.Message);
+      Message.error(err?.message);
     } finally {
       setLoading(false);
     }
@@ -161,7 +161,7 @@ export function provideSearchUser(): SearchUserState {
     window.history.pushState({}, '', url);
   };
 
-  const onPageSizeChange = async (pageSize: number) => {
+  const onPageSizeChange = (pageSize: number) => {
     // 如果 v-model 双向绑定，则不需要手动绑定
     pagination.pageSize = pageSize;
     pagination.current = 1;

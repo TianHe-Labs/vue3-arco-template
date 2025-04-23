@@ -58,10 +58,12 @@
           class="lg:col-span-2 xl:col-span-3"
           content-class="flex-wrap gap-2"
         >
-          <a-input
+          <a-input-search
             v-model="fuzzyQueryModel.fuzzyWord"
+            allow-clear
             placeholder="输入检索关键字"
             @press-enter="fetchData"
+            @clear="fetchData"
           >
             <template #suffix>
               <a-divider
@@ -88,7 +90,7 @@
                 </template>
               </a-select>
             </template>
-          </a-input>
+          </a-input-search>
           <a-select
             v-model="fuzzyQueryModel.fuzzyKeys"
             multiple

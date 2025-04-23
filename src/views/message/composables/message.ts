@@ -1,10 +1,5 @@
 import { provide, inject, Ref, reactive, ref, watch, shallowRef } from 'vue';
-import {
-  FormInstance,
-  Message,
-  Modal,
-  PaginationProps,
-} from '@arco-design/web-vue';
+import { FormInstance, Message, PaginationProps } from '@arco-design/web-vue';
 import { useRoute, useRouter } from 'vue-router';
 import { isEmpty, isObject, omitBy, pick } from 'lodash';
 import useLoading from '@/composables/loading';
@@ -14,13 +9,10 @@ import {
   queryMessageList,
   MessageModel,
   QueryMessageListReq,
-  updateMessageReadAt,
-  deleteMessage,
   QueryMessageStatRes,
   queryMessageStat,
   QueryMessageStatReq,
 } from '@/api/message';
-import { SelectionState } from '@/global';
 
 interface FuzzyQueryModel {
   fuzzyWord: string;
@@ -188,7 +180,7 @@ export function provideMessage(): MessageState {
     window.history.pushState({}, '', url);
   };
 
-  const onPageSizeChange = async (pageSize: number) => {
+  const onPageSizeChange = (pageSize: number) => {
     // 如果 v-model 双向绑定，则不需要手动绑定
     pagination.pageSize = pageSize;
     pagination.current = 1;

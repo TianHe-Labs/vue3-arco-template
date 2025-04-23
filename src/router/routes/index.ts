@@ -8,7 +8,7 @@ const externalModules = import.meta.glob('./externalModules/*.ts', {
 function formatModules(_modules: any, result: RouteRecordNormalized[]) {
   Object.keys(_modules).forEach((key) => {
     const defaultModule = _modules[key].default;
-    if (!defaultModule) return;
+    if (!defaultModule || Object.keys(defaultModule).length === 0) return;
     const moduleList = Array.isArray(defaultModule)
       ? [...defaultModule]
       : [defaultModule];
@@ -21,5 +21,5 @@ export const appRoutes: RouteRecordNormalized[] = formatModules(modules, []);
 
 export const appExternalRoutes: RouteRecordNormalized[] = formatModules(
   externalModules,
-  []
+  [],
 );

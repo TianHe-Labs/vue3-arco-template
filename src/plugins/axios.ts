@@ -105,11 +105,11 @@ axios.interceptors.response.use(
       logout();
     } else if (status === 460) {
       // Access Token 过期
-      const config = error.config as InternalAxiosRequestConfig;
+      const failedConfig = error.config as InternalAxiosRequestConfig;
 
       // 如果正在刷新 token，将请求加入队列
       if (requestQueue.getIsRefreshing()) {
-        return requestQueue.add(config);
+        return requestQueue.add(failedConfig);
       }
 
       // 设置刷新状态

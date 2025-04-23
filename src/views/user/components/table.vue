@@ -84,7 +84,11 @@
 </script>
 
 <template>
-  <a-card :bordered="false" title="用户列表">
+  <a-card
+    title="用户列表"
+    :bordered="false"
+    :header-style="{ borderBottom: 'none', paddingBottom: '0px' }"
+  >
     <template #extra>
       <div class="flex gap-3">
         <!-- 删除 -->

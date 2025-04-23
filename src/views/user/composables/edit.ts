@@ -17,10 +17,23 @@ interface SearchUserState {
   editUserModel: Ref<CreateOrUpdateUserReq>;
 
   handleOpenEditPanel: ($event: Event, record?: UserModel) => void;
+  handleCloseEditPanel: () => void;
   handleSubmitEdit: (opts?: any) => Promise<any>;
 }
 
 const symbol = Symbol('EDIT');
+
+const resetEditUserModel = (): CreateOrUpdateUserReq => {
+  return {
+    username: '',
+    nickname: '',
+    role: USERROLE.COMMON,
+    email: '',
+    phone: '',
+    avatar: '',
+    status: '',
+  };
+};
 
 export function provideEditUser(): SearchUserState {
   const { loading, setLoading } = useLoading();
@@ -30,14 +43,20 @@ export function provideEditUser(): SearchUserState {
   // 表单实例
   const editUserFormRef = shallowRef<FormInstance>();
 
-  const editUserModel = ref<CreateOrUpdateUserReq>({});
+  const editUserModel = ref<CreateOrUpdateUserReq>(resetEditUserModel());
 
   // 用 event 占据第一个参数
   // 在template中使用时，如果不传参数（创建），可以不用加括号
-  const handleOpenEditPanel = ($event: Event, record?: UserModel) => {
+  const handleOpenEditPanel = ($event: Event, record?: Partial<UserModel>) => {
     // 创建时默认 普通用户
-    editUserModel.value = { role: USERROLE.COMMON, ...record };
+    editUserModel.value = { ...resetEditUserModel(), ...record };
     editPanelVisible.value = true;
+  };
+
+  // 面板关闭
+  const handleCloseEditPanel = () => {
+    // 重置
+    editUserModel.value = resetEditUserModel();
   };
 
   const handleSubmitEdit = async (callback?: any /* emits: any */) => {
@@ -152,6 +171,7 @@ export function provideEditUser(): SearchUserState {
     editUserFormRef,
     editUserModel,
     handleOpenEditPanel,
+    handleCloseEditPanel,
     handleSubmitEdit,
   };
 

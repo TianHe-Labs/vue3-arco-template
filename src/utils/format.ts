@@ -52,3 +52,37 @@ export function formatByte(obj: number): string {
   const i = Math.floor(Math.log(obj) / Math.log(base));
   return `${(obj / base ** i).toFixed(1)} ${symbols[i]}`;
 }
+
+// 简单 Markdown 解析
+export function simpleMarkdownParser(obj: string) {
+  // 解析加粗文本（**加粗**）
+  let parsedText = obj.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+
+  // 将单个换行替换为 `<br>`（除了列表项）
+  parsedText = parsedText.replace(/([^\n])\n([^\d])/g, '$1<br>$2');
+
+  // 分割为行，逐行解析有序列表
+  const lines = parsedText.split('\n');
+  const parsedLines = lines.map((line) => {
+    const listItemMatch = line.match(/^(\d+)\.\s+(.*)$/);
+    if (listItemMatch) {
+      return `<li>${listItemMatch[2]}</li>`;
+    }
+    return `<div>${line}</div>`;
+  });
+
+  // 处理列表项并将它们包裹在 `<ol>` 中
+  const listItems = parsedLines
+    .filter((line) => line.startsWith('<li>'))
+    .join('');
+  const nonListItems = parsedLines
+    .filter((line) => line.startsWith('<div>'))
+    .join('');
+
+  return `
+        <div>
+            ${nonListItems}
+            ${listItems ? `<ol>${listItems}</ol>` : ''}
+        </div>
+    `;
+}

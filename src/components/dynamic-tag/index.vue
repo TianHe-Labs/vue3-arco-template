@@ -42,6 +42,11 @@
       type: Function,
       default: (item: string) => !!item,
     },
+    // 校验不通过时的消息提示
+    validateMessage: {
+      type: String,
+      default: '格式校验不通过',
+    },
     // 输入框占位符
     placeholder: {
       type: String,
@@ -151,7 +156,12 @@
 </script>
 
 <template>
-  <div :class="['flex flex-wrap gap-2', { 'flex-col items-start': vertical }]">
+  <div
+    :class="[
+      'max-w-full flex flex-wrap gap-2',
+      { 'flex-col items-start': vertical },
+    ]"
+  >
     <!-- displayCount 限制显示数量 -->
     <a-tag
       v-for="itx in model.slice(
@@ -167,7 +177,7 @@
       }"
       @close="handleRemove(itx)"
     >
-      <span class="flex-auto">{{ formatTag(itx) }}</span>
+      <span class="flex-auto truncate">{{ formatTag(itx) }}</span>
     </a-tag>
     <!-- 超过 displayCount 限制显示数量 -->
     <a-tag
@@ -181,14 +191,16 @@
       v-if="showInput"
       :size="size"
       :validate-status="validateStatus"
-      :help="validateStatus === 'error' ? '格式校验不通过' : ''"
+      :help="validateStatus === 'error' ? validateMessage : ''"
       hide-label
       row-class="relative !w-max !mb-0"
       content-class="!h-min !min-h-min"
+      :wrapper-col-style="{ minHeight: 'min-content' }"
     >
       <a-input
         ref="inputRef"
         v-model.trim="inputVal"
+        allow-clear
         :size="size"
         :placeholder="placeholder"
         class="!min-w-60px !w-auto !flex-auto"
