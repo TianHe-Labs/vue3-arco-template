@@ -209,7 +209,7 @@
       />
     </a-form-item>
     <a-button
-      v-else
+      v-else-if="totalCount === -1 || model.length < totalCount"
       :size="size"
       type="dashed"
       class="!px-2"

@@ -44,7 +44,7 @@ export function formatNumberZhAbbr(obj: number): string {
 // 字节格式化
 export function formatByte(obj: number): string {
   if (typeof obj !== 'number') return 'Invalid Number';
-  if (obj === 0) return '0';
+  if (obj === 0) return '0 B';
   // base 底数
   const base = 1024;
   // 取对数匹配单位
