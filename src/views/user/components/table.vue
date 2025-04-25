@@ -77,7 +77,7 @@
       dataIndex: 'operations',
       slotName: 'operations',
       fixed: 'right',
-      width: 110,
+      width: 160,
       headerCellClass: 'whitespace-nowrap',
     },
   ]);
@@ -160,25 +160,30 @@
       </template>
       <!-- 操作 -->
       <template #operations="{ record }">
-        <div class="flex items-center gap-2">
+        <div class="flex items-center">
           <a-button
             size="small"
-            type="outline"
+            type="text"
             class="!px-2"
             @click="handleOpenEditPanel($event, record)"
           >
+            <template #icon>
+              <icon-edit />
+            </template>
             修改
           </a-button>
           <a-button
             status="danger"
-            type="outline"
+            type="text"
             size="small"
             :disabled="record.id === userStore?.id"
+            class="!px-2"
             @click="handleConfirmDeleteUser([record.id], onUpdateRenderData)"
           >
             <template #icon>
               <icon-delete />
             </template>
+            删除
           </a-button>
         </div>
       </template>

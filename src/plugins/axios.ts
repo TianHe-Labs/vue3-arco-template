@@ -143,6 +143,10 @@ axios.interceptors.response.use(
           reject(err);
         });
         requestQueue.clear();
+        Message.error({
+          content: message || t('460'),
+          duration: 5 * 1000,
+        });
         logout();
         return Promise.reject(err);
       } finally {

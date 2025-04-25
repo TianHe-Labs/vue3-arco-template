@@ -58,7 +58,7 @@
       dataIndex: 'operations',
       slotName: 'operations',
       fixed: 'right',
-      width: 110,
+      width: 160,
       headerCellClass: 'whitespace-nowrap',
     },
   ]);
@@ -132,23 +132,36 @@
       </template>
       <!-- 操作 -->
       <template #operations="{ record }">
-        <div class="flex items-center gap-2">
-          <router-link
-            :to="{ name: 'XxxxDetail', params: { id: record.id } }"
-            target="_blank"
-          >
-            <a-button size="small" type="outline" class="!px-2">详情</a-button>
-          </router-link>
+        <!-- 按钮较多时，分行显示 操作类的放一行 -->
+        <router-link
+          :to="{ name: 'XxxxDetail', params: { id: record.id } }"
+          target="_blank"
+        >
+          <a-button size="small" type="text" class="!px-2">
+            <template #icon>
+              <icon-launch />
+            </template>
+            详情
+          </a-button>
+        </router-link>
+        <div class="flex items-center">
+          <a-button size="small" type="text" class="!px-2">
+            <template #icon>
+              <icon-edit />
+            </template>
+            修改
+          </a-button>
           <a-button
             status="danger"
             size="small"
-            type="outline"
+            type="text"
             class="!px-2"
             @click="handleConfirmDeleteXxxx([record.id], onUpdateRenderData)"
           >
             <template #icon>
               <icon-delete />
             </template>
+            删除
           </a-button>
         </div>
       </template>

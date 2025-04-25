@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-  const appCopyright = import.meta.env.VITE_APP_COPR;
+  const appCopyright = import.meta.env.VITE_APP_COPYRIGHT;
 </script>
 
 <template>

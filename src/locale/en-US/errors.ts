@@ -28,7 +28,7 @@ export default {
   '429': 'Too Many Requests. Try again later',
   '431': 'Header fields too large. Check and try again',
   '451': 'Resource unavailable for legal reasons. Check and try again',
-  '460': '',
+  '460': 'Expired authorized request. Log in and try again',
   '461': 'Expired authorized request. Log in and try again',
   '500': 'Service exception. Try again later',
   '501': 'Service exception. Try again later',

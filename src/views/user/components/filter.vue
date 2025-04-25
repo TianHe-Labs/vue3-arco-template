@@ -105,7 +105,7 @@
                   <icon-select-all />
                 </template>
                 <template #header>
-                  <div p="x-4 y-2"> 选择匹配属性 </div>
+                  <div p="x-4 y-2" text="text-3"> 选择匹配属性 </div>
                 </template>
               </a-select>
             </template>
@@ -124,7 +124,7 @@
               <icon-select-all />
             </template>
             <template #header>
-              <div p="x-4 y-2"> 选择匹配属性 </div>
+              <div p="x-4 y-2" text="text-3"> 选择匹配属性 </div>
             </template>
           </a-select>
         </a-form-item>

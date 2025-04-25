@@ -16,8 +16,10 @@ declare namespace JSX {
 interface ImportMetaEnv {
   readonly VITE_API_BASE: string;
   readonly VITE_APP_NAME: string;
-  readonly VITE_APP_DESC: string;
-  readonly VITE_APP_COPR: string;
+  readonly VITE_APP_SUB_NAME: string;
+  readonly VITE_APP_COPYRIGHT: string;
+  readonly VITE_APP_SLOGAN: string;
+  readonly VITE_APP_SUB_SLOGAN: string;
 
   // https://cn.vitejs.dev/config/server-options.html#server-proxy
   // Vite Dev Server Proxy 环境变量配置，只用于 .env.development

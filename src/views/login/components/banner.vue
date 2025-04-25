@@ -1,3 +1,8 @@
+<script setup lang="ts">
+  const slogan = import.meta.env.VITE_APP_SLOGAN;
+  const subSlogan = import.meta.env.VITE_APP_SUB_SLOGAN;
+</script>
+
 <template>
   <div
     class="flex flex-col justify-center items-center gap-4"
@@ -10,8 +15,8 @@
         linear-gradient(172deg, rgba(var(--primary-5)), rgb(1 1 1 / 75%) 72%);
     "
   >
-    <div class="text-xl text-fill-1"> 开箱即用的高质量模板 </div>
-    <p class="text-text-3"> 丰富的的页面模板，覆盖大多数典型业务场景 </p>
+    <div v-if="slogan" class="text-xl text-fill-1"> {{ slogan }} </div>
+    <p v-if="slogan && subSlogan" class="text-text-3"> {{ subSlogan }} </p>
     <img class="w-2/3" src="@/assets/images/login-banner.png" />
   </div>
 </template>
