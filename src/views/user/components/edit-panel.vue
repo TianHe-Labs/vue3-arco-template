@@ -1,6 +1,6 @@
 <script lang="ts" setup>
   import { useI18n } from 'vue-i18n';
-  import { USERROLE } from '@/store/modules/user/types';
+  import { USERROLE } from '@/store/modules/user/types.d';
   import { enum2Arr } from '@/utils/transform';
   import { isPhone } from '@/utils/is';
   import { useEditUser } from '../composables/edit';

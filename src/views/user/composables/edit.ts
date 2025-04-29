@@ -8,7 +8,7 @@ import {
   UserModel,
   createOrUpdateUser,
 } from '@/api/user';
-import { USERROLE } from '@/store/modules/user/types';
+import { USERROLE } from '@/store/modules/user/types.d';
 
 interface SearchUserState {
   editPanelVisible: Ref<boolean>;

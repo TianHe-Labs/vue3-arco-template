@@ -1,7 +1,7 @@
 import Mock, { Random } from 'mockjs';
 import qs from 'query-string';
 import setupMock, { successResponseWrap } from '@/plugins/setup-mock';
-import { MockRequest } from '@/mock/types';
+import { MockRequest } from '@/mock/types.d';
 
 const xxxxs = Mock.mock({
   'list|55': [

@@ -1,6 +1,6 @@
 import type { RouteRecordNormalized } from 'vue-router';
 import axios from 'axios';
-import { UserState } from '@/store/modules/user/types';
+import { UserState } from '@/store/modules/user/types.d';
 
 // 登录
 export type LoginReq = Pick<UserState, 'username' | 'password'>;

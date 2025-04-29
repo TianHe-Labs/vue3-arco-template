@@ -17,5 +17,3 @@ export interface AppState {
   footer: boolean;
   [key: string]: any;
 }
-
-export {};

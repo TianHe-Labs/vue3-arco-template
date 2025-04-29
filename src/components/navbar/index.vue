@@ -38,6 +38,7 @@
 
 <script lang="ts" setup>
   import { computed, inject } from 'vue';
+  import { useDark, useToggle } from '@vueuse/core';
   import { useAppStore } from '@/store';
   import Menu from '@/components/menu/index.vue';
   import Toolbar from '@/components/toolbar/index.vue';

@@ -4,5 +4,3 @@ export interface OssState {
   securityToken?: string;
   expiration?: number;
 }
-
-export {};

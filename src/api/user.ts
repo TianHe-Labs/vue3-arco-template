@@ -1,7 +1,7 @@
 import axios from 'axios';
 import qs from 'query-string';
 import { List, Pagination } from '@/global';
-import { UserState } from '@/store/modules/user/types';
+import { UserState } from '@/store/modules/user/types.d';
 
 export interface UserModel
   extends Omit<UserState, 'accessToken' | 'refreshToken'> {}

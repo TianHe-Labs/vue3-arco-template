@@ -11,7 +11,7 @@ setupMock({
           text: Mock.Random.natural(20, 100),
           audio: Mock.Random.natural(20, 100),
           video: Mock.Random.natural(20, 100),
-        }))
+        })),
       );
     });
   },

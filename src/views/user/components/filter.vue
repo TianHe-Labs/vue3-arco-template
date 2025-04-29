@@ -1,7 +1,7 @@
 <script lang="ts" setup>
   import { useI18n } from 'vue-i18n';
   import { enum2Arr } from '@/utils/transform';
-  import { USERROLE } from '@/store/modules/user/types';
+  import { USERROLE } from '@/store/modules/user/types.d';
   import { useSearchUser } from '../composables/search';
 
   const {

@@ -61,7 +61,7 @@
   import { useRouter, useRoute } from 'vue-router';
   import { useI18n } from 'vue-i18n';
   import { useTabBarStore } from '@/store';
-  import type { TagProps } from '@/store/modules/tab-bar/types';
+  import type { TagProps } from '@/store/modules/tab-bar/types.d';
   import { DEFAULT_ROUTE_NAME, REDIRECT_ROUTE_NAME } from '@/router/constants';
 
   // eslint-disable-next-line no-shadow

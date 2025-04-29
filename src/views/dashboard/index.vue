@@ -7,7 +7,7 @@
     formatNumberZhAbbr,
   } from '@/utils/format';
   import { enum2Arr } from '@/utils/transform';
-  import { USERROLE } from '@/store/modules/user/types';
+  import { USERROLE } from '@/store/modules/user/types.d';
   import Banner from './components/banner.vue';
   import StackBarDist from './components/stack-bar-dist.vue';
   import DynamicTag from '@/components/dynamic-tag/index.vue';

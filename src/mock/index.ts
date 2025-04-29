@@ -1,16 +1,16 @@
 import Mock from 'mockjs';
 
-import './servers/dashboard';
+import './_servers/dashboard';
 
-import './servers/xxxx';
+import './_servers/xxxx';
 
-import './servers/message';
+import './_servers/message';
 
-import './servers/account';
+import './_servers/account';
 
-import './servers/user';
+import './_servers/user';
 
-import './servers/feedback';
+import './_servers/feedback';
 
 Mock.setup({
   timeout: '600-1000',

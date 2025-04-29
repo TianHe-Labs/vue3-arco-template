@@ -1,7 +1,7 @@
 import { DirectiveBinding } from 'vue';
 import { useUserStore } from '@/store';
 import { enum2Arr } from '@/utils/transform';
-import { USERROLE } from '@/store/modules/user/types';
+import { USERROLE } from '@/store/modules/user/types.d';
 
 function checkPermission(el: HTMLElement, binding: DirectiveBinding) {
   const { value } = binding;

@@ -6,7 +6,7 @@ import {
   updateUserToken as updateUserTokenApi,
 } from '@/api/account';
 import { camelCase, mapKeys } from 'lodash';
-import { USERROLE, UserState } from './types';
+import { USERROLE, UserState } from './types.d';
 
 const useUserStore = defineStore('user', {
   state: (): UserState => ({

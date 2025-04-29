@@ -3,8 +3,8 @@ import setupMock, {
   successResponseWrap,
   failureResponseWrap,
 } from '@/plugins/setup-mock';
-import { MockRequest } from '@/mock/types';
-import { USERROLE } from '@/store/modules/user/types';
+import { MockRequest } from '@/mock/types.d';
+import { USERROLE } from '@/store/modules/user/types.d';
 
 const users = [
   {

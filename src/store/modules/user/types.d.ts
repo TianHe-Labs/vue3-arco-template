@@ -27,5 +27,3 @@ export interface UserState {
   createdAt?: string | Date;
   updatedAt?: string | Date;
 }
-
-export {};

@@ -3,7 +3,7 @@ import type { RouteRecordNormalized } from 'vue-router';
 import { type NotificationReturn, Notification } from '@arco-design/web-vue';
 import defaultSettings from '@/settings.json';
 import { queryServerMenuList } from '@/api/account';
-import { AppState } from './types';
+import { AppState } from './types.d';
 
 const useAppStore = defineStore('app', {
   state: (): AppState => ({
