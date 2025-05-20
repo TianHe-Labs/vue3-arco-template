@@ -10,11 +10,13 @@
   import { USERROLE } from '@/store/modules/user/types.d';
   import Banner from './components/banner.vue';
   import StackBarDist from './components/stack-bar-dist.vue';
-  import DynamicTag from '@/components/dynamic-tag/index.vue';
+  import DynamicTag, { TagItem } from '@/components/dynamic-tag/index.vue';
   import ExtendedInputTag from '@/components/extended-input-tag/index.vue';
 
+  const inputTags = ref<string[]>([]);
+
   const dynamicTagRef = ref<InstanceType<typeof DynamicTag>>();
-  const tags = ref<string[]>([]);
+  const dynamicTags = ref<TagItem[]>([]);
   // 标签数据映射
   const tagMap: Record<string, string> = {
     '1': '标签一',
@@ -22,12 +24,20 @@
     '3': '标签三',
   };
   // 格式化标签显示值
-  const formatTagLabel = (id: string) => {
-    return tagMap[id] || id;
+  const formatTagLabel = (item: TagItem) => {
+    return (
+      (item as any)?.name ||
+      tagMap[(item as any)?.id || item] ||
+      (item as string)
+    );
   };
 
   const handleAddButtonClick = () => {
-    dynamicTagRef.value?.addTag('1');
+    // 通过组件内的方法可以触发相关事件
+    dynamicTagRef.value?.addTag({ id: '1', name: '标签一' });
+
+    // 当然也可以直接修改绑定的变量值
+    // dynamicTags.value.push({ id: '1', name: '标签一' });
   };
 </script>
 
@@ -38,16 +48,19 @@
     <StackBarDist />
 
     <div class="flex flex-col gap-4 p-4 bg-bg-2">
-      {{ tags }}
+      {{ inputTags }}
 
-      <ExtendedInputTag v-model="tags" />
+      <ExtendedInputTag v-model="inputTags" />
+
+      {{ dynamicTags }}
 
       <!-- 开启 customMode 属性，监听 add-button-click 事件 -->
-      <!-- 通过调用暴漏出的方法 dynamicTagRef.addTag 自定义地添加标签 -->
       <DynamicTag
-        v-model="tags"
+        v-model="dynamicTags"
         ref="dynamicTagRef"
-        :custom-mode="false"
+        value-key="id"
+        :unique-value="true"
+        :custom-mode="true"
         :format-tag="formatTagLabel"
         :vertical="true"
         @add-button-click="handleAddButtonClick"
