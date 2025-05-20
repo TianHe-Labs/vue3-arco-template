@@ -269,11 +269,15 @@
   >
     <!-- displayCount 限制显示数量 -->
     <a-tag
-      v-for="(itx, index) in model.slice(
+      v-for="itx in model.slice(
         0,
         displayCount === -1 ? model.length : displayCount,
       )"
-      :key="index"
+      :key="
+        typeof itx === 'string'
+          ? itx
+          : itx?.[props.valueKey] || JSON.stringify(itx)
+      "
       :closable="!disabled"
       :class="['!self-stretch', { 'w-full': vertical }]"
       :style="{
