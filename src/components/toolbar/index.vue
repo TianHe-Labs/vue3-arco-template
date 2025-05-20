@@ -166,9 +166,6 @@
     },
   );
 
-  // 响应式
-  const breakpoints = inject('breakpoints') as any;
-
   const userStore = useUserStore();
 
   const appStore = useAppStore();
@@ -195,10 +192,7 @@
   const { toggleFeedbackPanel } = useFeedback();
 
   // 消息
-  const { renderStats, fetchStats } = useMessage();
-  if (appStore.messageEnabled) {
-    fetchStats();
-  }
+  const { renderStats } = useMessage();
 
   // 全屏
   const { isFullscreen, toggle: toggleFullScreen } = useFullscreen();

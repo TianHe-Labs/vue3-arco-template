@@ -24,7 +24,7 @@ interface MessageState {
   pagination: PaginationProps;
   queryPanelVisible: Ref<boolean>;
   toggleQueryPanel: () => void;
-  queryFormRef: Ref<FormInstance>;
+  queryFormRef: Ref<FormInstance | null>;
   queryModel: Ref<QueryMessageListReq>;
   fuzzyKeys: string[];
   fuzzyQueryModel: Ref<FuzzyQueryModel>;
@@ -99,7 +99,7 @@ export function provideMessage(): MessageState {
   };
 
   // 表单实例
-  const queryFormRef = shallowRef<FormInstance>();
+  const queryFormRef = shallowRef<FormInstance | null>(null);
 
   // 精确筛选条件
   const queryModel = ref<QueryMessageListReq>(resetQueryModel());
@@ -122,8 +122,9 @@ export function provideMessage(): MessageState {
   };
 
   // 获取统计数据
-  // fetchStats();
+  fetchStats();
 
+  // 获取列表数据 (如果在顶层provide，那么只在消息列表页再开始调用获取)
   const fetchData = async (opts?: any) => {
     // 控制是否显示 loading
     if (!opts?.hideLoading) {
@@ -229,6 +230,11 @@ export function provideMessage(): MessageState {
         renderData.value = renderData.value.filter(
           (item) => !data?.ids?.includes(item.id),
         );
+
+        // 一整页全删除，则需要重新获取
+        if (renderData.value.length === 0) {
+          fetchData();
+        }
         break;
     }
     // 重新获取统计数据

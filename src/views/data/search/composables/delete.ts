@@ -45,22 +45,16 @@ export function provideDeleteXxxx() {
       onOk: async () => {
         try {
           const { data } = await deleteXxxx({ ids });
-          if (data?.ids && data.ids?.length === ids?.length) {
-            // 直接在前端逻辑中移除已经被删除的XX，不再请求接口
-            callback?.({
-              type: 'delete',
-              ids: data?.ids,
-            });
-            Message.success(
-              `已删除${data?.ids?.length || ids?.length || 0}个XX`,
-            );
-          } else {
-            Message.warning(
-              `已删除${data.ids.length}个XX, ${
-                ids.length - data?.ids?.length
-              }个XX删除失败`,
-            );
-          }
+          // 直接在前端逻辑中移除已经被删除的XX，不再请求接口
+          callback?.({
+            type: 'delete',
+            ids: data?.ids,
+          });
+          Message.success(
+            `已删除${data.ids.length}个XX, ${
+              ids.length - data?.ids?.length
+            }个XX删除失败`,
+          );
           toggleSelection(false);
         } catch (err: any) {
           Message.error(err?.message);

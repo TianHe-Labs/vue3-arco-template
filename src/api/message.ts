@@ -21,7 +21,7 @@ export interface MessageModel {
 // 获取消息列表，时间倒序，最新的在前
 export interface QueryMessageListReq {
   types?: MessageType[]; // 消息类型，通知、告警
-  unread?: boolean; // 是否只查询未读消息
+  unread?: boolean; // 是否过滤已读消息，即仅显示未读
   readRange?: string[] | Date[]; // 阅读时间范围，格式：YYYY-MM-DD
   createdRange?: string[] | Date[]; // 创建时间范围，格式：YYYY-MM-DD
 }
@@ -56,8 +56,8 @@ export interface UpdateMessageReadAtReq {
   ids?: string[]; // 不传则全部标记
 }
 export interface UpdateMessageReadAtRes {
-  ids: string[]; // 标记成功的id
-  readAt: string | Date; // 标记成功的最新时间
+  ids: string[]; // 标记的id
+  readAt?: string | Date; // 标记的时间
 }
 export function updateMessageReadAt(data: UpdateMessageReadAtReq) {
   return axios.put<UpdateMessageReadAtRes>('/api/message/readAt/update', data);

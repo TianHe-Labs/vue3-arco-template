@@ -55,10 +55,13 @@ export function provideOperation() {
         readAt: data?.readAt,
       });
 
-      Message.success(
-        `已将${data?.ids?.length || ids?.length || 0}条消息标记为已读`,
-      );
       toggleSelection(false);
+
+      Message.success(
+        `已标记${data?.ids?.length || ids?.length || 0}条消息为已读，${
+          ids.length - data?.ids?.length
+        }条消息标记失败`,
+      );
     } catch (err: any) {
       Message.error(err.message);
     }
@@ -82,23 +85,18 @@ export function provideOperation() {
       onOk: async () => {
         try {
           const { data } = await deleteMessage({ ids });
-          if (data?.ids && data.ids?.length === ids?.length) {
-            // 直接在前端逻辑中移除已经被删除的用户，不再请求接口
-            callback?.({
-              type: 'delete',
-              ids: data?.ids,
-            });
-            Message.success(
-              `已删除${data?.ids?.length || ids?.length || 0}条消息`,
-            );
-          } else {
-            Message.warning(
-              `已删除${data?.ids?.length}条消息, ${
-                ids.length - data?.ids?.length
-              }条消息删除失败`,
-            );
-          }
+          // 直接在前端逻辑中移除已经被删除的用户，不再请求接口
+          callback?.({
+            type: 'delete',
+            ids: data?.ids,
+          });
           toggleSelection(false);
+
+          Message.success(
+            `已删除${data?.ids?.length}条消息, ${
+              ids.length - data?.ids?.length
+            }条消息删除失败`,
+          );
         } catch (err: any) {
           Message.error(err.message);
         }

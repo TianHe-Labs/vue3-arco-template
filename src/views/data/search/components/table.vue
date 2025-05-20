@@ -111,7 +111,7 @@
     >
       <!-- 序号 + (pagination.current - 1) * pagination.pageSize -->
       <template #index="{ rowIndex }">
-        <span font="number bold italic" opacity-40>
+        <span class="font-number font-bold italic opacity-40">
           {{ rowIndex + 1 }}
         </span>
       </template>

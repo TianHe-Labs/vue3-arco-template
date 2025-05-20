@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-  import { Message, TableColumnData } from '@arco-design/web-vue';
+  import { TableColumnData } from '@arco-design/web-vue';
   import { useMessage } from '../composables/message';
   import { dayjs } from '@/utils/format';
   import { computed, ref } from 'vue';
@@ -119,6 +119,7 @@
           删除
         </a-button>
 
+        <!-- 高级筛选 显示/隐藏 -->
         <a-button
           :type="queryPanelVisible ? 'primary' : 'outline'"
           size="small"
@@ -154,7 +155,7 @@
     >
       <!-- 序号 + (pagination.current - 1) * pagination.pageSize -->
       <template #index="{ rowIndex }">
-        <span font="number bold italic" opacity-40>
+        <span class="font-number font-bold italic opacity-40">
           {{ rowIndex + 1 }}
         </span>
       </template>
