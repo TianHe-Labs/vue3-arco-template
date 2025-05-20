@@ -277,13 +277,13 @@
       <!-- 图标 -->
       <template #icon>
         <!-- 具名插槽方式 -->
-        <slot name="icon" :itx="itx">
+        <slot name="icon" :item="itx">
           <component :is="formatIcon?.(itx)" v-if="formatIcon" />
         </slot>
       </template>
       <!-- 内容 -->
       <span class="flex-auto truncate">
-        <slot name="default" :itx="itx">
+        <slot name="default" :item="itx">
           <!-- 根据需要返回字符串或 VNode，组件会自动选择最合适的渲染方式 -->
           <template v-if="typeof formatTag(itx) === 'string'">
             {{ formatTag(itx) }}
