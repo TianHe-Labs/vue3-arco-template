@@ -81,13 +81,13 @@
         @add-button-click="handleAddButtonClick"
       >
         <!-- 插槽形式编码更直观友好 -->
-        <template #icon="{ itx }">
-          <!-- <component :is="formatTagIcon(itx)" /> -->
+        <template #icon="{ item }">
+          <!-- <component :is="formatTagIcon(item)" /> -->
           <icon-heart />
         </template>
-        <template #default="{ itx }">
-          <!-- {{ formatTagLabel(itx) }} -->
-          {{ itx.name }}
+        <template #default="{ item }">
+          <!-- {{ formatTagLabel(item) }} -->
+          {{ item.name }}
         </template>
       </DynamicTag>
 
