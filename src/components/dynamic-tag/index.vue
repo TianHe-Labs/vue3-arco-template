@@ -1,12 +1,9 @@
-<script lang="ts" setup>
+<script lang="ts" setup generic="T extends string | Record<string, any>">
+  import { nextTick, ref, PropType, VNode, watch, h } from 'vue';
   import { InputInstance } from '@arco-design/web-vue';
-  import { nextTick, ref, PropType, VNode, watch } from 'vue';
-
-  // 定义标签项的类型
-  export type TagItem = string | Record<string, any>;
 
   // v-model 双向绑定
-  const model = defineModel<TagItem[]>({ default: [] });
+  const model = defineModel<T[]>({ default: [] });
 
   // 组件属性
   const props = defineProps({
@@ -27,14 +24,16 @@
     },
     // 标题图标格式化函数
     formatIcon: {
-      type: Function as PropType<(value: TagItem) => VNode | undefined>,
+      type: Function as PropType<(value: T) => VNode | undefined>,
       default: undefined,
     },
     // 标签显示值格式化函数
     formatTag: {
-      type: Function as PropType<(value: TagItem) => string>,
-      default: (value: TagItem) =>
-        typeof value === 'string' ? value : JSON.stringify(value),
+      type: Function as PropType<(value: T) => VNode | string>,
+      default: (value: T) =>
+        typeof value === 'string'
+          ? h('span', {}, value)
+          : h('span', {}, JSON.stringify(value)),
     },
     // 如果model是对象数组，则用于标识对象数组中唯一性的属性名
     valueKey: {
@@ -43,7 +42,7 @@
     },
     // 删除前的回调函数，返回 true 或 Promise<true> 则继续删除，返回 false 或 Promise<false> 则取消删除
     beforeRemove: {
-      type: Function as PropType<(item: TagItem) => boolean | Promise<boolean>>,
+      type: Function as PropType<(item: T) => boolean | Promise<boolean>>,
       default: undefined,
     },
     // 最大数量
@@ -63,8 +62,8 @@
     },
     // 输入验证函数
     validate: {
-      type: Function as PropType<(item: TagItem) => boolean>,
-      default: (item: TagItem) => !!item,
+      type: Function as PropType<(item: T) => boolean>,
+      default: (item: T) => !!item,
     },
     // 校验不通过时的消息提示
     validateMessage: {
@@ -96,18 +95,18 @@
 
   const emits = defineEmits<{
     (event: 'add-button-click'): void; // 点击新增按钮时（仅customMode为true时触发）
-    (event: 'change', value: TagItem[]): void; // v-model 绑定值的变化
-    (event: 'add', item: TagItem, newValue: TagItem[]): void; // 添加标签时触发
-    (event: 'remove', item: TagItem, newValue: TagItem[]): void; // 删除标签时触发
+    (event: 'change', value: T[]): void; // v-model 绑定值的变化
+    (event: 'add', item: T, newValue: T[]): void; // 添加标签时触发
+    (event: 'remove', item: T, newValue: T[]): void; // 删除标签时触发
   }>();
 
   const showInput = ref<boolean>(false);
   const inputRef = ref<InputInstance>();
-  const inputVal = ref<string>('');
+  const inputVal = ref<T extends string ? string : T>();
   const validateStatus = ref<'success' | 'warning' | 'error' | 'validating'>();
 
   // 比较两个值是否相等
-  const isEqual = (a: TagItem, b: TagItem): boolean => {
+  const isEqual = (a: T, b: T): boolean => {
     if (typeof a === 'string' && typeof b === 'string') {
       return a === b;
     }
@@ -139,11 +138,11 @@
   // 输入框输入回车添加
   const handleAdd = () => {
     if (props.totalCount !== -1 && model.value.length >= props.totalCount) {
-      inputVal.value = '';
+      inputVal.value = undefined;
       return;
     }
     if (inputVal.value) {
-      if (!props.validate(inputVal.value)) {
+      if (!props.validate(inputVal.value as T)) {
         validateStatus.value = 'error';
         nextTick(() => {
           if (inputRef.value) {
@@ -152,22 +151,23 @@
         });
         return;
       }
-      model.value.push(inputVal.value);
+      model.value.push(inputVal.value as T);
       if (props.uniqueValue) {
         model.value = model.value.filter(
           (item, index, self) =>
             index === self.findIndex((t) => isEqual(t, item)),
         );
       }
-      inputVal.value = '';
       emits('change', model.value);
-      emits('add', inputVal.value, model.value);
+      emits('add', inputVal.value as T, model.value);
+      // 清空输入框
+      inputVal.value = undefined;
     }
     showInput.value = false;
   };
 
   // 执行删除操作
-  const doRemove = (item: TagItem) => {
+  const doRemove = (item: T) => {
     const newModel = model.value.filter((itx) => !isEqual(itx, item));
     if (props.uniqueValue) {
       model.value = newModel.filter(
@@ -180,7 +180,7 @@
   };
 
   // 点击标签删除
-  const handleRemove = async (item: TagItem) => {
+  const handleRemove = async (item: T) => {
     // 如果有 beforeRemove 回调，则等待其执行完成
     if (props.beforeRemove) {
       try {
@@ -198,20 +198,8 @@
   };
 
   // 监听model.value的变化
-  // 如果用户在外部直接修改绑定的 model 值，也可以触发change事件、校验及过滤
+  // 如果用户在外部直接修改绑定的 model 值，也可以触发change事件、过滤
   watch(model.value, (newVal) => {
-    // 校验
-    if (props.validate) {
-      const isValid = props.validate(newVal);
-      if (!isValid) {
-        validateStatus.value = 'error';
-        nextTick(() => {
-          if (inputRef.value) {
-            inputRef.value?.focus();
-          }
-        });
-      }
-    }
     // 过滤
     if (props.uniqueValue) {
       model.value = newVal.filter(
@@ -227,7 +215,7 @@
   // 通过组件内的方法可以触发校验
   defineExpose({
     // 添加标签
-    addTag: (value: TagItem) => {
+    addTag: (value: T) => {
       if (props.totalCount !== -1 && model.value.length >= props.totalCount) {
         return false;
       }
@@ -246,7 +234,7 @@
       return false;
     },
     // 删除标签
-    removeTag: (value: TagItem) => {
+    removeTag: (value: T) => {
       model.value = model.value.filter((itx) => !isEqual(itx, value));
       if (props.uniqueValue) {
         model.value = model.value.filter(
@@ -288,11 +276,21 @@
     >
       <!-- 图标 -->
       <template #icon>
-        <component :is="formatIcon?.(itx)" v-if="formatIcon" />
-        <slot name="icon" v-else />
+        <!-- 具名插槽方式 -->
+        <slot name="icon" :itx="itx">
+          <component :is="formatIcon?.(itx)" v-if="formatIcon" />
+        </slot>
       </template>
       <!-- 内容 -->
-      <span class="flex-auto truncate">{{ formatTag(itx) }}</span>
+      <span class="flex-auto truncate">
+        <slot name="default" :itx="itx">
+          <!-- 根据需要返回字符串或 VNode，组件会自动选择最合适的渲染方式 -->
+          <template v-if="typeof formatTag(itx) === 'string'">
+            {{ formatTag(itx) }}
+          </template>
+          <component v-else :is="formatTag(itx)" />
+        </slot>
+      </span>
       <!-- 删除按钮 -->
       <template #close-icon>
         <slot name="close-icon" />

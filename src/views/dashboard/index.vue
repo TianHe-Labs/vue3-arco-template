@@ -1,5 +1,6 @@
 <script lang="ts" setup>
-  import { ref } from 'vue';
+  import { h, ref, shallowRef } from 'vue';
+  import IconHeart from '@arco-design/web-vue/es/icon/icon-heart';
   import {
     dayjs,
     formatNumber,
@@ -10,26 +11,26 @@
   import { USERROLE } from '@/store/modules/user/types.d';
   import Banner from './components/banner.vue';
   import StackBarDist from './components/stack-bar-dist.vue';
-  import DynamicTag, { TagItem } from '@/components/dynamic-tag/index.vue';
+  import DynamicTag from '@/components/dynamic-tag/index.vue';
   import ExtendedInputTag from '@/components/extended-input-tag/index.vue';
 
   const inputTags = ref<string[]>([]);
 
-  const dynamicTagRef = ref<InstanceType<typeof DynamicTag>>();
-  const dynamicTags = ref<TagItem[]>([]);
+  const dynamicTagRef = shallowRef<any>();
+  const dynamicTags = ref<any[]>([]);
   // 标签数据映射
   const tagMap: Record<string, string> = {
     '1': '标签一',
     '2': '标签二',
     '3': '标签三',
   };
+  // 格式化标签图标
+  const formatTagIcon = (item: any) => {
+    return h(IconHeart);
+  };
   // 格式化标签显示值
-  const formatTagLabel = (item: TagItem) => {
-    return (
-      (item as any)?.name ||
-      tagMap[(item as any)?.id || item] ||
-      (item as string)
-    );
+  const formatTagLabel = (item: any) => {
+    return item?.name || tagMap[item?.id || item] || item;
   };
 
   const handleAddButtonClick = () => {
@@ -61,10 +62,34 @@
         value-key="id"
         :unique-value="true"
         :custom-mode="true"
+        :format-icon="formatTagIcon"
         :format-tag="formatTagLabel"
         :vertical="true"
         @add-button-click="handleAddButtonClick"
       />
+
+      <!-- 或者使用具名插槽格式化 -->
+      <DynamicTag
+        v-model="dynamicTags"
+        ref="dynamicTagRef"
+        value-key="id"
+        :unique-value="true"
+        :custom-mode="true"
+        :format-icon="formatTagIcon"
+        :format-tag="formatTagLabel"
+        :vertical="true"
+        @add-button-click="handleAddButtonClick"
+      >
+        <!-- 插槽形式编码更直观友好 -->
+        <template #icon="{ itx }">
+          <!-- <component :is="formatTagIcon(itx)" /> -->
+          <icon-heart />
+        </template>
+        <template #default="{ itx }">
+          <!-- {{ formatTagLabel(itx) }} -->
+          {{ itx.name }}
+        </template>
+      </DynamicTag>
 
       <div> 当前时间：{{ dayjs().format('YYYY-MM-DD HH:mm:ss') }} </div>
 
