@@ -266,13 +266,11 @@
           ? itx
           : itx?.[props.valueKey] || JSON.stringify(itx)
       "
-      :closable="!disabled"
       :class="['!self-stretch', { 'w-full': vertical }]"
       :style="{
         'min-height':
           size === 'small' ? '28px' : size === 'medium' ? '32px' : '36px',
       }"
-      @close="handleRemove(itx)"
     >
       <!-- 图标 -->
       <template #icon>
@@ -291,10 +289,20 @@
           <component v-else :is="formatTag(itx)" />
         </slot>
       </span>
-      <!-- 删除按钮 -->
-      <template #close-icon>
+      <!-- tag 的关闭按钮会直接关闭到tag，无法进行诸如回掉自定义等操作 -->
+      <!-- <template #close-icon>
         <slot name="close-icon" />
-      </template>
+      </template> -->
+      <!-- 删除按钮 -->
+      <span
+        v-if="!disabled"
+        class="arco-icon-hover arco-tag-icon-hover arco-tag-close-btn"
+        role="button"
+        aria-label="Close"
+        @click="handleRemove(itx)"
+      >
+        <slot name="close-icon" />
+      </span>
     </a-tag>
     <!-- 超过 displayCount 限制显示数量 -->
     <a-tag

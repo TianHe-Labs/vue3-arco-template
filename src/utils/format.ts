@@ -22,6 +22,7 @@ export function formatNumber(obj: number, separator = ','): string {
 // 数字格式化 英文单位，千进位
 export function formatNumberEnAbbr(obj: number): string {
   if (typeof obj !== 'number') return 'Invalid Number';
+  if (obj === 0) return '0';
   // base 底数
   const base = 1000;
   // 取对数匹配单位
@@ -33,6 +34,7 @@ export function formatNumberEnAbbr(obj: number): string {
 // 数字格式化 中文单位，万进位
 export function formatNumberZhAbbr(obj: number): string {
   if (typeof obj !== 'number') return 'Invalid Number';
+  if (obj === 0) return '0';
   // base 底数
   const base = 10000;
   // 取对数匹配单位

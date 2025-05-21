@@ -1,7 +1,5 @@
 <script lang="ts" setup>
   import { useI18n } from 'vue-i18n';
-  import { enum2Arr } from '@/utils/transform';
-  import { USERROLE } from '@/store/modules/user/types.d';
   import { dayjs } from '@/utils/format';
   import { messageTypes } from '@/api/message';
   import { useMessage } from '../composables/message';
@@ -41,7 +39,7 @@
   const { t } = useI18n();
   const typeOptions = computed(() =>
     messageTypes.map((value) => ({
-      label: `${t(`message.type.${value}`)} (${renderStats.value[value]})`,
+      label: `${t(`message.type.${value}`)} (${renderStats.value?.[value] ?? 0})`,
       value,
     })),
   );

@@ -177,6 +177,7 @@ export function provideMessage(): MessageState {
     fetchData();
 
     // 将分页持久化到地址栏中，防止刷新丢失分页，影响用户体验
+    // 如果一个页面中有多个分页，就不需要在地址栏中持久化，否则会相互干扰
     const url = router.resolve({ query: { ...route.query, current } }).href;
     window.history.pushState({}, '', url);
   };
@@ -188,6 +189,7 @@ export function provideMessage(): MessageState {
     fetchData();
 
     // 将分页持久化到地址栏中，防止刷新丢失分页，影响用户体验
+    // 如果一个页面中有多个分页，就不需要在地址栏中持久化，否则会相互干扰
     const url = router.resolve({
       query: { ...route.query, current: 1, pageSize },
     }).href;

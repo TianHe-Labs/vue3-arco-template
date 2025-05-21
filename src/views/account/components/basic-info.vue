@@ -14,7 +14,7 @@
   const basicInfoFormRef = ref<FormInstance>();
 
   // 表单数据
-  const basicInfoFormModel = reactive<UpdateUserInfoReq>({
+  const basicInfoModel = reactive<UpdateUserInfoReq>({
     username: userStore.username,
     nickname: userStore.nickname,
     phone: userStore.phone,
@@ -30,7 +30,7 @@
       return;
     }
     try {
-      const { data } = await updateUserInfo(basicInfoFormModel);
+      const { data } = await updateUserInfo(basicInfoModel);
       if (data.username) {
         Message.success('基本信息已修改');
       }
@@ -46,7 +46,7 @@
 <template>
   <a-form
     ref="basicInfoFormRef"
-    :model="basicInfoFormModel"
+    :model="basicInfoModel"
     auto-label-width
     scroll-to-first-error
     class="w-full max-w-500px mx-auto pr-4"
@@ -71,7 +71,7 @@
       ]"
     >
       <a-input
-        v-model="basicInfoFormModel.username"
+        v-model="basicInfoModel.username"
         allow-clear
         placeholder="输入用户名"
       />
@@ -92,7 +92,7 @@
       ]"
     >
       <a-input
-        v-model="basicInfoFormModel.nickname"
+        v-model="basicInfoModel.nickname"
         allow-clear
         placeholder="输入用户昵称"
       />
@@ -116,7 +116,7 @@
       ]"
     >
       <a-input
-        v-model="basicInfoFormModel.email"
+        v-model="basicInfoModel.email"
         allow-clear
         placeholder="输入电子邮箱，如xxx@example.com"
       />
@@ -136,7 +136,7 @@
       ]"
     >
       <a-input
-        v-model="basicInfoFormModel.phone"
+        v-model="basicInfoModel.phone"
         allow-clear
         placeholder="输入手机号码，如178xxxxxxxx"
       />
@@ -144,7 +144,7 @@
     <!-- 部门 -->
     <a-form-item field="sector" label="所属部门">
       <a-input
-        v-model="basicInfoFormModel.sector"
+        v-model="basicInfoModel.sector"
         allow-clear
         placeholder="输入所属部门"
       />
@@ -152,7 +152,7 @@
     <!-- 状态 -->
     <a-form-item field="status" label="当前状态">
       <a-input
-        v-model="basicInfoFormModel.status"
+        v-model="basicInfoModel.status"
         allow-clear
         placeholder="输入当前状态"
       />
