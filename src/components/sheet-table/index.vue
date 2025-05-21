@@ -1,5 +1,5 @@
 <script lang="ts" setup generic="T extends Record<string, any>">
-  import { shallowRef, watch } from 'vue';
+  import { shallowRef, watch, nextTick } from 'vue';
   import Spreadsheet from 'x-data-spreadsheet';
 
   interface Column {
@@ -23,7 +23,11 @@
   const spreadsheetRef = shallowRef<any>();
 
   const spreadsheetInstance = shallowRef<Spreadsheet | null>(null);
-  watch([spreadsheetRef], () => {
+
+  // 是否正在更新 （表格中输入， 防止循环依赖，重复触发）
+  const isUpdating = shallowRef(false);
+
+  watch([spreadsheetRef, () => props.modelValue], () => {
     if (!spreadsheetInstance.value && spreadsheetRef.value) {
       spreadsheetInstance.value = new Spreadsheet(spreadsheetRef.value, {
         showToolbar: false,
@@ -48,6 +52,10 @@
           minWidth: props.colWidth || 256,
         },
       });
+    }
+
+    if (isUpdating.value) {
+      return;
     }
 
     const data = {
@@ -80,25 +88,34 @@
     // spreadsheetInstance.value?.validate();
 
     // console.log(spreadsheetInstance.getData());
-    spreadsheetInstance.value?.change((changedData: any) => {
-      const updatedData = Object.values(changedData.rows).map((row: any) =>
-        props.columns.reduce((acc: any, column, index) => {
-          if (row.cells?.[index] && row.cells[index]?.text) {
-            acc[column.key] = row.cells?.[index]?.text?.replace(/\s+/g, '');
-          }
-          // 去除空格
-          return acc;
-        }, {} as any),
-      );
-      emits(
-        'update:modelValue',
-        updatedData
-          .slice(1)
-          .filter((item: any) =>
-            Object.values(item).some((value: any) => value !== ''),
-          ),
-      ); // 去掉表头和空数据
-    });
+  });
+
+  watch(spreadsheetInstance, () => {
+    if (spreadsheetInstance.value) {
+      spreadsheetInstance.value?.change((changedData: any) => {
+        isUpdating.value = true;
+        const updatedData = Object.values(changedData.rows).map((row: any) =>
+          props.columns.reduce((acc: any, column, index) => {
+            if (row.cells?.[index] && row.cells[index]?.text) {
+              acc[column.key] = row.cells?.[index]?.text?.replace(/\s+/g, '');
+            }
+            // 去除空格
+            return acc;
+          }, {} as any),
+        );
+        emits(
+          'update:modelValue',
+          updatedData
+            .slice(1)
+            .filter((item: any) =>
+              Object.values(item).some((value: any) => value !== ''),
+            ),
+        ); // 去掉表头和空数据
+        nextTick(() => {
+          isUpdating.value = false;
+        });
+      });
+    }
   });
 </script>
 
