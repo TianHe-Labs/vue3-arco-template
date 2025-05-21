@@ -32,6 +32,7 @@ interface SearchUserState {
   onUpdateRenderData: (data: {
     type: 'update' | 'create' | 'delete';
     record?: UserModel;
+    records?: UserModel[];
     ids?: UserModel['id'][];
   }) => void;
 }
@@ -179,6 +180,7 @@ export function provideSearchUser(): SearchUserState {
   const onUpdateRenderData = (data: {
     type: 'update' | 'create' | 'delete';
     record?: UserModel;
+    records?: UserModel[];
     ids?: UserModel['id'][];
   }) => {
     switch (data.type) {
@@ -188,7 +190,7 @@ export function provideSearchUser(): SearchUserState {
           if (item.id === data.record?.id) {
             return {
               ...item,
-              ...(data.record as UserModel),
+              ...data.record,
             };
           }
           return item;
@@ -196,7 +198,12 @@ export function provideSearchUser(): SearchUserState {
         break;
       case 'create':
         // 创建
-        renderData.value.unshift(data.record as UserModel);
+        if (data.records) {
+          // 如果传入的是数组，则批量添加
+          renderData.value.unshift(...data.records);
+        } else {
+          renderData.value.unshift(data.record as UserModel);
+        }
         break;
       case 'delete':
         renderData.value = renderData.value.filter(

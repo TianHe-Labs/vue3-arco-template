@@ -5,7 +5,6 @@ import { isEmpty, isObject, omitBy, pick } from 'lodash';
 import useLoading from '@/composables/loading';
 // import useRequest from '@/composables/request';
 import { queryXxxxList, XxxxModel, QueryXxxxListReq } from '@/api/xxxx';
-import { Pagination } from '@/global';
 
 interface FuzzyQueryModel {
   fuzzyWord: string;
@@ -29,6 +28,7 @@ interface SearchXXXState {
   onUpdateRenderData: (data: {
     type: 'update' | 'create' | 'delete';
     record?: XxxxModel;
+    records?: XxxxModel[];
     ids?: XxxxModel['id'][];
   }) => void;
 }
@@ -173,6 +173,7 @@ export function provideSearchXXX(): SearchXXXState {
   const onUpdateRenderData = (data: {
     type: 'update' | 'create' | 'delete';
     record?: XxxxModel;
+    records?: XxxxModel[];
     ids?: XxxxModel['id'][];
   }) => {
     switch (data.type) {
@@ -181,14 +182,19 @@ export function provideSearchXXX(): SearchXXXState {
           if (item.id === data.record?.id) {
             return {
               ...item,
-              ...(data.record as XxxxModel),
+              ...data.record,
             };
           }
           return item;
         });
         break;
       case 'create':
-        renderData.value.unshift(data.record as XxxxModel);
+        // 如果传入的是数组，则批量添加
+        if (data.records) {
+          renderData.value.unshift(...data.records);
+        } else {
+          renderData.value.unshift(data.record as XxxxModel);
+        }
         break;
       case 'delete':
         renderData.value = renderData.value.filter(

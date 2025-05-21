@@ -41,6 +41,8 @@
     // dynamicTags.value.push({ id: '1', name: '标签一' });
   };
 
+  const sheetTableData = ref<any[]>([]);
+
   const sheetTableColumns = [
     {
       key: 'name',
@@ -136,7 +138,8 @@
       <!-- 在线简易表格 -->
       <!-- 相关库已经不更新，推荐使用 vue3-excel-editor -->
       相关库已经不更新，推荐使用 vue3-excel-editor
-      <SheetTable :data="[]" :columns="sheetTableColumns" />
+      {{ sheetTableData }}
+      <SheetTable v-model="sheetTableData" :columns="sheetTableColumns" />
     </div>
   </div>
 </template>

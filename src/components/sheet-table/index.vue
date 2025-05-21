@@ -1,4 +1,4 @@
-<script lang="ts" setup>
+<script lang="ts" setup generic="T extends Record<string, any>">
   import { shallowRef, watch } from 'vue';
   import Spreadsheet from 'x-data-spreadsheet';
 
@@ -8,7 +8,7 @@
   }
 
   const props = defineProps<{
-    data: any[];
+    modelValue: T[];
     columns: Column[]; // 指定表头信息
     rowHeight?: number; // 行高
     colWidth?: number; // 列宽
@@ -17,39 +17,37 @@
   }>();
 
   const emits = defineEmits<{
-    (event: 'update', data: any[]): void;
+    (event: 'update:modelValue', value: any[]): void;
   }>();
 
   const spreadsheetRef = shallowRef<any>();
 
-  let spreadsheetInstance: any = null;
-  watch([spreadsheetRef, () => props.data], () => {
-    if (spreadsheetRef.value) {
-      if (!spreadsheetInstance) {
-        spreadsheetInstance = new Spreadsheet(spreadsheetRef.value, {
-          showToolbar: false,
-          showBottomBar: false,
-          showContextmenu: false,
-          view: {
-            height: () => props.height || document.documentElement.clientHeight,
-            width: () => props.width || document.documentElement.clientHeight,
-          },
-          row: {
-            height: props.rowHeight || 30,
-            len: 500,
-          },
-          col: {
-            len: props.columns.length,
-            width:
-              props.colWidth ||
-              ((props.width || document.documentElement.clientHeight) - 60) /
-                props.columns.length ||
-              256,
-            indexWidth: 60,
-            minWidth: props.colWidth || 256,
-          },
-        });
-      }
+  const spreadsheetInstance = shallowRef<Spreadsheet | null>(null);
+  watch([spreadsheetRef], () => {
+    if (!spreadsheetInstance.value && spreadsheetRef.value) {
+      spreadsheetInstance.value = new Spreadsheet(spreadsheetRef.value, {
+        showToolbar: false,
+        showBottomBar: false,
+        showContextmenu: false,
+        view: {
+          height: () => props.height || document.documentElement.clientHeight,
+          width: () => props.width || document.documentElement.clientHeight,
+        },
+        row: {
+          height: props.rowHeight || 30,
+          len: 500,
+        },
+        col: {
+          len: props.columns.length,
+          width:
+            props.colWidth ||
+            ((props.width || document.documentElement.clientHeight) - 60) /
+              props.columns.length ||
+            256,
+          indexWidth: 60,
+          minWidth: props.colWidth || 256,
+        },
+      });
     }
 
     const data = {
@@ -63,26 +61,26 @@
           }, {} as any),
         },
 
-        ...props.data?.reduce((acc: any, cur, index) => {
+        ...props.modelValue?.reduce((acc: any, cur, index) => {
           acc[index + 1] = {
             cells: props.columns.map((column) => ({
               text: cur[column.key]?.replace(/\s+/g, ''),
             })),
           };
           return acc;
-        }, {} as any),
+        }, {} as T),
       },
       cols: {
         len: props.columns.length,
       },
     };
-    spreadsheetInstance.loadData(data); // load data
+    // spreadsheetInstance.value?.sheet?.freeze(1, 1);
+    spreadsheetInstance.value?.loadData(data); // load data
     // spreadsheetInstance.cellText();
-    spreadsheetInstance.validate();
+    // spreadsheetInstance.value?.validate();
 
     // console.log(spreadsheetInstance.getData());
-
-    spreadsheetInstance.change((changedData: any) => {
+    spreadsheetInstance.value?.change((changedData: any) => {
       const updatedData = Object.values(changedData.rows).map((row: any) =>
         props.columns.reduce((acc: any, column, index) => {
           if (row.cells?.[index] && row.cells[index]?.text) {
@@ -92,7 +90,14 @@
           return acc;
         }, {} as any),
       );
-      emits('update', updatedData.slice(1)); // 去掉表头
+      emits(
+        'update:modelValue',
+        updatedData
+          .slice(1)
+          .filter((item: any) =>
+            Object.values(item).some((value: any) => value !== ''),
+          ),
+      ); // 去掉表头和空数据
     });
   });
 </script>

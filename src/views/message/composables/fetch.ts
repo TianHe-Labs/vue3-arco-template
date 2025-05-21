@@ -222,7 +222,7 @@ export function provideFetchMessage(): FetchMessageState {
           if (item.id === data.record?.id) {
             return {
               ...item,
-              ...(data.record as MessageModel),
+              ...data.record,
             };
           }
           return item;
