@@ -10,7 +10,7 @@ import {
 } from '@/api/user';
 import { USERROLE } from '@/store/modules/user/types.d';
 
-interface SearchUserState {
+interface EditUserState {
   editPanelVisible: Ref<boolean>;
   loading: Ref<boolean>;
   editUserFormRef: Ref<FormInstance>;
@@ -21,7 +21,7 @@ interface SearchUserState {
   handleSubmitEdit: (opts?: any) => Promise<any>;
 }
 
-const symbol = Symbol('EDIT');
+const symbol = Symbol('EDIT-USER');
 
 const resetEditUserModel = (): CreateOrUpdateUserReq => {
   return {
@@ -35,7 +35,7 @@ const resetEditUserModel = (): CreateOrUpdateUserReq => {
   };
 };
 
-export function provideEditUser(): SearchUserState {
+export function provideEditUser(): EditUserState {
   const { loading, setLoading } = useLoading();
 
   const editPanelVisible = ref<boolean>(false);
@@ -165,7 +165,7 @@ export function provideEditUser(): SearchUserState {
     }
   };
 
-  const returnState: SearchUserState = {
+  const returnState: EditUserState = {
     editPanelVisible,
     loading,
     editUserFormRef,
@@ -180,6 +180,6 @@ export function provideEditUser(): SearchUserState {
   return returnState;
 }
 
-export function useEditUser(): SearchUserState {
-  return inject(symbol) as SearchUserState;
+export function useEditUser(): EditUserState {
+  return inject(symbol) as EditUserState;
 }

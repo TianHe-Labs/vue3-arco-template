@@ -33,7 +33,7 @@ interface SearchXXXState {
   }) => void;
 }
 
-const symbol = Symbol('SEARCH');
+const symbol = Symbol('SEARCH-XXX');
 
 // 用于（指定属性的）全文关键词检索
 const fuzzyKeys = ['name', 'description'];
@@ -194,6 +194,11 @@ export function provideSearchXXX(): SearchXXXState {
         renderData.value = renderData.value.filter(
           (item) => !data?.ids?.includes(item.id),
         );
+        // 如果整页被删除，则重置分页，并重新请求数据
+        if (renderData.value.length === 0) {
+          pagination.current = 1;
+          fetchData();
+        }
         break;
       default:
         break;

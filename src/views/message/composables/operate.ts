@@ -7,7 +7,7 @@ import {
   updateMessageReadAt,
 } from '@/api/message';
 
-interface OperationState {
+interface OperateMessageState {
   selectionState: SelectionState;
   toggleSelection: (visible?: boolean) => void;
   handleConfirmReadMessage: (
@@ -22,9 +22,9 @@ interface OperationState {
   handleBatchDeleteMessage: (callback?: any) => Promise<void>;
 }
 
-const symbol = Symbol('OPERATION');
+const symbol = Symbol('OPERATE-MESSAGE');
 
-export function provideOperation() {
+export function provideOperateMessage() {
   // 选中消息
   // 显示表格勾选
   const selectionState = reactive<SelectionState>({
@@ -124,7 +124,7 @@ export function provideOperation() {
     }
   };
 
-  const returnState: OperationState = {
+  const returnState: OperateMessageState = {
     selectionState,
     toggleSelection,
     handleConfirmReadMessage,
@@ -138,6 +138,6 @@ export function provideOperation() {
   return returnState;
 }
 
-export function useOperation(): OperationState {
-  return inject<OperationState>(symbol) as OperationState;
+export function useOperateMessage(): OperateMessageState {
+  return inject<OperateMessageState>(symbol) as OperateMessageState;
 }

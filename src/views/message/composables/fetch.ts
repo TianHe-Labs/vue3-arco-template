@@ -19,7 +19,7 @@ interface FuzzyQueryModel {
   fuzzyKeys: string[];
 }
 
-interface MessageState {
+interface FetchMessageState {
   loading: Ref<boolean>;
   pagination: PaginationProps;
   queryPanelVisible: Ref<boolean>;
@@ -43,7 +43,7 @@ interface MessageState {
   }) => void;
 }
 
-const symbol = Symbol('MESSAGE');
+const symbol = Symbol('FETCH-MESSAGE');
 
 // 用于（指定属性的）全文关键词检索
 const fuzzyKeys = ['title', 'content'];
@@ -69,7 +69,7 @@ const resetQueryModel = (keys?: string[]): QueryMessageListReq => {
   return defaultModel;
 };
 
-export function provideMessage(): MessageState {
+export function provideFetchMessage(): FetchMessageState {
   const { loading, setLoading } = useLoading();
 
   // 响应式
@@ -197,6 +197,7 @@ export function provideMessage(): MessageState {
   };
 
   // 响应更新列表
+  // 更新渲染数据，删除、新增、更新时使用，惰性请求
   const onUpdateRenderData = (data: {
     type: 'read' | 'update' | 'delete';
     record?: MessageModel;
@@ -233,8 +234,9 @@ export function provideMessage(): MessageState {
           (item) => !data?.ids?.includes(item.id),
         );
 
-        // 一整页全删除，则需要重新获取
+        // 如果整页被删除，则重置分页，并重新请求数据
         if (renderData.value.length === 0) {
+          pagination.current = 1;
           fetchData();
         }
         break;
@@ -265,7 +267,7 @@ export function provideMessage(): MessageState {
     { deep: true },
   );
 
-  const returnState: MessageState = {
+  const returnState: FetchMessageState = {
     loading,
     pagination,
     queryPanelVisible,
@@ -291,6 +293,6 @@ export function provideMessage(): MessageState {
   return returnState;
 }
 
-export function useMessage(): MessageState {
-  return inject(symbol) as MessageState;
+export function useFetchMessage(): FetchMessageState {
+  return inject(symbol) as FetchMessageState;
 }

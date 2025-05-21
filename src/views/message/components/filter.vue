@@ -2,7 +2,7 @@
   import { useI18n } from 'vue-i18n';
   import { dayjs } from '@/utils/format';
   import { messageTypes } from '@/api/message';
-  import { useMessage } from '../composables/message';
+  import { useFetchMessage } from '../composables/fetch';
   import { computed } from 'vue';
 
   const {
@@ -13,7 +13,7 @@
     renderStats,
     fetchData,
     handleResetQueryModel,
-  } = useMessage();
+  } = useFetchMessage();
 
   // 全文检索关键字匹配的属性
   const fuzzyKeyOptions = [

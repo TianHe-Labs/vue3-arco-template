@@ -13,7 +13,7 @@ interface DeleteUserState {
   handleBatchDeleteUser: (callback?: any) => Promise<void>;
 }
 
-const symbol = Symbol('DELETE');
+const symbol = Symbol('DELETE-USER');
 
 export function provideDeleteUser() {
   // 显示勾选（列表中 序号列 # / 勾选框 切换）

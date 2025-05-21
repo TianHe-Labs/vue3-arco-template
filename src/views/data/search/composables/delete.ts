@@ -3,7 +3,7 @@ import { Message, Modal } from '@arco-design/web-vue';
 import { SelectionState } from '@/global';
 import { deleteXxxx, XxxxModel } from '@/api/xxxx';
 
-interface DeleteDataState {
+interface DeleteXXXState {
   selectionState: SelectionState;
   toggleSelection: (visible?: boolean) => void;
   handleConfirmDeleteXxxx: (
@@ -13,7 +13,7 @@ interface DeleteDataState {
   handleBatchDeleteXxxx: (callback?: any) => Promise<void>;
 }
 
-const symbol = Symbol('DELETE');
+const symbol = Symbol('DELETE-XXX');
 
 export function provideDeleteXxxx() {
   // 显示勾选（列表中 序号列 # / 勾选框 切换）
@@ -74,7 +74,7 @@ export function provideDeleteXxxx() {
     }
   };
 
-  const returnState: DeleteDataState = {
+  const returnState: DeleteXXXState = {
     selectionState,
     toggleSelection,
     handleConfirmDeleteXxxx,
@@ -87,5 +87,5 @@ export function provideDeleteXxxx() {
 }
 
 export function useDeleteXxxx() {
-  return inject(symbol) as DeleteDataState;
+  return inject(symbol) as DeleteXXXState;
 }

@@ -75,12 +75,12 @@
   import Footer from '@/components/footer/index.vue';
   import TabBar from '@/components/tab-bar/index.vue';
   import { provideFeedback } from '@/components/feedback-panel/composables/feedback';
-  import { provideMessage } from '@/views/message/composables/message';
+  import { provideFetchMessage } from '@/views/message/composables/fetch';
   import PageLayout from './page-layout.vue';
   import MobileEntry from '@/components/mobile-entry/index.vue';
   import FeedbackPanel from '@/components/feedback-panel/index.vue';
   // 消息
-  provideMessage();
+  provideFetchMessage();
 
   // 反馈
   provideFeedback();

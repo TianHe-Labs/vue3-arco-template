@@ -1,9 +1,9 @@
 <script lang="ts" setup>
   import { TableColumnData } from '@arco-design/web-vue';
-  import { useMessage } from '../composables/message';
+  import { useFetchMessage } from '../composables/fetch';
   import { dayjs } from '@/utils/format';
   import { computed, ref } from 'vue';
-  import { useOperation } from '../composables/operation';
+  import { useOperateMessage } from '../composables/operate';
 
   const {
     loading,
@@ -16,9 +16,9 @@
     onPageChange,
     onPageSizeChange,
     onUpdateRenderData,
-  } = useMessage();
+  } = useFetchMessage();
 
-  // 顶部栏只显示消息数量，所以 provideMessage 在最顶层调用
+  // 顶部栏只显示消息数量，所以 provideFetchMessage 在最顶层调用
   // 但是获取数据需要依赖于当前组件，所以需要在这里调用
 
   // 获取数据
@@ -30,7 +30,7 @@
     toggleSelection,
     handleBatchReadMessage,
     handleBatchDeleteMessage,
-  } = useOperation();
+  } = useOperateMessage();
 
   const renderColumns = computed<TableColumnData[]>(() => {
     return [

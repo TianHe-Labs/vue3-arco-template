@@ -153,7 +153,7 @@
   import { useRouter } from 'vue-router';
   import { useAppStore, useUserStore } from '@/store';
   import { isDevelopment } from '@/utils';
-  import { useMessage } from '@/views/message/composables/message';
+  import { useFetchMessage } from '@/views/message/composables/fetch';
   import { useFeedback } from '@/components/feedback-panel/composables/feedback';
   import useLogout from '@/composables/logout';
 
@@ -192,7 +192,7 @@
   const { toggleFeedbackPanel } = useFeedback();
 
   // 消息
-  const { renderStats } = useMessage();
+  const { renderStats } = useFetchMessage();
 
   // 全屏
   const { isFullscreen, toggle: toggleFullScreen } = useFullscreen();

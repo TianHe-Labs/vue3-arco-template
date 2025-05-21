@@ -1,14 +1,14 @@
 <script lang="ts" setup>
-  // import { provideMessage } from './composables/message';
-  import { provideOperation } from './composables/operation';
+  // import { provideFetchMessage } from './composables/fetch';
+  import { provideOperateMessage } from './composables/operate';
   import Filter from './components/filter.vue';
   import Table from './components/table.vue';
 
-  // 顶层 provide，因为顶部栏显示消息数量，所以 provideMessage 在最顶层调用
-  // provideMessage();
+  // 顶层 provide，因为顶部栏显示消息数量，所以 provideFetchMessage 在最顶层调用
+  // provideFetchMessage();
 
   // 操作
-  provideOperation();
+  provideOperateMessage();
 </script>
 
 <template>
