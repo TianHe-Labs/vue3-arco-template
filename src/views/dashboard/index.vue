@@ -13,7 +13,7 @@
   import StackBarDist from './components/stack-bar-dist.vue';
   import DynamicTag from '@/components/dynamic-tag/index.vue';
   import ExtendedInputTag from '@/components/extended-input-tag/index.vue';
-
+  import SheetTable from '@/components/sheet-table/index.vue';
   const inputTags = ref<string[]>([]);
 
   const dynamicTagRef = shallowRef<any>();
@@ -40,6 +40,21 @@
     // 当然也可以直接修改绑定的变量值
     // dynamicTags.value.push({ id: '1', name: '标签一' });
   };
+
+  const sheetTableColumns = [
+    {
+      key: 'name',
+      label: '姓名',
+    },
+    {
+      key: 'phone',
+      label: '手机',
+    },
+    {
+      key: 'email',
+      label: '邮箱',
+    },
+  ];
 </script>
 
 <template>
@@ -64,7 +79,7 @@
         :custom-mode="true"
         :format-icon="formatTagIcon"
         :format-tag="formatTagLabel"
-        :vertical="true"
+        class="grid grid-cols-2"
         @add-button-click="handleAddButtonClick"
       />
 
@@ -77,7 +92,7 @@
         :custom-mode="true"
         :format-icon="formatTagIcon"
         :format-tag="formatTagLabel"
-        :vertical="true"
+        class="flex flex-col"
         @add-button-click="handleAddButtonClick"
       >
         <!-- 插槽形式编码更直观友好 -->
@@ -115,6 +130,13 @@
       </div>
 
       <div> 用户角色（类型定义转数组）：{{ enum2Arr(USERROLE) }} </div>
+
+      <br />
+
+      <!-- 在线简易表格 -->
+      <!-- 相关库已经不更新，推荐使用 vue3-excel-editor -->
+      相关库已经不更新，推荐使用 vue3-excel-editor
+      <SheetTable :data="[]" :columns="sheetTableColumns" />
     </div>
   </div>
 </template>

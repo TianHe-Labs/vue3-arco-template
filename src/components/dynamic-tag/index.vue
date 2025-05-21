@@ -86,11 +86,6 @@
       type: String,
       default: '新增',
     },
-    // 是否垂直排列标签
-    vertical: {
-      type: Boolean,
-      default: false,
-    },
   });
 
   const emits = defineEmits<{
@@ -249,12 +244,7 @@
 </script>
 
 <template>
-  <div
-    :class="[
-      'max-w-full flex flex-wrap gap-2',
-      { 'flex-col items-start': vertical },
-    ]"
-  >
+  <div class="max-w-full gap-2">
     <!-- displayCount 限制显示数量 -->
     <a-tag
       v-for="itx in model.slice(
@@ -266,7 +256,6 @@
           ? itx
           : itx?.[props.valueKey] || JSON.stringify(itx)
       "
-      :class="['!self-stretch', { 'w-full': vertical }]"
       :style="{
         'min-height':
           size === 'small' ? '28px' : size === 'medium' ? '32px' : '36px',
@@ -296,12 +285,14 @@
       <!-- 删除按钮 -->
       <span
         v-if="!disabled"
-        class="arco-icon-hover arco-tag-icon-hover arco-tag-close-btn"
+        class="flex-none arco-icon-hover arco-tag-icon-hover arco-tag-close-btn"
         role="button"
         aria-label="Close"
         @click="handleRemove(itx)"
       >
-        <slot name="close-icon" />
+        <slot name="close-icon">
+          <icon-close />
+        </slot>
       </span>
     </a-tag>
     <!-- 超过 displayCount 限制显示数量 -->
@@ -336,7 +327,7 @@
     <a-button
       v-else-if="!disabled && (totalCount === -1 || model.length < totalCount)"
       :size="size"
-      :long="vertical"
+      long
       type="dashed"
       class="!px-2"
       @click="handleEdit"
