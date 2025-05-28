@@ -20,6 +20,9 @@ export default {
   // 账号中心
   'menu.account': '账号中心',
   'menu.account.index': '账号中心',
+  // 预览
+  'menu.preview': '组件预览',
+  'menu.preview.index': '组件预览',
 
   ...localeErrors,
   ...localeOptions,

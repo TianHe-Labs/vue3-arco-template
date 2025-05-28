@@ -61,7 +61,7 @@
 
 <template>
   <div class="h-full flex flex-col p-4 gap-4">
-    <Breadcrumb :items="['menu.dashboard']" />
+    <Breadcrumb :items="['menu.preview']" />
     <Banner />
     <StackBarDist />
 
@@ -146,6 +146,6 @@
 
 <script lang="ts">
   export default {
-    name: 'Dashboard',
+    name: 'Preview',
   };
 </script>

@@ -327,9 +327,8 @@
     <a-button
       v-else-if="!disabled && (totalCount === -1 || model.length < totalCount)"
       :size="size"
-      long
       type="dashed"
-      class="!px-2"
+      class="!flex !px-2"
       @click="handleEdit"
     >
       <template #icon>
