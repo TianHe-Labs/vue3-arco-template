@@ -10,9 +10,9 @@
   const passwordFormRef = ref<FormInstance>();
   // 表单数据
   const passwordFormData = reactive<UpdateUserPasswordReq>({
-    oldPassword: '',
-    newPassword: '',
-    confirmPassword: '',
+    current: '',
+    new: '',
+    confirm: '',
   });
 
   // 事件响应
@@ -48,7 +48,7 @@
   >
     <!-- 当前密码 -->
     <a-form-item
-      field="oldPassword"
+      field="current"
       label="当前密码"
       :rules="[
         {
@@ -62,14 +62,14 @@
       ]"
     >
       <a-input-password
-        v-model="passwordFormData.oldPassword"
+        v-model="passwordFormData.current"
         allow-clear
         placeholder="输入当前密码"
       />
     </a-form-item>
     <!-- 新密码 -->
     <a-form-item
-      field="newPassword"
+      field="new"
       label="新密码"
       :rules="[
         {
@@ -83,14 +83,14 @@
       ]"
     >
       <a-input-password
-        v-model="passwordFormData.newPassword"
+        v-model="passwordFormData.new"
         allow-clear
         placeholder="输入新密码"
       />
     </a-form-item>
     <!-- 确认新密码 -->
     <a-form-item
-      field="confirmPassword"
+      field="confirm"
       label="确认新密码"
       :rules="[
         {
@@ -98,8 +98,8 @@
           message: '密码不可为空',
         },
         {
-          validator: (confirmPassword: string, callback: any) => {
-            if (confirmPassword !== passwordFormData.newPassword) {
+          validator: (confirm: string, callback: any) => {
+            if (confirm !== passwordFormData.new) {
               callback('与新密码不一致');
             }
           },
@@ -107,7 +107,7 @@
       ]"
     >
       <a-input-password
-        v-model="passwordFormData.confirmPassword"
+        v-model="passwordFormData.confirm"
         allow-clear
         placeholder="再次输入新密码"
       />

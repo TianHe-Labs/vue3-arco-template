@@ -60,12 +60,12 @@ export function updateUserInfo(data: UpdateUserInfoReq) {
 
 // 更新用户密码
 export type UpdateUserPasswordReq = {
-  oldPassword: string;
-  newPassword: string;
-  confirmPassword?: string; // confirmPassword === newPassword 前端检查即可
+  current: string;
+  new: string;
+  confirm?: string; // confirm === new 前端检查即可
 };
 export type UpdateUserPasswordRes = Pick<UserState, 'username'>;
 
 export function updateUserPassword(data: UpdateUserPasswordReq) {
-  return axios.post<UpdateUserPasswordRes>('/api/user/password/update', data);
+  return axios.post<UpdateUserPasswordRes>('/api/user/reset-password', data);
 }
