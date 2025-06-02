@@ -95,6 +95,18 @@
             <icon-idcard />
             {{ $t(`account.roles.${userStore.role}`) }}
           </a-typography-text>
+          <!-- 如果是roles -->
+          <!-- <a-typography-text
+            v-if="userStore?.roles && userStore.roles.length > 0"
+            class="!text-sm"
+          >
+            <icon-idcard />
+            {{
+              userStore.roles.map((role) => $t(`account.roles.${role}`)).join(
+                ', ',
+              )
+            }}
+          </a-typography-text> -->
         </div>
         <a-divider :margin="8" />
         <a-doption>

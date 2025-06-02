@@ -59,6 +59,18 @@
             placeholder="选择角色权限"
           />
         </a-form-item>
+        <!-- 如果是roles -->
+        <!-- <a-form-item field="roles" label="角色权限" :rules="[]">
+          <a-select
+            v-model="queryModel.roles"
+            :options="roleOptions"
+            multiple
+            allow-clear
+            allow-create
+            allow-search
+            placeholder="选择角色权限"
+          />
+        </a-form-item> -->
         <!-- 精确匹配 -->
         <a-form-item field="sector" label="所属部门" :rules="[]">
           <a-select

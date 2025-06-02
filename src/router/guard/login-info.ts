@@ -9,7 +9,8 @@ export default function setupUserLoginInfoGuard(router: Router) {
     const userStore = useUserStore();
     if (userStore.accessToken) {
       if (userStore.role) {
-        // 登录之后就不要跳转到登录了
+        // 如果是roles
+        // userStore.roles && userStore.roles.length > 0
         if (to.name === 'Login') next({ name: DEFAULT_ROUTE_NAME });
         else next();
       } else {

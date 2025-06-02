@@ -28,6 +28,7 @@ const resetEditUserModel = (): CreateOrUpdateUserReq => {
     username: '',
     nickname: '',
     role: USERROLE.COMMON,
+    // roles: [USERROLE.ADMIN, USERROLE.COMMON],
     email: '',
     phone: '',
     avatar: '',

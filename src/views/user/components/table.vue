@@ -53,6 +53,12 @@
       slotName: 'role',
       headerCellClass: 'whitespace-nowrap',
     },
+    // {
+    //   title: '角色权限',
+    //   dataIndex: 'roles',
+    //   slotName: 'roles',
+    //   headerCellClass: 'whitespace-nowrap',
+    // },
     {
       title: '所属部门',
       dataIndex: 'sector',
@@ -158,6 +164,14 @@
           {{ $t(`account.roles.${record.role}`) }}
         </a-tag>
       </template>
+
+      <!-- 如果是roles -->
+      <!-- <template #roles="{ record }">
+        <a-tag v-for="role in record.roles" :key="role" color="arcoblue" bordered>
+          {{ $t(`account.roles.${role}`) }}
+        </a-tag>
+      </template> -->
+
       <!-- 操作 -->
       <template #operations="{ record }">
         <div class="flex items-center">

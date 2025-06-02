@@ -13,6 +13,7 @@ export interface UserState {
   password?: string;
 
   role?: USERROLE;
+  // roles?: USERROLE[]; // 多角色，应该复杂场景，暂时未使用
 
   email?: string;
   phone?: string;

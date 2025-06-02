@@ -13,6 +13,7 @@ const users = [
     nickname: '管理员',
     password: 'nslab321',
     role: USERROLE.ADMIN,
+    // roles: [USERROLE.ADMIN, USERROLE.COMMON],
     sector: '网络部',
     status: '专注中...',
     accessToken:

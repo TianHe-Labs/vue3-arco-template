@@ -58,6 +58,16 @@
           placeholder="选择角色权限"
         />
       </a-form-item>
+      <!-- 如果是roles -->
+      <!-- <a-form-item field="roles" label="角色权限">
+        <a-select
+          v-model="editUserModel.roles"
+          :options="roleOptions"
+          multiple
+          allow-clear
+          placeholder="选择角色权限"
+        />
+      </a-form-item> -->
       <a-form-item
         field="email"
         label="电子邮箱"

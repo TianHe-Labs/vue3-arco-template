@@ -36,6 +36,13 @@
         <icon-idcard />
         {{ $t(`account.roles.${userStore.role}`) }}
       </div>
+      <!-- 如果是roles -->
+      <!-- <div v-if="userStore?.roles" class="text-text-2">
+        <icon-idcard />
+        {{
+          userStore.roles.map((role) => $t(`account.roles.${role}`)).join(', ')
+        }}
+      </div> -->
       <div v-if="userStore?.sector" class="text-text-2">
         <icon-home />
         {{ userStore.sector }}

@@ -15,6 +15,7 @@ const useUserStore = defineStore('user', {
     nickname: '',
 
     role: undefined,
+    // roles: [],
 
     email: 'admin@example.cn',
     phone: '17000000000',
@@ -73,6 +74,7 @@ const useUserStore = defineStore('user', {
           username: data?.account,
           nickname: data?.name,
           role: USERROLE.ADMIN,
+          // roles: [USERROLE.ADMIN, USERROLE.COMMON],
           ...data,
         };
         this.setUserInfo(cleanedData);
@@ -81,6 +83,7 @@ const useUserStore = defineStore('user', {
           // axios 拦截统一处理了返回结果
           // 如果该接口 404，则认为是单用户系统，没有用户信息
           this.setUserInfo({ role: USERROLE.ADMIN });
+          // roles: [USERROLE.ADMIN, USERROLE.COMMON],
         } else {
           this.resetUserInfo();
           throw err;

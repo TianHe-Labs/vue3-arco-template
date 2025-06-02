@@ -11,6 +11,7 @@ const users = [
     password: 'nslab321',
     nickname: '管理员',
     role: USERROLE.ADMIN,
+    // roles: [USERROLE.ADMIN, USERROLE.COMMON],
     email: 'ex@172.com',
     phone: '19023232243',
 
