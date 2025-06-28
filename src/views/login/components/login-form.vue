@@ -19,8 +19,6 @@
 
   const userStore = useUserStore();
 
-  const appName = import.meta.env.VITE_APP_NAME;
-
   const loginConfig = useStorage<LoginConfig>('__th_ls_login_config__', {
     username: '',
     password: '',
@@ -72,9 +70,9 @@
 <template>
   <div class="w-340px mx-auto">
     <div class="text-2xl text-text-2 font-semibold">用户认证</div>
-    <div class="text-xl text-text-3">
+    <!-- <div class="text-xl text-text-3">
       {{ appName }}
-    </div>
+    </div> -->
     <div class="h-36px leading-36px text-danger-6">
       {{ errorMessage }}
     </div>
