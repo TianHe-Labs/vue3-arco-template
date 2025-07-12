@@ -35,6 +35,13 @@ export default defineConfig({
   },
 
   theme: {
+    // 同步 ArcoDesign 的 box-shadow 变量 https://arco.design/vue/docs/token
+    boxShadow: {
+      'special': '0 0 1px rgba(0, 0, 0, 0.3)',
+      '1-center': '0 -2px 5px rgba(0, 0, 0, 0.1)',
+      '2-center': '0 0 10px rgba(0, 0, 0, 0.1)',
+      '3-center': '0 0 20px rgba(0, 0, 0, 0.1)',
+    },
     colors: {
       // ArcoDesign 变量
       // https://arco.design/vue/docs/token
