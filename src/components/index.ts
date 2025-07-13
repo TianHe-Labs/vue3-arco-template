@@ -8,6 +8,7 @@ import {
   LegendComponent,
   DataZoomComponent,
   GraphicComponent,
+  DatasetComponent,
 } from 'echarts/components';
 
 import Chart from 'vue-echarts';
@@ -26,6 +27,7 @@ use([
   LegendComponent,
   DataZoomComponent,
   GraphicComponent,
+  DatasetComponent,
 ]);
 
 export default {

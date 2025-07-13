@@ -1,6 +1,6 @@
 <script lang="ts" setup>
-  import { reactive, ref } from 'vue';
-  import { isEmpty, mapValues, mergeWith } from 'lodash';
+  import { computed, reactive, ref } from 'vue';
+  import { isEmpty, mapValues, mergeWith, omit } from 'lodash';
   import useLoading from '@/composables/loading';
   import { ToolTipFormatterParams } from '@/global.d';
   import useChartOption from '@/composables/chart-option';
@@ -9,9 +9,8 @@
     QueryXxxxDistReq,
     QueryXxxxDist,
   } from '@/api/dashboard';
-  import { matchNumber } from '@/utils/transform';
   import { Message } from '@arco-design/web-vue';
-  // import { formatNumberEnAbbr } from '@/utils/format';
+  import { ECharts } from 'echarts';
 
   const { loading, setLoading } = useLoading(true);
 
@@ -21,8 +20,10 @@
   });
 
   // 绘图数据
-  const xAxisData = ref<string[]>([]);
-  const chartData = ref<any>({} as any);
+  const renderData = ref<any[]>([]);
+
+  // 聚焦时刻
+  const currentFocusDataIndex = ref<number>(0);
 
   const fetchData = async () => {
     setLoading(true);
@@ -46,53 +47,29 @@
        *    },
        *    ...
        * ]
-       *
-       * ==>
-       *
-       * 根据统计属性 image 等
-       * 按照统计尺度（通常为时间 datetime）顺序转换为 chart 对应的多个 serial
-       * {
-       *    image: [40, 28],
-       *    text: [21, 11],
-       *    audio: [19, 10],
-       *    video: [23, 43],
-       * }
+       * 转化为
+       * [
+       *    ['datetime', 'image', 'text', 'audio', 'video'],
+       *    ['2024-03-18 19:00:00', 40, 21, 19, 23],
+       *    ['2024-03-18 21:00:00', 28, 11, 10, 43],
+       *    ...
+       * ]
+       * 生成共享dataset用于绘图，并实现图之间的联动
        *
        */
 
       // 重置变量避免造成影响
-      xAxisData.value = [];
-      chartData.value = {};
-
       // 数据处理
-      let obj: any = {};
       // 防御性编程，避免
-      // 1. (data || []) 接口返回结果不规范（如：null等）
-      // 2. data 未按照规定顺序排序，通常要求按照时间正序排列
-      // datetime 通常为 '2024-03-18 21:00:00'
-      // 用正则方式matchNumber匹配出数字来做比较（仅供参考）
-      (data || [])
-        .sort(
-          (prev, next) =>
-            matchNumber(prev?.datetime) - matchNumber(next?.datetime),
-        )
-        .forEach((item: QueryXxxxDist) => {
-          const { datetime, ...values } = item;
-
-          // 横轴
-          xAxisData.value.push(datetime);
-
-          // 数据
-          if (isEmpty(obj)) {
-            obj = mapValues(values, (val) => [val]);
-          } else {
-            obj = mergeWith(obj, values, (objVal: number[], srcVal: number) => {
-              return objVal.concat(srcVal);
-            });
-          }
-        });
-
-      chartData.value = obj;
+      // (data.list || []) 接口返回结果不规范（如：null等）
+      currentFocusDataIndex.value = data.list?.length - 1 || 0;
+      renderData.value = (data.list || []).reduce(
+        (acc, cur) => {
+          acc.push(Object.values(cur));
+          return acc;
+        },
+        [Object.keys(data.list?.[0] || {})],
+      );
     } catch (err: any) {
       Message.error(err?.message);
     } finally {
@@ -105,7 +82,7 @@
   const tooltipItemsHtmlString = (items: ToolTipFormatterParams[]) => {
     return items
       .map(
-        (el) =>
+        (el, idx) =>
           `<div class="content-panel">
             <p>
               <span style="background-color: ${
@@ -116,7 +93,7 @@
               </span>
             </p>
             <span class="tooltip-value">
-              ${Number(el.value).toLocaleString()}
+              ${Number((el.value as any[])?.[idx + 1]).toLocaleString()}
             </span>
           </div>`,
       )
@@ -124,26 +101,57 @@
   };
 
   // 绘图
+  // 堆叠柱状图/曲线/面积图分布示例
+  // 统一使用数据集的方式来传入数据
+  // https://echarts.apache.org/handbook/zh/concepts/dataset/
+  // 这样可以是实现图之间的联动
+  // 在曲线图或者堆叠柱图中，聚焦某一x轴时，同步使用饼图的方式来显示比例
+  const chartRef = ref<ECharts | null>(null);
   const { chartOption } = useChartOption((isDark) => {
     return {
       grid: {
-        left: 32,
-        right: 0,
-        top: 32,
+        left: '35%',
+        right: 12,
+        top: 24,
         bottom: 24,
       },
       legend: {
         top: 'top',
-        padding: [0, 10],
+        left: 'left',
+        padding: [16, 0],
         itemGap: 15,
         icon: 'circle',
         textStyle: {
-          color: '#4E5969',
+          color: isDark ? 'rgb(246, 246, 246)' : 'rgb(29, 33, 41)',
         },
       },
+
+      // https://echarts.apache.org/zh/option.html#dataset
+      dataset: [
+        {
+          // 维度
+          // 用数据源中第一行数据作为维度
+          // 默认是自动检测
+          // dimensions: renderDimensions.value,
+          // 数据源
+          source: renderData.value,
+        },
+        // 几个 transform 被声明成 array ，他们构成了一个链，
+        // 前一个 transform 的输出是后一个 transform 的输入。
+        {
+          transform: [
+            {
+              type: 'sort',
+              // 时间正序
+              config: { dimension: 'datetime', order: 'asc' },
+              // 打印数据用于调试
+              print: true,
+            },
+          ],
+        },
+      ],
       xAxis: {
         type: 'category',
-        data: xAxisData.value,
         axisLine: {
           lineStyle: {
             color: isDark ? '#3f3f3f' : '#A9AEB8',
@@ -152,18 +160,17 @@
         axisTick: {
           show: true,
           alignWithLabel: true,
-          lineStyle: {
-            color: '#86909C',
-          },
+          // lineStyle: {
+          //   color: '#86909C',
+          // },
         },
         axisLabel: {
-          color: '#86909C',
+          color: isDark ? 'rgb(246, 246, 246)' : 'rgb(29, 33, 41)',
         },
       },
       yAxis: {
         type: 'value',
         axisLabel: {
-          color: '#86909C',
           // formatter(value: number, idx: number) {
           //   if (idx === 0) return value;
           //   return formatNumberEnAbbr(value);
@@ -171,7 +178,7 @@
         },
         splitLine: {
           lineStyle: {
-            color: isDark ? '#3F3F3F' : '#E5E6EB',
+            color: isDark ? 'rgb(72, 72, 73)' : 'rgb(229, 230, 235)',
           },
         },
       },
@@ -188,18 +195,89 @@
         className: 'echarts-tooltip-diy',
       },
       color: ['#246EFF', '#00B2FF', '#0E42D2', '#81E2FF'],
-      series: Object.entries(chartData.value).map(([serial, data]) => {
-        return {
-          name: serial,
-          data,
-          stack: 'one',
-          type: 'bar',
-          barWidth: 16,
-          // color: isDark ? '#4A7FF7' : '#246EFF',
-        } as any;
-      }),
+      series: [
+        ...(renderData.value?.[0]?.slice(1) || []).map((item: string) => {
+          return {
+            name: item,
+            stack: 'one',
+            type: 'line', // 'bar'
+            // smooth: true,
+            // 系列被安放到 dataset 的列上面
+            // 默认是 column
+            seriesLayoutBy: 'column',
+            emphasis: { focus: 'series' },
+            barWidth: 16,
+            // color: isDark ? '#4A7FF7' : '#246EFF',
+          };
+        }),
+        {
+          id: 'pie',
+          type: 'pie',
+          // 系列被安放到 dataset 的行上面
+          // 绘制某一datetime时各项数据占比
+          seriesLayoutBy: 'row',
+          left: 'left',
+          right: '70%',
+          width: '30%',
+          radius: '30%',
+          center: ['50%', '50%'],
+          emphasis: {
+            focus: 'self',
+          },
+          label: {
+            alignTo: 'edge',
+            formatter: `{name|{b}: {@${currentFocusDataIndex.value}}}\n {ratio|{d}%}`,
+            minMargin: 5,
+            edgeDistance: 10,
+            lineHeight: 18,
+            rich: {
+              name: {
+                fontSize: 12,
+                color: isDark ? 'rgb(246, 246, 246)' : 'rgb(29, 33, 41)',
+              },
+              ratio: {
+                fontSize: 10,
+                color: isDark ? 'rgb(197, 197, 197)' : 'rgb(78, 89, 105)',
+              },
+            },
+          },
+          // 标签引导线调整
+          // https://echarts.apache.org/examples/zh/editor.html?c=pie-labelLine-adjust
+          labelLine: {
+            length: 15,
+            length2: 0,
+            maxSurfaceAngle: 80,
+          },
+          labelLayout: function (params: any) {
+            // 饼图占据左边 30% 的宽度
+            const isLeft =
+              params.labelRect.x <
+              ((chartRef.value?.getWidth() as number) * 0.3) / 2;
+            const points = params.labelLinePoints;
+            // Update the end point.
+            points[2][0] = isLeft
+              ? params.labelRect.x
+              : params.labelRect.x + params.labelRect.width;
+            return {
+              labelLinePoints: points,
+            };
+          },
+          encode: {
+            // 必须得有，不然数据项 name 为空
+            // 关联 formatter 中的 {b}
+            itemName: 'datetime',
+            value: currentFocusDataIndex.value,
+          },
+        },
+      ] as any[],
     };
   });
+
+  const handleUpdateAxisPointer = (params: any) => {
+    currentFocusDataIndex.value =
+      params?.axesInfo?.[0]?.value + 1 || renderData.value.length - 1;
+    // 默认值：最新 datetime
+  };
 </script>
 
 <template>
@@ -229,7 +307,12 @@
           </template>
         </a-select>
       </template>
-      <Chart style="height: 350px" :option="chartOption" />
+      <Chart
+        ref="chartRef"
+        style="height: 350px"
+        :option="chartOption"
+        @updateAxisPointer="handleUpdateAxisPointer"
+      />
     </a-card>
   </a-spin>
 </template>
