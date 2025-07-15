@@ -228,7 +228,7 @@
       color: ['#246EFF', '#00B2FF', '#0E42D2', '#81E2FF'],
       series: [
         ...(renderLineData.value?.[0] || [])
-          .filter((item: string) => item !== 'datetime')
+          .filter((itx: string) => itx !== 'datetime')
           .map((item: string) => {
             return {
               name: item,
@@ -249,7 +249,7 @@
             };
           }),
         ...(renderBarData.value?.[0] || [])
-          .filter((item: string) => item !== 'datetime')
+          .filter((itx: string) => itx !== 'datetime')
           .map((item: string) => {
             return {
               name: item,
