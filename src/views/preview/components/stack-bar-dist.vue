@@ -246,7 +246,7 @@
             name: item,
             // stack: 'one', // 设置为一样的（任意）值堆表示堆叠
             type: 'line', // 'line'
-            datasetsIndex: 0, // 重要
+            datasetIndex: 0, // 重要
             smooth: true,
             // 系列被安放到 dataset 的列上面
             // 默认是 column
@@ -262,7 +262,7 @@
           // 系列被安放到 dataset 的行上面
           // 绘制某一datetime时各项数据占比
           seriesLayoutBy: 'row',
-          datasetsIndex: 0, // 重要
+          datasetIndex: 0, // 重要
           left: 'left',
           right: '70%',
           width: '30%',
