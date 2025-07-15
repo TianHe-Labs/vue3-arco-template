@@ -1,11 +1,16 @@
 <script lang="ts" setup>
-  import { reactive, ref } from 'vue';
+  import { computed, reactive, ref } from 'vue';
   import useLoading from '@/composables/loading';
   import { ToolTipFormatterParams } from '@/global.d';
   import useChartOption from '@/composables/chart-option';
-  import { queryXxxxTrend, QueryXxxxTrendReq } from '@/api/dashboard';
+  import {
+    QueryXxxxTrend,
+    queryXxxxTrend,
+    QueryXxxxTrendReq,
+  } from '@/api/dashboard';
   import { Message } from '@arco-design/web-vue';
   import { ECharts } from 'echarts';
+  import { omit, pick, sortBy } from 'lodash';
 
   const { loading, setLoading } = useLoading(true);
 
@@ -14,8 +19,61 @@
     timespan: 7,
   });
 
+  // 原始数据
+  const renderData = ref<QueryXxxxTrend[]>([]);
+
+  /**
+   * [
+   *    {
+   *      datetime: '2024-03-18 19:00:00',
+   *      image: 40,
+   *      text: 21,
+   *      audio: 19,
+   *      video: 23
+   *    },
+   *    {
+   *      datetime: '2024-03-18 21:00:00',
+   *      image: 28,
+   *      text: 11,
+   *      audio: 10,
+   *      video: 43
+   *    },
+   *    ...
+   * ]
+   * 转化为
+   * [
+   *    ['datetime', 'image', 'text', 'audio', 'video'],
+   *    ['2024-03-18 19:00:00', 40, 21, 19, 23],
+   *    ['2024-03-18 21:00:00', 28, 11, 10, 43],
+   *    ...
+   * ]
+   * 生成共享dataset用于绘图，并实现图之间的联动
+   *
+   */
+
   // 绘图数据
-  const renderData = ref<any[]>([]);
+  const renderBarData = computed(() => {
+    return renderData.value.reduce((acc, cur, idx) => {
+      if (idx === 0) {
+        // 第一行是维度
+        acc.push(Object.keys(omit(cur, 'score')));
+      }
+      // 剥离 score 字段
+      acc.push(Object.values(omit(cur, 'score')));
+      return acc;
+    }, [] as any[]);
+  });
+  const renderLineData = computed(() => {
+    return renderData.value.reduce((acc, cur, idx) => {
+      if (idx === 0) {
+        // 第一行是维度
+        acc.push(Object.keys(pick(cur, ['datetime', 'score'])));
+      }
+      // 剥离 score 字段
+      acc.push(Object.values(pick(cur, ['datetime', 'score'])));
+      return acc;
+    }, [] as any[]);
+  });
 
   // 聚焦时刻
   const currentFocusDataIndex = ref<number>(0);
@@ -24,47 +82,12 @@
     setLoading(true);
     try {
       const { data } = await queryXxxxTrend(queryModel);
-      /**
-       * [
-       *    {
-       *      datetime: '2024-03-18 19:00:00',
-       *      image: 40,
-       *      text: 21,
-       *      audio: 19,
-       *      video: 23
-       *    },
-       *    {
-       *      datetime: '2024-03-18 21:00:00',
-       *      image: 28,
-       *      text: 11,
-       *      audio: 10,
-       *      video: 43
-       *    },
-       *    ...
-       * ]
-       * 转化为
-       * [
-       *    ['datetime', 'image', 'text', 'audio', 'video'],
-       *    ['2024-03-18 19:00:00', 40, 21, 19, 23],
-       *    ['2024-03-18 21:00:00', 28, 11, 10, 43],
-       *    ...
-       * ]
-       * 生成共享dataset用于绘图，并实现图之间的联动
-       *
-       */
-
       // 重置变量避免造成影响
       // 数据处理
       // 防御性编程，避免
       // (data.list || []) 接口返回结果不规范（如：null等）
       currentFocusDataIndex.value = data.list?.length - 1 || 0;
-      renderData.value = (data.list || []).reduce(
-        (acc, cur) => {
-          acc.push(Object.values(cur));
-          return acc;
-        },
-        [Object.keys(data.list?.[0] || {})],
-      );
+      renderData.value = sortBy(data.list || [], 'datetime');
     } catch (err: any) {
       Message.error(err?.message);
     } finally {
@@ -75,10 +98,13 @@
 
   // 工具函数
   const tooltipItemsHtmlString = (items: ToolTipFormatterParams[]) => {
+    console.log('items', items);
     return items
-      .map(
-        (el, idx) =>
-          `<div class="content-panel">
+      .map((el) => {
+        // 找到数据在value数组中的位置
+        const idx =
+          el.dimensionNames?.findIndex((itx) => itx === el.seriesName) || 0;
+        return `<div class="content-panel">
             <p>
               <span style="background-color: ${
                 el.color
@@ -88,10 +114,10 @@
               </span>
             </p>
             <span class="tooltip-value">
-              ${Number((el.value as any[])?.[idx + 1]).toLocaleString()}
+              ${Number((el.value as any[])?.[idx]).toLocaleString()}
             </span>
-          </div>`,
-      )
+          </div>`;
+      })
       .join('');
   };
 
@@ -129,21 +155,32 @@
           // 默认是自动检测
           // dimensions: renderDimensions.value,
           // 数据源
-          source: renderData.value,
+          // 绘制柱图
+          source: renderBarData.value,
         },
+        {
+          // 维度
+          // 用数据源中第一行数据作为维度
+          // 默认是自动检测
+          // dimensions: renderDimensions.value,
+          // 数据源
+          // 绘制线图
+          source: renderLineData.value,
+        },
+        // 自行排序
         // 几个 transform 被声明成 array ，他们构成了一个链，
         // 前一个 transform 的输出是后一个 transform 的输入。
-        {
-          transform: [
-            {
-              type: 'sort',
-              // 时间正序
-              config: { dimension: 'datetime', parser: 'time', order: 'asc' },
-              // 打印数据用于调试
-              print: true,
-            },
-          ],
-        },
+        // {
+        //   transform: [
+        //     {
+        //       type: 'sort',
+        //       // 时间正序
+        //       config: { dimension: 'datetime', parser: 'time', order: 'asc' },
+        //       // 打印数据用于调试
+        //       print: true,
+        //     },
+        //   ],
+        // },
       ],
       xAxis: {
         type: 'category',
@@ -191,17 +228,31 @@
       },
       color: ['#246EFF', '#00B2FF', '#0E42D2', '#81E2FF'],
       series: [
-        ...(renderData.value?.[0]?.slice(1) || []).map((item: string) => {
+        ...(renderLineData.value?.[0]?.slice(1) || []).map((item: string) => {
           return {
             name: item,
-            stack: 'one',
-            type: 'line', // 'bar'
+            type: 'line',
+            datasetIndex: 1, // 重要
             // smooth: true,
             // 系列被安放到 dataset 的列上面
             // 默认是 column
             seriesLayoutBy: 'column',
             emphasis: { focus: 'series' },
-            datasetIndex: 1, // 使用转换后（排序）的数据
+            barWidth: 16,
+            // color: isDark ? '#4A7FF7' : '#246EFF',
+          };
+        }),
+        ...(renderBarData.value?.[0]?.slice(1) || []).map((item: string) => {
+          return {
+            name: item,
+            // stack: 'one', // 设置为一样的（任意）值堆表示堆叠
+            type: 'bar', // 'line'
+            datasetsIndex: 0, // 重要
+            // smooth: true,
+            // 系列被安放到 dataset 的列上面
+            // 默认是 column
+            seriesLayoutBy: 'column',
+            emphasis: { focus: 'series' },
             barWidth: 16,
             // color: isDark ? '#4A7FF7' : '#246EFF',
           };
@@ -212,6 +263,7 @@
           // 系列被安放到 dataset 的行上面
           // 绘制某一datetime时各项数据占比
           seriesLayoutBy: 'row',
+          datasetsIndex: 0, // 重要
           left: 'left',
           right: '70%',
           width: '30%',
@@ -220,13 +272,6 @@
           emphasis: {
             focus: 'self',
           },
-          encode: {
-            // 必须得有，不然数据项 name 为空
-            // 关联 formatter 中的 {b}
-            itemName: 'datetime',
-            value: currentFocusDataIndex.value,
-          },
-          datasetIndex: 1, // 使用转换后（排序）的数据
           label: {
             alignTo: 'edge',
             formatter: `{name|{b}: {@${currentFocusDataIndex.value}}}\n {ratio|{d}%}`,
@@ -264,6 +309,12 @@
             return {
               labelLinePoints: points,
             };
+          },
+          encode: {
+            // 必须得有，不然数据项 name 为空
+            // 关联 formatter 中的 {b}
+            itemName: 'datetime',
+            value: currentFocusDataIndex.value,
           },
         },
       ] as any[],
