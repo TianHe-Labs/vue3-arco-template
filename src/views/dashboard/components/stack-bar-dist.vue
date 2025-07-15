@@ -201,6 +201,7 @@
             // 默认是 column
             seriesLayoutBy: 'column',
             emphasis: { focus: 'series' },
+            datasetIndex: 1, // 使用转换后（排序）的数据
             barWidth: 16,
             // color: isDark ? '#4A7FF7' : '#246EFF',
           };
@@ -219,6 +220,13 @@
           emphasis: {
             focus: 'self',
           },
+          encode: {
+            // 必须得有，不然数据项 name 为空
+            // 关联 formatter 中的 {b}
+            itemName: 'datetime',
+            value: currentFocusDataIndex.value,
+          },
+          datasetIndex: 1, // 使用转换后（排序）的数据
           label: {
             alignTo: 'edge',
             formatter: `{name|{b}: {@${currentFocusDataIndex.value}}}\n {ratio|{d}%}`,
@@ -256,12 +264,6 @@
             return {
               labelLinePoints: points,
             };
-          },
-          encode: {
-            // 必须得有，不然数据项 name 为空
-            // 关联 formatter 中的 {b}
-            itemName: 'datetime',
-            value: currentFocusDataIndex.value,
           },
         },
       ] as any[],
