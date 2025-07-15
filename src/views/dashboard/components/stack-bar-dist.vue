@@ -138,7 +138,7 @@
             {
               type: 'sort',
               // 时间正序
-              config: { dimension: 'datetime', order: 'asc' },
+              config: { dimension: 'datetime', parser: 'time', order: 'asc' },
               // 打印数据用于调试
               print: true,
             },

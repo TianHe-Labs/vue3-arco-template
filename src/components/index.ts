@@ -9,6 +9,7 @@ import {
   DataZoomComponent,
   GraphicComponent,
   DatasetComponent,
+  TransformComponent,
 } from 'echarts/components';
 
 import Chart from 'vue-echarts';
@@ -28,6 +29,7 @@ use([
   DataZoomComponent,
   GraphicComponent,
   DatasetComponent,
+  TransformComponent,
 ]);
 
 export default {
