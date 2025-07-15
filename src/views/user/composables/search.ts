@@ -131,7 +131,7 @@ export function provideSearchUser(): SearchUserState {
     try {
       const { data } = await queryUserList(cleanedParams);
       renderData.value = data.list;
-      pagination.total = data.total;
+      pagination.total = data.total || 0;
     } catch (err: any) {
       Message.error(err?.message);
     } finally {
@@ -145,7 +145,6 @@ export function provideSearchUser(): SearchUserState {
 
   // 重置
   const handleResetQueryModel = (keys?: string[]) => {
-    router.push({ query: {} });
     queryModel.value = { ...queryModel.value, ...resetQueryModel(keys) };
     if (!keys || !keys?.length) {
       fuzzyQueryModel.value = resetFuzzyQueryModel();
@@ -159,6 +158,8 @@ export function provideSearchUser(): SearchUserState {
     fetchData();
 
     // 将分页持久化到地址栏中，防止刷新丢失分页，影响用户体验
+    // 不可以使用router.push({ query: { ...route.query, current: 1, pageSize } })
+    // 因为会刷新整个页面，用户体验很糟糕
     const url = router.resolve({ query: { ...route.query, current } }).href;
     window.history.pushState({}, '', url);
   };
@@ -170,6 +171,8 @@ export function provideSearchUser(): SearchUserState {
     fetchData();
 
     // 将分页持久化到地址栏中，防止刷新丢失分页，影响用户体验
+    // 不可以使用router.push({ query: { ...route.query, current: 1, pageSize } })
+    // 因为会刷新整个页面，用户体验很糟糕
     const url = router.resolve({
       query: { ...route.query, current: 1, pageSize },
     }).href;
@@ -237,8 +240,14 @@ export function provideSearchUser(): SearchUserState {
       fetchData();
 
       // 将分页持久化到地址栏中，防止刷新丢失分页，影响用户体验
+      // 不可以使用router.push({ query: { ...route.query, current: 1, pageSize } })
+      // 因为会刷新整个页面，用户体验很糟糕
       const url = router.resolve({
-        query: { ...route.query, current: 1, pageSize: 20 },
+        query: {
+          ...route.query,
+          current: pagination.current,
+          pageSize: pagination.pageSize,
+        },
       }).href;
       window.history.pushState({}, '', url);
     },

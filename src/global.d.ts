@@ -15,7 +15,9 @@ export interface Pagination {
 }
 
 export interface List<T> {
-  total: number;
+  // 总数，有些地方不需要
+  total?: number;
+  // 为了拓展性，列表数据放在 list 下
   list: T[];
 }
 
