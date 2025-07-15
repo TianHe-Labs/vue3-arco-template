@@ -9,7 +9,7 @@ const xxxxs = Mock.mock({
       'id|8': /[A-Z][a-z][-][0-9]/,
       'name': Random.csentence(12, 20),
       'description': Random.cparagraph(),
-      'tags': Random.cword(1, 3),
+      'tags|1-3': [Random.cword(4, 9)],
       'createdAt': Random.datetime(),
       'updatedAt': Random.datetime(),
     },
@@ -28,6 +28,18 @@ setupMock({
         total: xxxxs.list.length,
       });
     });
+
+    // 更新
+    Mock.mock(new RegExp('/api/xxxx/update'), (params: MockRequest) => {
+      const { id, name, description, tags } = JSON.parse(params.body as string);
+      return successResponseWrap({
+        id,
+        name,
+        description,
+        tags,
+      });
+    });
+
     // 删除
     Mock.mock(new RegExp('/api/xxxx/delete'), (params: MockRequest) => {
       const { ids } = JSON.parse(params.body as string);

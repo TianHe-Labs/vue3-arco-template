@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-  import { useSearchXXX } from '../composables/search';
+  import { useSearchXxxx } from '../composables/search';
 
   const {
     queryFormRef,
@@ -7,9 +7,9 @@
     fuzzyQueryModel,
     fetchData,
     handleResetQueryModel,
-  } = useSearchXXX();
+  } = useSearchXxxx();
 
-  // 非业务逻辑，仅页面显示
+  // 非业务逻辑，仅在页面显示，不写在 composable 中
   // const fuzzyKeyOptions = fuzzyKeys.map((value) => ({
   //   label: value,
   //   value,

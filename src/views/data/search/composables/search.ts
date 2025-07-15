@@ -11,7 +11,7 @@ interface FuzzyQueryModel {
   fuzzyKeys: string[];
 }
 
-interface SearchXXXState {
+interface SearchXxxxState {
   loading: Ref<boolean>;
   pagination: PaginationProps;
   queryFormRef: Ref<FormInstance>;
@@ -33,7 +33,7 @@ interface SearchXXXState {
   }) => void;
 }
 
-const symbol = Symbol('SEARCH-XXX');
+const searchXxxxSymbol = Symbol('SEARCH-XXXX');
 
 // 用于（指定属性的）全文关键词检索
 const fuzzyKeys = ['name', 'description'];
@@ -58,7 +58,14 @@ const resetQueryModel = (keys?: string[]): QueryXxxxListReq => {
   return defaultModel;
 };
 
-export function provideSearchXXX(): SearchXXXState {
+// 提供搜索组件
+// queries 接受外部传入的查询条件，
+// 用于外部调用时，可以传入查询条件
+// 例如在详情页复用时，传入 id 查询详情
+// 此时，结果只返回一条，复用接口减少接口开发
+export function provideSearchXxxx(
+  queries: Ref<Partial<QueryXxxxListReq>>,
+): SearchXxxxState {
   const { loading, setLoading } = useLoading();
 
   // 响应式
@@ -235,7 +242,20 @@ export function provideSearchXXX(): SearchXXXState {
     { deep: true },
   );
 
-  const returnState: SearchXXXState = {
+  // 外部参数变化时，更新查询条件
+  // 例如在详情页复用时，传入 id 查询详情
+  // 此时，结果只返回一条，复用接口减少接口开发
+  watch(
+    queries,
+    () => {
+      if (!isEmpty(queries.value)) {
+        queryModel.value = { ...queryModel.value, ...queries.value };
+      }
+    },
+    { immediate: true },
+  );
+
+  const returnState: SearchXxxxState = {
     loading,
     pagination,
     queryFormRef,
@@ -252,11 +272,11 @@ export function provideSearchXXX(): SearchXXXState {
     onUpdateRenderData,
   };
 
-  provide(symbol, returnState);
+  provide(searchXxxxSymbol, returnState);
 
   return returnState;
 }
 
-export function useSearchXXX(): SearchXXXState {
-  return inject(symbol) as SearchXXXState;
+export function useSearchXxxx(): SearchXxxxState {
+  return inject(searchXxxxSymbol) as SearchXxxxState;
 }

@@ -1,7 +1,8 @@
 <script lang="ts" setup>
   import { computed } from 'vue';
   import { TableColumnData } from '@arco-design/web-vue';
-  import { useSearchXXX } from '../composables/search';
+  import { useSearchXxxx } from '../composables/search';
+  import { useUpdateXxxx } from '../composables/update';
   import { useDeleteXxxx } from '../composables/delete';
 
   const {
@@ -12,8 +13,12 @@
     onPageChange,
     onPageSizeChange,
     onUpdateRenderData,
-  } = useSearchXXX();
+  } = useSearchXxxx();
 
+  // 更新（单个）
+  const { handleOpenUpdateXxxxPanel } = useUpdateXxxx();
+
+  // 删除（单个、批量）
   const {
     selectionState,
     toggleSelection,
@@ -132,7 +137,7 @@
       </template>
       <!-- 操作 -->
       <template #operations="{ record }">
-        <!-- 按钮较多时，分行显示 操作类的放一行 -->
+        <!-- 按钮较多时，根据操作使用频率 分行显示 详情等 操作放一行 -->
         <router-link
           :to="{ name: 'XxxxDetail', params: { id: record.id } }"
           target="_blank"
@@ -144,8 +149,15 @@
             详情
           </a-button>
         </router-link>
+        <!-- 按钮较多时，根据操作使用频率 分行显示 删改等操作放一行 -->
         <div class="flex items-center">
-          <a-button size="small" type="text" class="!px-2">
+          <a-button
+            status="warning"
+            size="small"
+            type="text"
+            class="!px-2"
+            @click="handleOpenUpdateXxxxPanel(record)"
+          >
             <template #icon>
               <icon-edit />
             </template>

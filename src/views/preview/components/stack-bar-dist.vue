@@ -5,9 +5,9 @@
   import { ToolTipFormatterParams } from '@/global.d';
   import useChartOption from '@/composables/chart-option';
   import {
-    queryXxxxDist,
-    QueryXxxxDistReq,
-    QueryXxxxDist,
+    queryXxxxTrend,
+    QueryXxxxTrendReq,
+    QueryXxxxTrend,
   } from '@/api/dashboard';
   import { Message } from '@arco-design/web-vue';
   import { ECharts } from 'echarts';
@@ -15,7 +15,7 @@
   const { loading, setLoading } = useLoading(true);
 
   // 请求参数
-  const queryModel = reactive<QueryXxxxDistReq>({
+  const queryModel = reactive<QueryXxxxTrendReq>({
     timespan: 7,
   });
 
@@ -28,7 +28,7 @@
   const fetchData = async () => {
     setLoading(true);
     try {
-      const { data } = await queryXxxxDist(queryModel);
+      const { data } = await queryXxxxTrend(queryModel);
       /**
        * [
        *    {
