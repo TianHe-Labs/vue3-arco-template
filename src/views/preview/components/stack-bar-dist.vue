@@ -98,7 +98,6 @@
 
   // 工具函数
   const tooltipItemsHtmlString = (items: ToolTipFormatterParams[]) => {
-    console.log('items', items);
     return items
       .map((el) => {
         // 找到数据在value数组中的位置
@@ -228,34 +227,50 @@
       },
       color: ['#246EFF', '#00B2FF', '#0E42D2', '#81E2FF'],
       series: [
-        ...(renderLineData.value?.[0]?.slice(1) || []).map((item: string) => {
-          return {
-            name: item,
-            type: 'line',
-            datasetIndex: 1, // 重要
-            smooth: true,
-            // 系列被安放到 dataset 的列上面
-            // 默认是 column
-            seriesLayoutBy: 'column',
-            emphasis: { focus: 'series' },
-            // color: isDark ? '#4A7FF7' : '#246EFF',
-          };
-        }),
-        ...(renderBarData.value?.[0]?.slice(1) || []).map((item: string) => {
-          return {
-            name: item,
-            // stack: 'one', // 设置为一样的（任意）值堆表示堆叠
-            type: 'line', // 'line'
-            datasetIndex: 0, // 重要
-            smooth: true,
-            // 系列被安放到 dataset 的列上面
-            // 默认是 column
-            seriesLayoutBy: 'column',
-            emphasis: { focus: 'series' },
-            // barWidth: 16,
-            // color: isDark ? '#4A7FF7' : '#246EFF',
-          };
-        }),
+        ...(renderLineData.value?.[0] || [])
+          .filter((item: string) => item !== 'datetime')
+          .map((item: string) => {
+            return {
+              name: item,
+              type: 'line',
+              smooth: true,
+              datasetIndex: 1, // 重要
+              // 系列被安放到 dataset 的列上面
+              // 默认是 column
+              seriesLayoutBy: 'column',
+              encode: {
+                // 重要
+                x: 'datetime', // 指定 datetime 映射为 x 轴
+                y: item,
+                tooltip: item,
+              },
+              emphasis: { focus: 'series' },
+              // color: isDark ? '#4A7FF7' : '#246EFF',
+            };
+          }),
+        ...(renderBarData.value?.[0] || [])
+          .filter((item: string) => item !== 'datetime')
+          .map((item: string) => {
+            return {
+              name: item,
+              // stack: 'one', // 设置为一样的（任意）值堆表示堆叠
+              type: 'line', // 'line'
+              smooth: true,
+              // 系列被安放到 dataset 的列上面
+              // 默认是 column
+              datasetIndex: 0, // 重要
+              seriesLayoutBy: 'column',
+              encode: {
+                // 重要
+                x: 'datetime', // 指定 datetime 映射为 x 轴
+                y: item,
+                tooltip: item,
+              },
+              emphasis: { focus: 'series' },
+              // barWidth: 16,
+              // color: isDark ? '#4A7FF7' : '#246EFF',
+            };
+          }),
         {
           id: 'pie',
           type: 'pie',
@@ -263,6 +278,12 @@
           // 绘制某一datetime时各项数据占比
           seriesLayoutBy: 'row',
           datasetIndex: 0, // 重要
+          encode: {
+            // 必须得有，不然数据项 name 为空
+            // 关联 formatter 中的 {b}
+            itemName: 0, // 第一行 表头信息
+            value: currentFocusDataIndex.value,
+          },
           left: 'left',
           right: '70%',
           width: '30%',
@@ -302,18 +323,14 @@
               ((chartRef.value?.getWidth() as number) * 0.3) / 2;
             const points = params.labelLinePoints;
             // Update the end point.
-            points[2][0] = isLeft
-              ? params.labelRect.x
-              : params.labelRect.x + params.labelRect.width;
+            if (points && points.length > 2) {
+              points[2][0] = isLeft
+                ? params.labelRect.x
+                : params.labelRect.x + params.labelRect.width;
+            }
             return {
               labelLinePoints: points,
             };
-          },
-          encode: {
-            // 必须得有，不然数据项 name 为空
-            // 关联 formatter 中的 {b}
-            itemName: 'datetime',
-            value: currentFocusDataIndex.value,
           },
         },
       ] as any[],
