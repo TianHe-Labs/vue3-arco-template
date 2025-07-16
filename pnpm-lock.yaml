@@ -27,6 +27,9 @@ dependencies:
   echarts:
     specifier: 5.6.0
     version: 5.6.0
+  file-saver:
+    specifier: ^2.0.5
+    version: 2.0.5
   lodash:
     specifier: ^4.17.21
     version: 4.17.21
@@ -80,6 +83,9 @@ devDependencies:
   '@types/crypto-js':
     specifier: 4.2.2
     version: 4.2.2
+  '@types/file-saver':
+    specifier: ^2.0.7
+    version: 2.0.7
   '@types/lodash':
     specifier: 4.17.5
     version: 4.17.5
@@ -1421,6 +1427,10 @@ packages:
 
   /@types/estree@1.0.7:
     resolution: {integrity: sha512-w28IoSUCJpidD/TGviZwwMJckNESJZXFu7NBZ5YJ4mEUnNraUn9Pm8HSZm/jDF1pDWYKspWE7oVphigUPRakIQ==}
+
+  /@types/file-saver@2.0.7:
+    resolution: {integrity: sha512-dNKVfHd/jk0SkR/exKGj2ggkB45MAkzvWCaqLUUgkyjITkGNzH8H+yUwr+BLJUBjZOe9w8X3wgmXhZDRg1ED6A==}
+    dev: true
 
   /@types/glob@7.2.0:
     resolution: {integrity: sha512-ZUxbzKl0IfJILTS6t7ip5fQQM/J3TJYubDm3nMbgubNNYS62eXeUpoLUC8/7fJNiFYHTrGPQn7hspDUzIHX3UA==}
@@ -4733,6 +4743,10 @@ packages:
     dependencies:
       flat-cache: 4.0.1
     dev: true
+
+  /file-saver@2.0.5:
+    resolution: {integrity: sha512-P9bmyZ3h/PRG+Nzga+rbdI4OEpNDzAVyy74uVO9ATgzLK6VtAsYybF/+TOCvrc0MO793d6+42lLyZTw7/ArVzA==}
+    dev: false
 
   /file-type@10.11.0:
     resolution: {integrity: sha512-uzk64HRpUZyTGZtVuvrjP0FYxzQrBf4rojot6J65YMEbwBLB0CWm0CLojVpwpmFmxcE/lkvYICgfcGozbBq6rw==}

@@ -27,6 +27,13 @@ export function queryXxxxList(params: QueryXxxxListReq & Pagination) {
   });
 }
 
+// 导出
+export function exportXxxxList(data: QueryXxxxListReq) {
+  return axios.post('/api/xxxx/export', data, {
+    responseType: 'blob',
+  });
+}
+
 // 创建（如果需要批量添加时，单个/批量二合一）
 export type CreateXxxxModel = Pick<XxxxModel, 'name' | 'description' | 'tags'>;
 

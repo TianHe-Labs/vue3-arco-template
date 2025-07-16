@@ -1,10 +1,23 @@
-import { provide, inject, Ref, reactive, ref, watch, shallowRef } from 'vue';
-import { FormInstance, Message, PaginationProps } from '@arco-design/web-vue';
+import { provide, inject, Ref, reactive, ref, watch, shallowRef, h } from 'vue';
+import {
+  FormInstance,
+  Input,
+  Message,
+  Modal,
+  PaginationProps,
+} from '@arco-design/web-vue';
 import { useRoute, useRouter } from 'vue-router';
+import { saveAs } from 'file-saver';
 import { isEmpty, isObject, omitBy, pick } from 'lodash';
+import { dayjs } from '@/utils/format';
 import useLoading from '@/composables/loading';
 // import useRequest from '@/composables/request';
-import { queryXxxxList, XxxxModel, QueryXxxxListReq } from '@/api/xxxx';
+import {
+  queryXxxxList,
+  XxxxModel,
+  QueryXxxxListReq,
+  exportXxxxList,
+} from '@/api/xxxx';
 
 interface FuzzyQueryModel {
   fuzzyWord: string;
@@ -31,6 +44,9 @@ interface SearchXxxxState {
     records?: XxxxModel[];
     ids?: XxxxModel['id'][];
   }) => void;
+
+  exportLoading: Ref<boolean>;
+  handleExportData: () => void;
 }
 
 const searchXxxxSymbol = Symbol('SEARCH-XXXX');
@@ -178,6 +194,55 @@ export function provideSearchXxxx(
     window.history.pushState({}, '', url);
   };
 
+  // 导出
+  // 条件与检索相同
+  const { loading: exportLoading, setLoading: setExportLoading } = useLoading();
+  const handleExportData = () => {
+    // 水印信息输入框的值
+    let watermarkText = '';
+
+    Modal.confirm({
+      title: '导出',
+      titleAlign: 'start',
+      modalClass: '!p-5',
+      content: () =>
+        h(Input, {
+          placeholder: '添加水印信息，缺省默认不设置',
+          onChange: (value: string) => {
+            watermarkText = value;
+          },
+        }),
+      okText: '确定',
+      cancelText: '取消',
+      onOk: async () => {
+        try {
+          setExportLoading(true);
+
+          const cleanedParams = {
+            // 过滤掉空值参数，剔除0, '', null, undefined / '',[]
+            ...omitBy(
+              queryModel.value,
+              (value) => !value || (isObject(value) && isEmpty(value)),
+            ),
+          };
+
+          const resp = await exportXxxxList(cleanedParams);
+
+          // 创建下载链接
+          const blob = new Blob([resp.data], {
+            type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+          });
+
+          saveAs(blob, `${dayjs().format('YYYYMMDDHHmmss')}.xlsx`);
+        } catch (err: any) {
+          Message.error(err?.message);
+        } finally {
+          setExportLoading(false);
+        }
+      },
+    });
+  };
+
   const onUpdateRenderData = (data: {
     type: 'update' | 'create' | 'delete';
     record?: XxxxModel;
@@ -270,6 +335,9 @@ export function provideSearchXxxx(
     onPageSizeChange,
 
     onUpdateRenderData,
+
+    exportLoading,
+    handleExportData,
   };
 
   provide(searchXxxxSymbol, returnState);

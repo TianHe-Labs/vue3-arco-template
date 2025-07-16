@@ -1,5 +1,6 @@
 import Mock, { Random } from 'mockjs';
 import qs from 'query-string';
+import { generateCsv } from '@/utils/transform';
 import setupMock, { successResponseWrap } from '@/plugins/setup-mock';
 import { MockRequest } from '@/mock/types.d';
 
@@ -19,8 +20,8 @@ const xxxxs = Mock.mock({
 setupMock({
   setup: () => {
     // 列表
-    Mock.mock(new RegExp('/api/xxxx/search'), (params: MockRequest) => {
-      const { current = 1, pageSize = 10 } = qs.parseUrl(params.url).query;
+    Mock.mock(new RegExp('/api/xxxx/search'), (req: MockRequest) => {
+      const { current = 1, pageSize = 10 } = qs.parseUrl(req.url).query;
       const p = current as number;
       const ps = pageSize as number;
       return successResponseWrap({
@@ -29,9 +30,18 @@ setupMock({
       });
     });
 
+    // 导出
+    Mock.mock(new RegExp('/api/xxxx/export'), () => {
+      const content = generateCsv(xxxxs.list);
+      const contentType =
+        'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
+      const blob = new Blob([content], { type: contentType });
+      return successResponseWrap(blob);
+    });
+
     // 更新
-    Mock.mock(new RegExp('/api/xxxx/update'), (params: MockRequest) => {
-      const { id, name, description, tags } = JSON.parse(params.body as string);
+    Mock.mock(new RegExp('/api/xxxx/update'), (req: MockRequest) => {
+      const { id, name, description, tags } = JSON.parse(req.body as string);
       return successResponseWrap({
         id,
         name,
@@ -41,8 +51,8 @@ setupMock({
     });
 
     // 删除
-    Mock.mock(new RegExp('/api/xxxx/delete'), (params: MockRequest) => {
-      const { ids } = JSON.parse(params.body as string);
+    Mock.mock(new RegExp('/api/xxxx/delete'), (req: MockRequest) => {
+      const { ids } = JSON.parse(req.body as string);
       return successResponseWrap({
         ids,
       });

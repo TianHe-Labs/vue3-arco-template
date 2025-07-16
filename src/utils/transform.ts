@@ -36,6 +36,58 @@ export function matchNumber(obj: any) {
   return Number(matched.join(''));
 }
 
+// CSV 文件生成
+export const generateCsv = (data: any[]) => {
+  if (!data || data.length === 0) return '';
+
+  // 获取表头
+  const headers = Object.keys(data[0]);
+
+  // 处理值的函数
+  const formatValue = (value: any): string => {
+    if (value === undefined || value === null) return '';
+
+    // 如果是对象或数组，转换为 JSON 字符串
+    if (typeof value === 'object') {
+      try {
+        return JSON.stringify(value);
+      } catch (error) {
+        return String(value);
+      }
+    }
+
+    // 其他类型直接转换为字符串
+    return String(value);
+  };
+
+  // 处理包含逗号、引号或换行符的值
+  const escapeValue = (value: string): string => {
+    if (
+      value.includes(',') ||
+      value.includes('"') ||
+      value.includes('\n') ||
+      value.includes('\r')
+    ) {
+      return `"${value.replace(/"/g, '""')}"`;
+    }
+    return value;
+  };
+
+  // 生成 CSV 内容
+  let csvContent = headers.join(',') + '\n';
+
+  // 添加数据行
+  data.forEach((row) => {
+    const values = headers.map((header) => {
+      const formattedValue = formatValue(row[header]);
+      return escapeValue(formattedValue);
+    });
+    csvContent += values.join(',') + '\n';
+  });
+
+  return csvContent;
+};
+
 export function example() {
   return true;
 }

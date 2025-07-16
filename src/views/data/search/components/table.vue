@@ -13,6 +13,8 @@
     onPageChange,
     onPageSizeChange,
     onUpdateRenderData,
+    exportLoading,
+    handleExportData,
   } = useSearchXxxx();
 
   // 更新（单个）
@@ -93,6 +95,15 @@
           @click="handleBatchDeleteXxxx(onUpdateRenderData)"
         >
           批量删除
+        </a-button>
+
+        <a-button
+          size="small"
+          type="outline"
+          :loading="exportLoading"
+          @click="handleExportData"
+        >
+          导出
         </a-button>
       </div>
     </template>

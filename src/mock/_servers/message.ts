@@ -29,9 +29,9 @@ const messages = Mock.mock({
 setupMock({
   setup: () => {
     // 列表
-    Mock.mock(new RegExp('/api/message/list'), (params: MockRequest) => {
-      const { current = 1, pageSize = 10 } = qs.parseUrl(params.url).query;
-      const { unread = false } = JSON.parse(params?.body as string);
+    Mock.mock(new RegExp('/api/message/list'), (req: MockRequest) => {
+      const { current = 1, pageSize = 10 } = qs.parseUrl(req.url).query;
+      const { unread = false } = JSON.parse(req?.body as string);
       const p = current as number;
       const ps = pageSize as number;
       const list = unread
@@ -55,17 +55,14 @@ setupMock({
     });
 
     // 标记已读
-    Mock.mock(
-      new RegExp('/api/message/readAt/update'),
-      (params: MockRequest) => {
-        const { ids } = JSON.parse(params?.body as string);
-        return successResponseWrap({ ids, readAt: new Date() });
-      },
-    );
+    Mock.mock(new RegExp('/api/message/readAt/update'), (req: MockRequest) => {
+      const { ids } = JSON.parse(req?.body as string);
+      return successResponseWrap({ ids, readAt: new Date() });
+    });
 
     // 删除
-    Mock.mock(new RegExp('/api/message/delete'), (params: MockRequest) => {
-      const { ids } = JSON.parse(params?.body as string);
+    Mock.mock(new RegExp('/api/message/delete'), (req: MockRequest) => {
+      const { ids } = JSON.parse(req?.body as string);
       return successResponseWrap({ ids });
     });
   },
