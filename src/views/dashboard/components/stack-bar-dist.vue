@@ -200,20 +200,36 @@
           color: isDark ? 'rgb(246, 246, 246)' : 'rgb(29, 33, 41)',
         },
       },
-      yAxis: {
-        type: 'value',
-        axisLabel: {
-          // formatter(value: number, idx: number) {
-          //   if (idx === 0) return value;
-          //   return formatNumberEnAbbr(value);
-          // },
-        },
-        splitLine: {
-          lineStyle: {
-            color: isDark ? 'rgb(72, 72, 73)' : 'rgb(229, 230, 235)',
+      yAxis: [
+        // 柱图和线图y轴值域范围可能不一样
+        // 以防万一，分开设置
+        // bar
+        {
+          show: true,
+          type: 'value',
+          axisLabel: {
+            show: false,
+          },
+          splitLine: {
+            show: true,
+            lineStyle: {
+              type: 'dashed',
+              color: isDark ? 'rgb(72, 72, 73)' : 'rgb(229, 230, 235)',
+            },
           },
         },
-      },
+        // line
+        {
+          show: true,
+          type: 'value',
+          axisLabel: {
+            show: false,
+          },
+          splitLine: {
+            show: false,
+          },
+        },
+      ],
       tooltip: {
         show: true,
         trigger: 'axis',
@@ -228,35 +244,41 @@
       },
       color: ['#246EFF', '#00B2FF', '#0E42D2', '#81E2FF'],
       series: [
-        ...(renderLineData.value?.[0]?.slice(1) || []).map((item: string) => {
-          return {
-            name: item,
-            type: 'line',
-            datasetIndex: 1, // 重要
-            // smooth: true,
-            // 系列被安放到 dataset 的列上面
-            // 默认是 column
-            seriesLayoutBy: 'column',
-            emphasis: { focus: 'series' },
-            barWidth: 16,
-            // color: isDark ? '#4A7FF7' : '#246EFF',
-          };
-        }),
-        ...(renderBarData.value?.[0]?.slice(1) || []).map((item: string) => {
-          return {
-            name: item,
-            // stack: 'one', // 设置为一样的（任意）值堆表示堆叠
-            type: 'bar', // 'line'
-            datasetsIndex: 0, // 重要
-            // smooth: true,
-            // 系列被安放到 dataset 的列上面
-            // 默认是 column
-            seriesLayoutBy: 'column',
-            emphasis: { focus: 'series' },
-            barWidth: 16,
-            // color: isDark ? '#4A7FF7' : '#246EFF',
-          };
-        }),
+        ...(renderLineData.value?.[0] || [])
+          .filter((itx: string) => itx !== 'datetime')
+          .map((item: string) => {
+            return {
+              name: item,
+              type: 'line',
+              datasetIndex: 1, // 重要
+              // smooth: true,
+              // 系列被安放到 dataset 的列上面
+              // 默认是 column
+              seriesLayoutBy: 'column',
+              emphasis: { focus: 'series' },
+              barWidth: 16,
+              yAxisIndex: 1,
+              // color: isDark ? '#4A7FF7' : '#246EFF',
+            };
+          }),
+        ...(renderBarData.value?.[0] || [])
+          .filter((itx: string) => itx !== 'datetime')
+          .map((item: string) => {
+            return {
+              name: item,
+              // stack: 'one', // 设置为一样的（任意）值堆表示堆叠
+              type: 'bar', // 'line'
+              datasetsIndex: 0, // 重要
+              // smooth: true,
+              // 系列被安放到 dataset 的列上面
+              // 默认是 column
+              seriesLayoutBy: 'column',
+              yAxisIndex: 0,
+              emphasis: { focus: 'series' },
+              barWidth: 16,
+              // color: isDark ? '#4A7FF7' : '#246EFF',
+            };
+          }),
         {
           id: 'pie',
           type: 'pie',

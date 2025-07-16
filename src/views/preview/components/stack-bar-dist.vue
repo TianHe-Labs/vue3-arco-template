@@ -199,20 +199,36 @@
           color: isDark ? 'rgb(246, 246, 246)' : 'rgb(29, 33, 41)',
         },
       },
-      yAxis: {
-        type: 'value',
-        axisLabel: {
-          // formatter(value: number, idx: number) {
-          //   if (idx === 0) return value;
-          //   return formatNumberEnAbbr(value);
-          // },
-        },
-        splitLine: {
-          lineStyle: {
-            color: isDark ? 'rgb(72, 72, 73)' : 'rgb(229, 230, 235)',
+      yAxis: [
+        // 柱图和线图y轴值域范围可能不一样
+        // 以防万一，分开设置
+        // bar
+        {
+          show: true,
+          type: 'value',
+          axisLabel: {
+            show: false,
+          },
+          splitLine: {
+            show: true,
+            lineStyle: {
+              type: 'dashed',
+              color: isDark ? 'rgb(72, 72, 73)' : 'rgb(229, 230, 235)',
+            },
           },
         },
-      },
+        // line
+        {
+          show: true,
+          type: 'value',
+          axisLabel: {
+            show: false,
+          },
+          splitLine: {
+            show: false,
+          },
+        },
+      ],
       tooltip: {
         show: true,
         trigger: 'axis',
@@ -244,6 +260,7 @@
                 y: item,
                 tooltip: item,
               },
+              yAxisIndex: 1,
               emphasis: { focus: 'series' },
               // color: isDark ? '#4A7FF7' : '#246EFF',
             };
@@ -266,6 +283,7 @@
                 y: item,
                 tooltip: item,
               },
+              yAxisIndex: 0,
               emphasis: { focus: 'series' },
               // barWidth: 16,
               // color: isDark ? '#4A7FF7' : '#246EFF',
