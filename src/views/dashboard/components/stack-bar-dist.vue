@@ -255,9 +255,14 @@
               // 系列被安放到 dataset 的列上面
               // 默认是 column
               seriesLayoutBy: 'column',
+              encode: {
+                // 重要
+                x: 'datetime', // 指定 datetime 映射为 x 轴
+                y: item,
+              },
+              yAxisIndex: 1,
               emphasis: { focus: 'series' },
               barWidth: 16,
-              yAxisIndex: 1,
               // color: isDark ? '#4A7FF7' : '#246EFF',
             };
           }),
@@ -273,6 +278,11 @@
               // 系列被安放到 dataset 的列上面
               // 默认是 column
               seriesLayoutBy: 'column',
+              encode: {
+                // 重要
+                x: 'datetime', // 指定 datetime 映射为 x 轴
+                y: item,
+              },
               yAxisIndex: 0,
               emphasis: { focus: 'series' },
               barWidth: 16,
@@ -282,10 +292,16 @@
         {
           id: 'pie',
           type: 'pie',
+          datasetsIndex: 0, // 重要
           // 系列被安放到 dataset 的行上面
           // 绘制某一datetime时各项数据占比
           seriesLayoutBy: 'row',
-          datasetsIndex: 0, // 重要
+          encode: {
+            // 必须得有，不然数据项 name 为空
+            // 关联 formatter 中的 {b}
+            itemName: 'datetime',
+            value: currentFocusDataIndex.value,
+          },
           left: 'left',
           right: '70%',
           width: '30%',
@@ -325,18 +341,14 @@
               ((chartRef.value?.getWidth() as number) * 0.3) / 2;
             const points = params.labelLinePoints;
             // Update the end point.
-            points[2][0] = isLeft
-              ? params.labelRect.x
-              : params.labelRect.x + params.labelRect.width;
+            if (points && points.length > 2) {
+              points[2][0] = isLeft
+                ? params.labelRect.x
+                : params.labelRect.x + params.labelRect.width;
+            }
             return {
               labelLinePoints: points,
             };
-          },
-          encode: {
-            // 必须得有，不然数据项 name 为空
-            // 关联 formatter 中的 {b}
-            itemName: 'datetime',
-            value: currentFocusDataIndex.value,
           },
         },
       ] as any[],

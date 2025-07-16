@@ -145,7 +145,6 @@
           color: isDark ? 'rgb(246, 246, 246)' : 'rgb(29, 33, 41)',
         },
       },
-
       // https://echarts.apache.org/zh/option.html#dataset
       dataset: [
         {
@@ -258,7 +257,6 @@
                 // 重要
                 x: 'datetime', // 指定 datetime 映射为 x 轴
                 y: item,
-                tooltip: item,
               },
               yAxisIndex: 1,
               emphasis: { focus: 'series' },
@@ -281,7 +279,6 @@
                 // 重要
                 x: 'datetime', // 指定 datetime 映射为 x 轴
                 y: item,
-                tooltip: item,
               },
               yAxisIndex: 0,
               emphasis: { focus: 'series' },
@@ -299,7 +296,7 @@
           encode: {
             // 必须得有，不然数据项 name 为空
             // 关联 formatter 中的 {b}
-            itemName: 0, // 第一行 表头信息
+            itemName: 'datetime', // 第一行 表头信息
             value: currentFocusDataIndex.value,
           },
           left: 'left',
