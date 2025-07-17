@@ -52,12 +52,6 @@
   const { chartOption } = useChartOption((isDark) => {
     registerMap('world', worldJson as any);
     return {
-      grid: {
-        left: '35%',
-        right: 12,
-        top: 24,
-        bottom: 24,
-      },
       legend: {
         top: 'top',
         left: 'left',
@@ -92,7 +86,6 @@
       series: [
         {
           name: 'map',
-          stack: 'one',
           type: 'map',
           map: 'world',
           colorBy: 'data',
