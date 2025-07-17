@@ -53,6 +53,7 @@
     registerMap('world', worldJson as any);
     return {
       legend: {
+        show: false,
         top: 'top',
         left: 'left',
         padding: [16, 0],
@@ -83,6 +84,32 @@
         className: 'echarts-tooltip-diy',
       },
       color: ['#246EFF', '#00B2FF', '#0E42D2', '#81E2FF'],
+
+      visualMap: [
+        {
+          show: true,
+          type: 'continuous',
+          min: 0,
+          max: Math.max(...renderData.value.map((item) => item.value)),
+        },
+      ],
+      // 如果需要在地图上绘制叠加其他图形
+      // 通过 geo 绘图地图设置为 地图 取代坐标系
+      // geo: {
+      //   show: true,
+      //   map: 'world',
+      //   roam: true,
+      //   nameMap: names, // 国家中英文映射关系，此处需要适配国际化问题
+      //   top: 0,
+      //   bottom: 0,
+      //   // 特定区域样式
+      //   regions: [],
+      //   label: {
+      //     emphasis: {
+      //       show: false,
+      //     },
+      //   },
+      // },
       series: [
         {
           name: 'map',
