@@ -113,6 +113,9 @@
       series: [
         {
           name: 'map',
+          // geo 和 map 同时使用，会出现两个图层
+          // 所以需要将 map 的图层设置为 geo 的图层
+          // geoIndex: 0,
           type: 'map',
           map: 'world',
           colorBy: 'data',
