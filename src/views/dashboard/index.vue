@@ -6,7 +6,7 @@
 <template>
   <div class="h-full flex flex-col p-4 gap-4">
     <Breadcrumb :items="['menu.dashboard']" />
-    <StackBarDist class="xl:col-span-3 col-span-1" />
+    <StackBarDist />
     <GeoDist />
   </div>
 </template>

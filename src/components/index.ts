@@ -1,8 +1,16 @@
 import { App } from 'vue';
 import { use } from 'echarts/core';
 import { CanvasRenderer } from 'echarts/renderers';
-import { BarChart, LineChart, PieChart, RadarChart } from 'echarts/charts';
 import {
+  BarChart,
+  LineChart,
+  PieChart,
+  RadarChart,
+  MapChart,
+} from 'echarts/charts';
+import {
+  GeoComponent,
+  VisualMapComponent,
   GridComponent,
   TooltipComponent,
   LegendComponent,
@@ -23,6 +31,9 @@ use([
   LineChart,
   PieChart,
   RadarChart,
+  MapChart,
+  GeoComponent,
+  VisualMapComponent,
   GridComponent,
   TooltipComponent,
   LegendComponent,

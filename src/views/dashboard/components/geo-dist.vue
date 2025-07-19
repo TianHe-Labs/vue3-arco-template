@@ -1,8 +1,7 @@
 <script lang="ts" setup>
-  import { computed, reactive, ref } from 'vue';
+  import { reactive, ref } from 'vue';
   import { Message } from '@arco-design/web-vue';
   import { ECharts, registerMap } from 'echarts';
-  import { isEmpty, mapValues, mergeWith, omit } from 'lodash';
   import useLoading from '@/composables/loading';
   import { ToolTipFormatterParams } from '@/global.d';
   import useChartOption from '@/composables/chart-option';
@@ -13,6 +12,7 @@
   } from '@/api/dashboard';
   import worldJson from '@/assets/geo/world.json';
   import names from '@/assets/geo/names.json';
+  import { sortBy } from 'lodash';
 
   const { loading, setLoading } = useLoading(true);
 
@@ -32,8 +32,8 @@
     try {
       const { data } = await queryXxxxGeoDist(queryModel);
       currentFocusDataIndex.value = data.list?.length - 1 || 0;
-      renderData.value = data.list || [];
-      console.log('geo dist', renderData.value);
+      // 按照 value 排个序，饼图层级更清晰
+      renderData.value = sortBy(data.list || [], 'value');
     } catch (err: any) {
       Message.error(err?.message);
     } finally {
@@ -84,40 +84,61 @@
         className: 'echarts-tooltip-diy',
       },
       color: ['#246EFF', '#00B2FF', '#0E42D2', '#81E2FF'],
-
       visualMap: [
         {
           show: true,
           type: 'continuous',
           min: 0,
-          max: Math.max(...renderData.value.map((item) => item.value)),
+          max: Math.max(
+            ...(renderData.value || []).map((item) => item.value),
+            0,
+          ),
         },
       ],
       // 如果需要在地图上绘制叠加其他图形
       // 通过 geo 绘图地图设置为 地图 取代坐标系
-      // geo: {
-      //   show: true,
-      //   map: 'world',
-      //   roam: true,
-      //   nameMap: names, // 国家中英文映射关系，此处需要适配国际化问题
-      //   top: 0,
-      //   bottom: 0,
-      //   // 特定区域样式
-      //   regions: [],
-      //   label: {
-      //     emphasis: {
-      //       show: false,
-      //     },
-      //   },
-      // },
+      geo: [
+        {
+          show: true,
+          map: 'world',
+          roam: false,
+          // nameMap: names, // 国家中英文映射关系，此处需要适配国际化问题
+          top: 0,
+          bottom: 0,
+          left: 0,
+          // 特定区域样式
+          regions: [],
+          label: {},
+          z: 1,
+        },
+      ],
       series: [
         {
-          name: 'map',
+          name: 'geoDist',
           // geo 和 map 同时使用，会出现两个图层
           // 所以需要将 map 的图层设置为 geo 的图层
-          // geoIndex: 0,
+          geoIndex: 0,
           type: 'map',
           map: 'world',
+          colorBy: 'data',
+          select: {
+            label: {
+              show: true,
+            },
+            itemStyle: {},
+          },
+          // color: isDark ? '#3D72F6' : '#246EFF',
+          // nameMap: names, // 国家中英文映射关系，此处需要适配国际化问题
+          data: renderData.value,
+          z: 9,
+        },
+        // 饼图联动，更直观的比例
+        {
+          // 轨迹分布 颜色地图 分布
+          name: 'pieDist',
+          type: 'pie',
+          left: '60%',
+          radius: ['0%', '50%'],
           colorBy: 'data',
           emphasis: {
             focus: 'self',
@@ -129,10 +150,34 @@
             itemStyle: {},
           },
           // color: isDark ? '#3D72F6' : '#246EFF',
-          // nameMap: names, // 国家中英文映射关系，此处需要适配国际化问题
+          nameMap: names, // 国家中英文映射关系，此处需要适配国际化问题
           data: renderData.value,
+          label: {
+            alignTo: 'edge',
+            formatter: `{name|{b}}：{ratio|{d}%}`,
+            minMargin: 5,
+            edgeDistance: 10,
+            lineHeight: 18,
+            rich: {
+              name: {
+                fontSize: 12,
+                color: isDark ? 'rgb(246, 246, 246)' : 'rgb(29, 33, 41)',
+              },
+              ratio: {
+                fontSize: 10,
+                color: isDark ? 'rgb(197, 197, 197)' : 'rgb(78, 89, 105)',
+              },
+            },
+          },
+          // 标签引导线调整
+          // https://echarts.apache.org/examples/zh/editor.html?c=pie-labelLine-adjust
+          labelLine: {
+            length: 15,
+            length2: 0,
+            maxSurfaceAngle: 80,
+          },
         },
-      ] as any,
+      ] as any[],
     };
   });
 </script>
@@ -164,7 +209,12 @@
           </template>
         </a-select>
       </template>
-      <Chart ref="chartRef" style="height: 350px" :option="chartOption" />
+      <Chart
+        ref="chartRef"
+        autoresize
+        :option="chartOption"
+        style="height: 350px"
+      />
     </a-card>
   </a-spin>
 </template>

@@ -98,7 +98,6 @@
 
   // 工具函数
   const tooltipItemsHtmlString = (items: ToolTipFormatterParams[]) => {
-    console.log('items', items);
     return items
       .map((el) => {
         // 找到数据在value数组中的位置
