@@ -12,6 +12,9 @@ dependencies:
   '@arco-design/web-vue':
     specifier: 2.57.0
     version: 2.57.0(vue@3.5.11)
+  '@fingerprintjs/fingerprintjs':
+    specifier: ^4.6.2
+    version: 4.6.2
   '@vueuse/core':
     specifier: 12.8.2
     version: 12.8.2(typescript@5.5.4)
@@ -1026,6 +1029,12 @@ packages:
       '@eslint/core': 0.13.0
       levn: 0.4.1
     dev: true
+
+  /@fingerprintjs/fingerprintjs@4.6.2:
+    resolution: {integrity: sha512-g8mXuqcFKbgH2CZKwPfVtsUJDHyvcgIABQI7Y0tzWEFXpGxJaXuAuzlifT2oTakjDBLTK4Gaa9/5PERDhqUjtw==}
+    dependencies:
+      tslib: 2.8.1
+    dev: false
 
   /@humanfs/core@0.19.1:
     resolution: {integrity: sha512-5DyQ4+1JEUzejeK1JGICcideyfUbGixgS9jNgex5nqkW+cY7WZhxBigmieN5Qnw9ZosSNVC9KQKyb+GUaGyKUA==}
@@ -9509,7 +9518,6 @@ packages:
 
   /tslib@2.8.1:
     resolution: {integrity: sha512-oJFu94HQb+KVduSUQL7wnpmqnfmLsOA/nAh6b6EH0wCEoK0/mPeXU6c3wKDV83MkOuHPRHtSXKKU99IBazS/2w==}
-    dev: true
 
   /tunnel-agent@0.6.0:
     resolution: {integrity: sha512-McnNiV1l8RYeY8tBgEpuodCC1mLUdbSN+CYBL7kJsJNInOP8UjDDEwdk6Mw60vdLLrr5NHKZhMAOSrR2NZuQ+w==}

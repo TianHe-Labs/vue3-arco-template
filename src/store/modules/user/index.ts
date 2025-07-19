@@ -9,6 +9,7 @@ import { camelCase, mapKeys } from 'lodash';
 import { USERROLE, UserState } from './types.d';
 
 const useUserStore = defineStore('user', {
+  // 根据具体业务场景，可以扩展字段
   state: (): UserState => ({
     id: '',
     username: '',
@@ -17,10 +18,10 @@ const useUserStore = defineStore('user', {
     role: undefined,
     // roles: [],
 
+    status: '',
+
     email: 'admin@example.cn',
     phone: '17000000000',
-    sector: '网络部',
-    status: '',
 
     accessToken: '',
     refreshToken: '',

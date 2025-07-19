@@ -3,7 +3,7 @@ import { DEFAULT_LAYOUT } from '../base';
 export default {
   path: '/account',
   name: 'Account',
-  redirect: '/account',
+  redirect: '/account/setting',
   component: DEFAULT_LAYOUT,
   meta: {
     locale: 'menu.account',
@@ -13,15 +13,23 @@ export default {
   },
   children: [
     {
-      path: '',
-      name: 'AccountIndex',
-      component: () => import('@/views/account/index.vue'),
+      path: 'setting',
+      name: 'AccountSetting',
+      component: () => import('@/views/account/setting/index.vue'),
       meta: {
-        locale: 'menu.account.index',
+        locale: 'menu.account.setting',
         requiresAuth: true,
         roles: ['*'],
-        activeMenu: 'Account',
-        hideInMenu: true,
+      },
+    },
+    {
+      path: 'info',
+      name: 'AccountInfo',
+      component: () => import('@/views/account/info/index.vue'),
+      meta: {
+        locale: 'menu.account.info',
+        requiresAuth: true,
+        roles: ['*'],
       },
     },
   ],

@@ -7,6 +7,7 @@ import { Message } from '@arco-design/web-vue';
 import i18n from '@/locale';
 import { useUserStore } from '@/store';
 import useLogout from '@/composables/logout';
+import { isNumber } from 'lodash';
 
 // 请求队列管理器
 class RequestQueue {
@@ -53,6 +54,9 @@ if (import.meta.env.VITE_API_BASE) {
 // add request interceptors(Authorization)
 axios.interceptors.request.use(
   (config: InternalAxiosRequestConfig) => {
+    // 设置 session-fp
+    config.headers['session-fp'] = sessionStorage.getItem('__th_ss_fp__') || '';
+
     // 如果发起请求时已经传入，则不再处理
     // 例如 updateUserToken with refreshToken
     if (config.headers?.Authorization) {
@@ -96,6 +100,10 @@ axios.interceptors.response.use(
     const respData = error.response?.data;
     // 错误消息可以用 message 或者 msg 字段 { message: '' } { msg: '' }
     const message = respData?.message || respData?.msg;
+
+    if (!isNumber(status)) {
+      return Promise.reject(error);
+    }
 
     if (status === 401) {
       Message.error({

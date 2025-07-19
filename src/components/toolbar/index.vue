@@ -110,7 +110,7 @@
         </div>
         <a-divider :margin="8" />
         <a-doption>
-          <a-space @click="router.push({ name: 'Account' })">
+          <a-space @click="router.push({ name: 'AccountSetting' })">
             <icon-user />
             <span>{{ $t('menu.account') }}</span>
           </a-space>
@@ -133,7 +133,7 @@
         class="nav-btn justify-start !px-3"
         @click="
           () => {
-            router.push({ name: 'Account' });
+            router.push({ name: 'AccountSetting' });
             toggleDrawerMenu();
           }
         "

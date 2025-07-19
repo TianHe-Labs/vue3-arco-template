@@ -91,15 +91,49 @@ setupMock({
       ];
       return successResponseWrap(menuList);
     });
+
     // 更新信息
     Mock.mock(new RegExp('/api/user/info/update'), (req: MockRequest) => {
       const { username } = JSON.parse(req.body as string);
       return successResponseWrap({ username });
     });
+
+    // 更新头像
+    Mock.mock(new RegExp('/api/user/avatar/update'), () => {
+      console.log('update avatar');
+      return successResponseWrap(Mock.mock({ avatar: '@image(200x200)' }));
+    });
+
     // 更新密码
-    Mock.mock(new RegExp('/api/user/passwd/update'), (req: MockRequest) => {
-      const { username } = JSON.parse(req.body as string);
-      return successResponseWrap({ username });
+    Mock.mock(new RegExp('/api/user/password/update'), () => {
+      return successResponseWrap({});
+    });
+
+    // 获取登录日志
+    Mock.mock(new RegExp('/api/user/log/login'), () => {
+      return successResponseWrap({
+        list: Mock.mock({
+          'list|20': [
+            {
+              id: '@id()',
+              userId: '15012312300',
+              result: '@pick(["success", "failure", "fault"])',
+              bioResult: '@pick(["success", "failure", "fault"])',
+              bioConfidence: '@natural(0, 100)',
+              mfaResult: '@pick(["success", "failure", "fault"])',
+              statusCode: '@pick([200, 401, 403, 404, 500])',
+              errorMessage:
+                '@pick(["用户名或密码错误", "用户名不存在", "密码错误", "用户被锁定", "用户被禁用"])',
+              sourceAgent: '@pick(["web", "app", "api"])',
+              sourceIp: '@ip',
+              sourceFp:
+                '@pick(["abcdefghijklmnopqrstuvwxyzsasasasase312321ewqdwqdwqwepca", "abcdefghijklmnopqrstxxasdsdwqdwqdwdfwfcwuvwxyz"])',
+              datetime: '@datetime("yyyy-MM-dd HH:mm:ss")',
+            },
+          ],
+        }).list,
+        total: Mock.Random.integer(100, 400),
+      });
     });
   },
 });

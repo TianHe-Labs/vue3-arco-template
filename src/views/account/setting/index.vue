@@ -6,13 +6,13 @@
 
 <script lang="ts">
   export default {
-    name: 'Account',
+    name: 'AccountSetting',
   };
 </script>
 
 <template>
   <div class="h-full flex flex-col gap-4 p-4">
-    <Breadcrumb :items="['menu.account.index']" />
+    <Breadcrumb :items="['menu.account', 'menu.account.setting']" />
 
     <Banner />
 
@@ -27,7 +27,7 @@
           <BasicInfo />
         </a-tab-pane>
 
-        <a-tab-pane key="password" title="密码管理">
+        <a-tab-pane key="password" title="密码设置">
           <Password />
         </a-tab-pane>
       </a-tabs>

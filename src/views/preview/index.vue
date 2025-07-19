@@ -183,7 +183,7 @@
         </template>
       </DynamicTag>
 
-      <div> 当前时间：{{ dayjs().format('YYYY-MM-DD HH:mm:ss') }} </div>
+      <div> 当前时间：{{ dayjs().format('L LTS') }} </div>
 
       <div>
         事件格式化 dayjs()： 2000-04-18 12:00:00 距今

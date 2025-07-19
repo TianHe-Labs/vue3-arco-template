@@ -5,6 +5,8 @@ export enum USERROLE {
   COMMON = 'common',
 }
 
+// 用户信息
+// 根据具体业务场景，可以扩展字段
 export interface UserState {
   id?: string;
   username?: string;
@@ -15,12 +17,12 @@ export interface UserState {
   role?: USERROLE;
   // roles?: USERROLE[]; // 多角色，应该复杂场景，暂时未使用
 
+  avatar?: string;
+
+  status?: string;
+
   email?: string;
   phone?: string;
-
-  sector?: string;
-  status?: string;
-  avatar?: string;
 
   accessToken?: string;
   refreshToken?: string;

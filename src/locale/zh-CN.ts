@@ -18,8 +18,9 @@ export default {
   'menu.user': '用户管理',
   'menu.user.list': '用户列表',
   // 账号中心
-  'menu.account': '账号中心',
-  'menu.account.index': '账号中心',
+  'menu.account': '个人中心',
+  'menu.account.setting': '账号设置',
+  'menu.account.info': '账号信息',
   // 预览
   'menu.preview': '组件预览',
   'menu.preview.index': '组件预览',

@@ -177,7 +177,7 @@
           {{ dayjs(record.createdAt).fromNow() }}
         </div>
         <div class="text-text-2 text-sm">
-          {{ dayjs(record.createdAt).format('YYYY-MM-DD HH:mm:ss') }}
+          {{ dayjs(record.createdAt).format('L LTS') }}
         </div>
       </template>
       <!-- 操作 -->

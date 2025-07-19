@@ -1,5 +1,6 @@
 <script lang="ts" setup>
   import { computed, reactive, ref } from 'vue';
+  import { useI18n } from 'vue-i18n';
   import useLoading from '@/composables/loading';
   import { ToolTipFormatterParams } from '@/global.d';
   import useChartOption from '@/composables/chart-option';
@@ -11,6 +12,8 @@
   import { Message } from '@arco-design/web-vue';
   import { ECharts } from 'echarts';
   import { omit, pick, sortBy } from 'lodash';
+
+  const { t } = useI18n();
 
   const { loading, setLoading } = useLoading(true);
 
@@ -53,26 +56,43 @@
 
   // 绘图数据
   const renderBarData = computed(() => {
-    return renderData.value.reduce((acc, cur, idx) => {
-      if (idx === 0) {
-        // 第一行是维度
-        acc.push(Object.keys(omit(cur, 'score')));
-      }
-      // 剥离 score 字段
-      acc.push(Object.values(omit(cur, 'score')));
-      return acc;
-    }, [] as any[]);
+    const dimensions = [
+      'datetime',
+      ...Object.keys(omit(renderData.value[0], ['datetime', 'score'])),
+    ];
+    return [
+      // 第一行是维度
+      // 须确保 datetime 在第一列
+      dimensions.map((item: string) =>
+        item === 'datetime' ? item : t(`types.${item}`),
+      ),
+      ...renderData.value.reduce((acc, cur) => {
+        // 剥离 score 字段
+        // 须确保 datetime 在第一列
+        acc.push(dimensions.map((item: string) => cur[item]));
+        return acc;
+      }, [] as any[]),
+    ];
   });
+
   const renderLineData = computed(() => {
-    return renderData.value.reduce((acc, cur, idx) => {
-      if (idx === 0) {
-        // 第一行是维度
-        acc.push(Object.keys(pick(cur, ['datetime', 'score'])));
-      }
-      // 剥离 score 字段
-      acc.push(Object.values(pick(cur, ['datetime', 'score'])));
-      return acc;
-    }, [] as any[]);
+    const dimensions = [
+      'datetime',
+      ...Object.keys(pick(renderData.value[0], ['score'])),
+    ];
+    return [
+      // 第一行是维度
+      // 须确保 datetime 在第一列
+      dimensions.map((item: string) =>
+        item === 'datetime' ? item : t(`types.${item}`),
+      ),
+      ...renderData.value.reduce((acc, cur) => {
+        // 剥离 score 字段
+        // 须确保 datetime 在第一列
+        acc.push(dimensions.map((item: string) => cur[item]));
+        return acc;
+      }, [] as any[]),
+    ];
   });
 
   // 聚焦时刻
@@ -140,12 +160,10 @@
         left: 'left',
         padding: [16, 0],
         itemGap: 15,
-        icon: 'circle',
         textStyle: {
           color: isDark ? 'rgb(246, 246, 246)' : 'rgb(29, 33, 41)',
         },
       },
-
       // https://echarts.apache.org/zh/option.html#dataset
       dataset: [
         {
@@ -156,6 +174,7 @@
           // 数据源
           // 绘制柱图
           source: renderBarData.value,
+          sourceHeader: true, // 是否将数据源中的第一行作为维度
         },
         {
           // 维度
@@ -182,6 +201,7 @@
         // },
       ],
       xAxis: {
+        show: true,
         type: 'category',
         axisLine: {
           lineStyle: {
@@ -196,6 +216,7 @@
           // },
         },
         axisLabel: {
+          alignMinLabel: 'left',
           color: isDark ? 'rgb(246, 246, 246)' : 'rgb(29, 33, 41)',
         },
       },
@@ -249,8 +270,8 @@
             return {
               name: item,
               type: 'line',
+              smooth: true,
               datasetIndex: 1, // 重要
-              // smooth: true,
               // 系列被安放到 dataset 的列上面
               // 默认是 column
               seriesLayoutBy: 'column',
@@ -258,10 +279,15 @@
                 // 重要
                 x: 'datetime', // 指定 datetime 映射为 x 轴
                 y: item,
+                tooltip: ['datetime', item],
               },
               yAxisIndex: 1,
-              emphasis: { focus: 'series' },
-              barWidth: 16,
+              emphasis: { focus: 'self' },
+              symbol: 'circle',
+              symbolSize: 8,
+              lineStyle: {
+                width: 3,
+              },
               // color: isDark ? '#4A7FF7' : '#246EFF',
             };
           }),
@@ -272,10 +298,10 @@
               name: item,
               // stack: 'one', // 设置为一样的（任意）值堆表示堆叠
               type: 'bar', // 'line'
-              datasetsIndex: 0, // 重要
-              // smooth: true,
+              smooth: true,
               // 系列被安放到 dataset 的列上面
               // 默认是 column
+              datasetIndex: 0, // 重要
               seriesLayoutBy: 'column',
               encode: {
                 // 重要
@@ -283,22 +309,22 @@
                 y: item,
               },
               yAxisIndex: 0,
-              emphasis: { focus: 'series' },
-              barWidth: 16,
+              emphasis: { focus: 'self' },
+              // barWidth: 16,
               // color: isDark ? '#4A7FF7' : '#246EFF',
             };
           }),
         {
           id: 'pie',
           type: 'pie',
-          datasetsIndex: 0, // 重要
           // 系列被安放到 dataset 的行上面
           // 绘制某一datetime时各项数据占比
+          datasetIndex: 0, // 重要
           seriesLayoutBy: 'row',
           encode: {
             // 必须得有，不然数据项 name 为空
             // 关联 formatter 中的 {b}
-            itemName: 'datetime',
+            itemName: 0, // 'datetime' 第 0 列 即为 datetime
             value: currentFocusDataIndex.value,
           },
           left: 'left',
@@ -388,10 +414,12 @@
           </template>
         </a-select>
       </template>
+
       <Chart
         ref="chartRef"
-        style="height: 350px"
+        autoresize
         :option="chartOption"
+        style="height: 350px"
         @updateAxisPointer="handleUpdateAxisPointer"
       />
     </a-card>

@@ -39,7 +39,7 @@
   const { t } = useI18n();
   const typeOptions = computed(() =>
     messageTypes.map((value) => ({
-      label: `${t(`message.type.${value}`)} (${renderStats.value?.[value] ?? 0})`,
+      label: `${t(`message.types.${value}`)} (${renderStats.value?.[value] ?? 0})`,
       value,
     })),
   );

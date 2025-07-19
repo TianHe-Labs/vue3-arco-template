@@ -213,7 +213,7 @@
         ref="chartRef"
         autoresize
         :option="chartOption"
-        style="height: 350px"
+        style="height: 500px"
       />
     </a-card>
   </a-spin>

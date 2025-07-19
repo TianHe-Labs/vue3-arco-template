@@ -13,7 +13,7 @@ setupMock({
           text: Mock.Random.natural(20, 100),
           audio: Mock.Random.natural(20, 100),
           video: Mock.Random.natural(20, 100),
-          datetime: `00:${String(index).padStart(2, '0')}:00`,
+          datetime: Mock.Random.datetime(),
         })),
       });
     });
