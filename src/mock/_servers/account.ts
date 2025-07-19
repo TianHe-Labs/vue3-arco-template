@@ -14,7 +14,7 @@ const users = [
     password: 'nslab321',
     role: USERROLE.ADMIN,
     // roles: [USERROLE.ADMIN, USERROLE.COMMON],
-    sector: '网络部',
+    org: '网络部',
     status: '专注中...',
     accessToken:
       'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Im5pc3QifQ.95aGaCg7ovpUWSpoZdCoam6Mvr-vE374VjMfthTpKPo',
@@ -53,12 +53,12 @@ setupMock({
       const foundItem = users[0];
 
       if (foundItem) {
-        const { username, nickname, role, sector, status } = foundItem;
+        const { username, nickname, role, org, status } = foundItem;
         return successResponseWrap({
           username,
           nickname,
           role,
-          sector,
+          org,
           status,
         });
       }

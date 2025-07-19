@@ -72,9 +72,9 @@
           />
         </a-form-item> -->
         <!-- 精确匹配 -->
-        <a-form-item field="sector" label="所属部门" :rules="[]">
+        <a-form-item field="org" label="所属部门" :rules="[]">
           <a-select
-            v-model="queryModel.sector"
+            v-model="queryModel.org"
             :options="['网络部', '事业部', '市场部']"
             allow-clear
             allow-create

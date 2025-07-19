@@ -57,7 +57,7 @@ const resetQueryModel = (keys?: string[]): QueryUserListReq => {
     phone: undefined,
     role: undefined,
     // roles: undefined,
-    sector: undefined,
+    org: undefined,
   };
 
   if (keys && keys.length) {

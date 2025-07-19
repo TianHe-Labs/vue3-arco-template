@@ -21,6 +21,8 @@ export interface UserState {
 
   status?: string;
 
+  org?: string;
+
   email?: string;
   phone?: string;
 

@@ -61,8 +61,8 @@
     // },
     {
       title: '所属部门',
-      dataIndex: 'sector',
-      slotName: 'sector',
+      dataIndex: 'org',
+      slotName: 'org',
       headerCellClass: 'whitespace-nowrap',
     },
     {

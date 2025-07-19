@@ -15,7 +15,7 @@ const users = [
     email: 'ex@172.com',
     phone: '19023232243',
 
-    sector: '网络部',
+    org: '网络部',
     status: '专注中',
     avatar: '',
     createdAt: '2023-01-10 12:10:00',
@@ -30,7 +30,7 @@ const users = [
     email: 'th354@173.com',
     phone: '13032322436',
 
-    sector: '事业部',
+    org: '事业部',
     status: '上班中',
     avatar: '',
     createdAt: '2023-01-10 12:10:00',

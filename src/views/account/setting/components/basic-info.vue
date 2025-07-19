@@ -19,7 +19,7 @@
     nickname: userStore.nickname,
     phone: userStore.phone,
     email: userStore.email,
-    sector: userStore.sector,
+    org: userStore.org,
     status: userStore.status,
   });
 
@@ -142,9 +142,9 @@
       />
     </a-form-item>
     <!-- 部门 -->
-    <a-form-item field="sector" label="所属部门">
+    <a-form-item field="org" label="所属部门">
       <a-input
-        v-model="basicInfoModel.sector"
+        v-model="basicInfoModel.org"
         allow-clear
         placeholder="输入所属部门"
       />
