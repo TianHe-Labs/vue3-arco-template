@@ -139,14 +139,14 @@
         {{ userStore.nickname }}
       </a-descriptions-item>
 
-      <a-descriptions-item label="用户角色">
+      <a-descriptions-item label="角色权限">
         <a-tag bordered :color="$t(`user.role.color.${userStore.role}`)">
           {{ $t(`user.role.text.${userStore.role}`) }}</a-tag
         >
       </a-descriptions-item>
 
       <!-- 如果是roles -->
-      <!-- <a-descriptions-item label="用户角色">
+      <!-- <a-descriptions-item label="角色权限">
         <div class="flex flex-wrap gap-2">
           <a-tag
             v-for="role in userStore.roles"
@@ -159,7 +159,7 @@
         </div>
       </a-descriptions-item> -->
 
-      <a-descriptions-item label="用户状态">
+      <a-descriptions-item label="账号状态">
         <a-tag
           :color="$t(`user.status.color.${userStore.status?.toLowerCase()}`)"
         >
