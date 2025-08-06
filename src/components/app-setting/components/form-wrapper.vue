@@ -2,7 +2,8 @@
   interface Props {
     type: string;
     name: string;
-    defaultValue: number | boolean;
+    defaultValue: number | boolean | string;
+    options?: any[];
   }
 
   interface Emits {
@@ -32,4 +33,22 @@
     size="small"
     @change="handleChange"
   />
+  <template v-else-if="type === 'radio'">
+    <a-radio-group
+      v-if="name === 'themeStyle'"
+      type="button"
+      :options="options"
+      :default-value="defaultValue as string"
+      size="small"
+      @change="handleChange"
+    />
+    <a-radio-group
+      v-else
+      type="button"
+      :options="options"
+      :default-value="defaultValue as string"
+      size="small"
+      @change="handleChange"
+    />
+  </template>
 </template>

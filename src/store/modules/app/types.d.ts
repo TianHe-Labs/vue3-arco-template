@@ -4,7 +4,7 @@ export interface AppState {
   appSettingEnabled: boolean;
   theme: string;
   colorWeak: boolean;
-  themeColor: string;
+  themeStyle: string;
   navbar: boolean;
   menu: boolean;
   topMenu: boolean;

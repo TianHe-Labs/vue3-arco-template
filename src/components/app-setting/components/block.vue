@@ -4,12 +4,13 @@
     <div
       v-for="option in options"
       :key="option.name"
-      class="flex justify-between items-center my-3"
+      class="flex flex-wrap justify-between items-center gap-y-1 my-3"
     >
-      <span>{{ option.label }}</span>
+      <span class="whitespace-nowrap">{{ option.label }}</span>
       <form-wrapper
         :type="option?.type || 'boolean'"
         :name="option.name"
+        :options="option.options"
         :default-value="option.defaultValue"
         @change="handleChange"
       />
@@ -25,7 +26,8 @@
     name: string;
     label: string;
     type?: string;
-    defaultValue: boolean | number;
+    options?: any[];
+    defaultValue: boolean | number | string;
   }
 
   interface Props {

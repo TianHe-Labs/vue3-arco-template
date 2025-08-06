@@ -82,6 +82,17 @@
       label: '色弱模式',
       defaultValue: appStore.colorWeak,
     },
+    // {
+    //   name: 'themeStyle',
+    //   label: '主题风格',
+    //   type: 'radio',
+    //   options: [
+    //     { label: '默认', value: '#165DFF' },
+    //     { label: '灰色', value: '#86909C' },
+    //     { label: '绿色', value: '#00B42A' },
+    //   ],
+    //   defaultValue: appStore.themeStyle,
+    // },
   ]);
   const moduleOptions = computed(() => [
     {
