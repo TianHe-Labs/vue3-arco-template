@@ -1,8 +1,10 @@
 <script lang="ts" setup>
-  import { useI18n } from 'vue-i18n';
-  import { enum2Arr } from '@/utils/transform';
-  import { USERROLE, USERSTATUS } from '@/api/user';
+  import { useEnumOptions } from '@/composables/enum-option';
   import { useSearchUser } from '../composables/search';
+  import { ref, shallowRef } from 'vue';
+  import { OrgModel, queryOrgList } from '@/api/org';
+  import useLoading from '@/composables/loading';
+  import { SelectOption } from '@arco-design/web-vue';
 
   const {
     queryFormRef,
@@ -31,21 +33,18 @@
     },
   ];
 
-  const { t } = useI18n();
-  // 角色选项
-  const roleOptions = enum2Arr(USERROLE).map((value) => ({
-    label: t(`user.role.text.${value}`),
-    value,
-  }));
-  // 状态选项
-  const statusOptions = enum2Arr(USERSTATUS).map((value) => ({
-    label: t(`user.status.text.${value.toLowerCase()}`),
-    value,
-  }));
+  // 枚举选项
+  const {
+    loading,
+    roleOptions,
+    statusOptions,
+    orgOptions,
+    handleLoadOrgOptions,
+  } = useEnumOptions();
 </script>
 
 <template>
-  <a-card :bordered="false" :body-style="{ paddingTop: '20px' }">
+  <a-card>
     <a-form ref="queryFormRef" :model="queryModel" auto-label-width>
       <div class="grid lg:grid-cols-2 xl:grid-cols-3 gap-x-4">
         <!-- 精确匹配 -->
@@ -62,11 +61,20 @@
         <a-form-item field="org" label="所属部门" :rules="[]">
           <a-select
             v-model="queryModel.orgId"
-            :options="[]"
+            :options="orgOptions"
+            :loading="loading"
             allow-clear
             allow-search
             placeholder="选择所属部门"
+            @popup-visible-change="
+              (visible: boolean) => visible && handleLoadOrgOptions()
+            "
+            @input-value-change="handleLoadOrgOptions"
+            @search="handleLoadOrgOptions"
           />
+          <!-- 打开时加载部门选项 -->
+          <!-- 输入值改变时加载部门选项 -->
+          <!-- 搜索时加载部门选项 -->
         </a-form-item>
         <!-- 精确匹配 -->
         <a-form-item field="role" label="角色权限" :rules="[]">

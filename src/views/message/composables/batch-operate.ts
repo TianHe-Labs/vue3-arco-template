@@ -92,8 +92,8 @@ export function provideBatchOperateMessage() {
     // 弹窗确认
     Modal.confirm({
       title: '警告',
-      content: '确定要删除消息？',
       titleAlign: 'start',
+      content: '确定要删除消息？',
       onOk: async () => {
         try {
           const { data } = await deleteMessage({ ids });

@@ -69,6 +69,7 @@
 <script lang="ts" setup>
   import { ref, computed, provide, onMounted, inject } from 'vue';
   import { useAppStore } from '@/store';
+  import { provideEnumOptions } from '@/composables/enum-option';
   import NavBar from '@/components/navbar/index.vue';
   import Menu from '@/components/menu/index.vue';
   import Toolbar from '@/components/toolbar/index.vue';
@@ -79,6 +80,10 @@
   import PageLayout from './page-layout.vue';
   import MobileEntry from '@/components/mobile-entry/index.vue';
   import FeedbackPanel from '@/components/feedback-panel/index.vue';
+
+  // 枚举选项
+  provideEnumOptions();
+
   // 消息
   provideSearchMessage();
 

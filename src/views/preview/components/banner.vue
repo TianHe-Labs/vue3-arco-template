@@ -1,5 +1,5 @@
 <template>
-  <a-card :bordered="false" class="w-full rounded">
+  <a-card>
     <a-typography-text bold class="text-2xl">
       {{ userStore.username }}
     </a-typography-text>

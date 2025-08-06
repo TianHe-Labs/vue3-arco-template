@@ -11,6 +11,7 @@
     UserLoginLogModel,
     queryUserLoginLog,
   } from '@/api/account';
+  import { useEnumOptions } from '@/composables/enum-option';
 
   const route = useRoute();
   const router = useRouter();
@@ -119,18 +120,13 @@
     },
   ];
 
-  const rangeShortcuts = [7, 15, 30, 90, 180, 360].map((day: number) => ({
-    label: t('dateRange.shortcuts', [day]),
-    value: () => [dayjs().toDate(), dayjs().subtract(day, 'day').toDate()],
-  }));
+  const { rangeShortcuts } = useEnumOptions();
 </script>
 
 <template>
   <a-card
     title="登录日志"
-    :bordered="false"
     :header-style="{
-      height: 'auto',
       padding: '16px 16px 0',
       borderBottom: 'none',
     }"

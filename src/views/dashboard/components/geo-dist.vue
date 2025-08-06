@@ -189,10 +189,9 @@
   <!-- 堆叠柱图/曲线/面积图分布示例 -->
   <a-card
     title="Xxxx分布"
-    :bordered="false"
-    :header-style="{ borderBottom: 'none', paddingBottom: 0 }"
+    :loading="loading"
+    :header-style="{ padding: '16px 16px 0', borderBottom: 'none' }"
     :body-style="{ paddingTop: 0 }"
-    class="rounded"
   >
     <template #extra>
       <!-- 时间 -->
@@ -211,6 +210,7 @@
         </template>
       </a-select>
     </template>
+
     <Chart
       ref="chartRef"
       autoresize

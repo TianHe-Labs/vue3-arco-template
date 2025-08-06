@@ -50,6 +50,7 @@ export default {
           Modal.open({
             title: '系统更新',
             width: 720,
+            titleAlign: 'start',
             footer: false,
             modalClass: 'no-border',
             content: () => h(Typography, { innerHTML: parsedData }),

@@ -14,12 +14,12 @@ setupMock({
         total: Mock.Random.integer(100, 500),
         list: new Array(ps).fill(0).map((_, index) =>
           Mock.mock({
-            id: '@id',
+            id: '@guid',
             orgName: '@cword(3, 6)',
             orgDescription: '@cword(10, 20)',
             parentOrgId: '@id',
             parentOrg: Mock.mock({
-              id: '@id',
+              id: '@guid',
               orgName: '@cword(3, 6)',
             }),
             createdAt: '@datetime',

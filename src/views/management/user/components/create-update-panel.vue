@@ -3,9 +3,9 @@
   import { USERROLE } from '@/api/user';
   import { enum2Arr } from '@/utils/transform';
   import { isPhone } from '@/utils/is';
+  import { useEnumOptions } from '@/composables/enum-option';
   import { useCreateUpdateUser } from '../composables/create-update';
   import { useSearchUser } from '../composables/search';
-  import { SelectOption } from '@arco-design/web-vue';
 
   // 创建（单个）/更新时，前端更新数据，不再请求接口
   const { onUpdateRenderData } = useSearchUser();
@@ -21,12 +21,8 @@
   // 非业务逻辑，仅页面显示
   const { t } = useI18n();
 
-  const roleOptions: SelectOption[] = enum2Arr(USERROLE).map((value) => ({
-    label: t(`user.role.text.${value}`),
-    value,
-  }));
-
-  const orgOptions: SelectOption[] = [];
+  const { loading, roleOptions, orgOptions, handleLoadOrgOptions } =
+    useEnumOptions();
 </script>
 
 <template>
@@ -69,9 +65,19 @@
         <a-select
           v-model="createUpdateUserModel.orgId"
           :options="orgOptions"
+          :loading="loading"
           allow-clear
           placeholder="选择所属部门"
+          @popup-visible-change="
+            (visible: boolean) => visible && handleLoadOrgOptions()
+          "
+          @change="handleLoadOrgOptions"
+          @input-value-change="handleLoadOrgOptions"
+          @search="handleLoadOrgOptions"
         />
+        <!-- 打开时加载部门选项 -->
+        <!-- 输入值改变时加载部门选项 -->
+        <!-- 搜索时加载部门选项 -->
       </a-form-item>
       <a-form-item field="role" label="角色权限">
         <a-select

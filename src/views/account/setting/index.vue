@@ -11,10 +11,8 @@
     <Banner />
 
     <a-card
-      class="flex-auto rounded"
-      :bordered="false"
-      :header-style="{ border: 'none' }"
-      :body-style="{ height: '100%' }"
+      class="flex-auto"
+      :body-style="{ height: '100%', paddingTop: '8px' }"
     >
       <a-tabs justify :header-padding="false">
         <a-tab-pane key="basicInfo" title="基本信息">

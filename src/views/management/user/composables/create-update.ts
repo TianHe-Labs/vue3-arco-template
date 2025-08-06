@@ -131,7 +131,6 @@ export function provideCreateUpdateUser(): CreateUpdateUserState {
           title: '提示',
           titleAlign: 'start',
           content,
-
           okText: '复制',
           hideCancel: true,
           onBeforeOk: () => {

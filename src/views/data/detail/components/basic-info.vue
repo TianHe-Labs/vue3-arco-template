@@ -12,8 +12,7 @@
 <template>
   <a-card
     title="基本信息"
-    :bordered="false"
-    :header-style="{ borderBottom: 'none' }"
+    :header-style="{ padding: '16px 16px 0', borderBottom: 'none' }"
   >
     <template #extra>
       <a-button

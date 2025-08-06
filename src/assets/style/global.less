@@ -21,6 +21,7 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
+// 自定义 echarts 的 tooltip 样式
 .echarts-tooltip-diy {
   background: linear-gradient(
     304.17deg,
@@ -75,19 +76,19 @@ body {
   }
 }
 
+// 自定义 modal 的 footer 样式
 .arco-modal-simple {
-  // padding: 20px !important;
+  .arco-modal-title {
+    justify-content: flex-start !important;
+  }
+
   .arco-modal-footer {
-    text-align: right !important;
+    display: flex !important;
+    gap: 12px !important;
+    justify-content: flex-end !important;
   }
 }
-
-.arco-modal-footer {
-  display: flex !important;
-  gap: 12px !important;
-  justify-content: flex-end !important;
-}
-
+// 自定义导航栏的按钮样式
 .nav-btn {
   color: rgb(var(--gray-8));
   background-color: transparent !important;

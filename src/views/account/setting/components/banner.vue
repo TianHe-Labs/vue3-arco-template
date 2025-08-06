@@ -76,7 +76,6 @@
 
 <template>
   <a-card
-    :bordered="false"
     :body-style="{
       display: 'flex',
       flexWrap: 'wrap',

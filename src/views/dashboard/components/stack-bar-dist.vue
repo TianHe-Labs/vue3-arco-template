@@ -243,6 +243,12 @@
           alignMinLabel: 'left',
           color: isDark ? 'rgb(246, 246, 246)' : 'rgb(29, 33, 41)',
         },
+        splitLine: {
+          show: true,
+          lineStyle: {
+            type: 'dashed',
+          },
+        },
         axisPointer: {
           show: true,
           type: 'shadow', // 柱图用 shadow 更美观
@@ -265,7 +271,10 @@
           show: true,
           type: 'value',
           axisLabel: {
-            show: false,
+            formatter(value: number) {
+              if (value < 1000) return value;
+              return `${value / 1000}k`;
+            },
           },
           splitLine: {
             show: true,
@@ -449,10 +458,8 @@
   <a-card
     title="Xxxx分布"
     :loading="loading"
-    :bordered="false"
-    :header-style="{ borderBottom: 'none', paddingBottom: 0 }"
+    :header-style="{ padding: '16px 16px 0', borderBottom: 'none' }"
     :body-style="{ paddingTop: 0 }"
-    class="rounded"
   >
     <template #extra>
       <!-- 时间 -->

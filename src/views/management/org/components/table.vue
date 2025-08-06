@@ -76,9 +76,7 @@
 
 <template>
   <a-card
-    :bordered="false"
     :header-style="{
-      height: 'auto',
       padding: '16px 16px 0',
       borderBottom: 'none',
     }"

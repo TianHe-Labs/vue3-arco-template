@@ -1,9 +1,10 @@
 <script lang="ts" setup>
+  import { computed } from 'vue';
   import { useI18n } from 'vue-i18n';
   import { dayjs } from '@/utils/format';
   import { messageTypes } from '@/api/message';
   import { useSearchMessage } from '../composables/search';
-  import { computed } from 'vue';
+  import { useEnumOptions } from '@/composables/enum-option';
 
   const {
     queryFormRef,
@@ -29,10 +30,7 @@
   const { t } = useI18n();
 
   // 预设时间范围快捷选择
-  const rangeShortcuts = [7, 15, 30, 90].map((day) => ({
-    label: t('dateRange.shortcuts', [day]),
-    value: () => [dayjs().toDate(), dayjs().subtract(day, 'day').toDate()],
-  }));
+  const { rangeShortcuts } = useEnumOptions();
 
   const typeOptions = computed(() =>
     messageTypes.map((value) => ({
@@ -42,7 +40,7 @@
   );
 </script>
 <template>
-  <a-card :bordered="false" :body-style="{ paddingTop: '20px' }">
+  <a-card>
     <a-form ref="queryFormRef" :model="queryModel" auto-label-width>
       <div class="grid lg:grid-cols-2 xl:grid-cols-3 gap-x-4">
         <!-- 消息类型 -->

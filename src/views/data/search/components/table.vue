@@ -94,10 +94,7 @@
 </script>
 
 <template>
-  <a-card
-    :bordered="false"
-    :header-style="{ borderBottom: 'none', paddingBottom: '0px' }"
-  >
+  <a-card :header-style="{ padding: '16px 16px 0', borderBottom: 'none' }">
     <template #title>
       <div class="flex items-center gap-2">
         <!-- 页面需要复用时，支持修改标题等 -->

@@ -22,9 +22,9 @@ setupMock({
             email: '@email',
             phone:
               '@pick(["13012345678", "13112345678", "13212345678", "13312345678", "13412345678", "13512345678", "13612345678", "13712345678", "13812345678", "13912345678"])',
-            orgId: '@id',
+            orgId: '@guid',
             org: Mock.mock({
-              id: '@id',
+              id: '@guiid',
               orgName: '@cword(3, 6)',
             }),
             status: () => Mock.Random.pick(enum2Arr(USERSTATUS)),
