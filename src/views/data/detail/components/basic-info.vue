@@ -1,12 +1,12 @@
 <script setup lang="ts">
   import { useSearchXxxx } from '@/views/data/search/composables/search';
-  import { useUpdateXxxx } from '@/views/data/search/composables/update';
+  import { useCreateUpdateXxxx } from '@/views/data/search/composables/create-update';
 
   // 复用检索逻辑
   const { renderData } = useSearchXxxx();
 
   // 更新（单个）
-  const { handleOpenUpdateXxxxPanel } = useUpdateXxxx();
+  const { handleCreateUpdateXxxx } = useCreateUpdateXxxx();
 </script>
 
 <template>
@@ -19,7 +19,7 @@
       <a-button
         type="text"
         status="warning"
-        @click="handleOpenUpdateXxxxPanel(renderData?.[0])"
+        @click="handleCreateUpdateXxxx($event, renderData?.[0])"
       >
         <template #icon>
           <icon-edit />

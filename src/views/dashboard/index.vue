@@ -1,5 +1,6 @@
 <script lang="ts" setup>
   import StackBarDist from './components/stack-bar-dist.vue';
+  import StackLineDist from './components/stack-line-dist.vue';
   import GeoDist from './components/geo-dist.vue';
 </script>
 
@@ -7,6 +8,7 @@
   <div class="h-full flex flex-col p-4 gap-4">
     <Breadcrumb :items="['menu.dashboard']" />
     <StackBarDist />
+    <StackLineDist />
     <GeoDist />
   </div>
 </template>

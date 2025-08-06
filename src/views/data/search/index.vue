@@ -2,19 +2,24 @@
   import { ref } from 'vue';
   import Filter from './components/filter.vue';
   import Table from './components/table.vue';
-  import UpdatePanel from './components/update-panel.vue';
+  import CreateUpdatePanel from './components/create-update-panel.vue';
+  import BatchCreatePanel from './components/batch-create-panel.vue';
   import { provideSearchXxxx } from './composables/search';
-  import { provideUpdateXxxx } from './composables/update';
-  import { provideDeleteXxxx } from './composables/delete';
+  import { provideCreateUpdateXxxx } from './composables/create-update';
+  import { provideBatchCreateXxxx } from './composables/batch-create';
+  import { provideBatchOperateXxxx } from './composables/batch-operate';
 
   // 搜索
   provideSearchXxxx(ref({}));
 
-  // 更新
-  provideUpdateXxxx();
+  // 创建（单个）/更新（单个）
+  provideCreateUpdateXxxx();
 
-  // 删除
-  provideDeleteXxxx();
+  // 批量创建
+  provideBatchCreateXxxx();
+
+  // 批量操作：删除等
+  provideBatchOperateXxxx();
 </script>
 
 <template>
@@ -29,7 +34,10 @@
     <!-- 表格 -->
     <Table />
 
-    <!-- 更新信息面板 -->
-    <UpdatePanel />
+    <!-- 创建（单个）/更新（单个） -->
+    <CreateUpdatePanel />
+
+    <!-- 批量创建 -->
+    <BatchCreatePanel />
   </div>
 </template>

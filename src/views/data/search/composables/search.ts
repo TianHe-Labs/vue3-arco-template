@@ -18,26 +18,32 @@ import {
   QueryXxxxListReq,
   exportXxxxList,
 } from '@/api/xxxx';
-
-interface FuzzyQueryModel {
-  fuzzyWord: string;
-  fuzzyKeys: string[];
-}
+import { FuzzyQueryModel } from '@/global';
 
 interface SearchXxxxState {
   loading: Ref<boolean>;
+
   pagination: PaginationProps;
+
+  // 检索表单
   queryFormRef: Ref<FormInstance>;
   queryModel: Ref<QueryXxxxListReq>;
+
+  // 模糊检索条件（多属性匹配）
   fuzzyKeys: string[];
   fuzzyQueryModel: Ref<FuzzyQueryModel>;
+
   renderData: Ref<XxxxModel[]>;
 
   fetchData: (opts?: any) => Promise<void>;
+
   onPageChange: (current: number) => void;
   onPageSizeChange: (pageSize: number) => void;
+
+  // 重置检索条件
   handleResetQueryModel: (keys?: string[]) => void;
 
+  // 前端更新检索结果
   onUpdateRenderData: (data: {
     type: 'update' | 'create' | 'delete';
     record?: XxxxModel;
@@ -45,17 +51,19 @@ interface SearchXxxxState {
     ids?: XxxxModel['id'][];
   }) => void;
 
+  // 导出
   exportLoading: Ref<boolean>;
   handleExportData: () => void;
 }
 
-const searchXxxxSymbol = Symbol('SEARCH-XXXX');
+const symbol = Symbol('SEARCH-XXXX');
 
 // 用于（指定属性的）全文关键词检索
 const fuzzyKeys = ['name', 'description'];
+
 const resetFuzzyQueryModel = (): FuzzyQueryModel => {
   return {
-    fuzzyWord: '', // 匹配的具体值
+    fuzzyText: '', // 匹配的具体值
     fuzzyKeys, // 匹配哪些属性
   };
 };
@@ -66,6 +74,7 @@ const resetQueryModel = (keys?: string[]): QueryXxxxListReq => {
     id: undefined,
     name: undefined,
     tags: [],
+    createdRange: [],
   };
 
   if (keys && keys.length) {
@@ -135,9 +144,9 @@ export function provideSearchXxxx(
         (value) => !value || (isObject(value) && isEmpty(value)),
       ),
       // 处理合并全文检索参数
-      ...(fuzzyQueryModel.value.fuzzyWord
+      ...(fuzzyQueryModel.value.fuzzyText
         ? fuzzyQueryModel.value.fuzzyKeys.reduce((obj: any, key) => {
-            obj[key] = [fuzzyQueryModel.value.fuzzyWord];
+            obj[key] = [fuzzyQueryModel.value.fuzzyText];
             return obj;
           }, {})
         : {}),
@@ -156,8 +165,6 @@ export function provideSearchXxxx(
 
   fetchData();
 
-  const router = useRouter();
-
   // 重置
   const handleResetQueryModel = (keys?: string[]) => {
     queryModel.value = { ...queryModel.value, ...resetQueryModel(keys) };
@@ -166,6 +173,7 @@ export function provideSearchXxxx(
     }
   };
 
+  const router = useRouter();
   // 分页
   const onPageChange = (current: number) => {
     // 如果 v-model 双向绑定，则不需要手动绑定
@@ -192,55 +200,6 @@ export function provideSearchXxxx(
       query: { ...route.query, current: 1, pageSize },
     }).href;
     window.history.pushState({}, '', url);
-  };
-
-  // 导出
-  // 条件与检索相同
-  const { loading: exportLoading, setLoading: setExportLoading } = useLoading();
-  const handleExportData = () => {
-    // 水印信息输入框的值
-    let watermarkText = '';
-
-    Modal.confirm({
-      title: '导出',
-      titleAlign: 'start',
-      modalClass: '!p-5',
-      content: () =>
-        h(Input, {
-          placeholder: '添加水印信息，缺省默认不设置',
-          onChange: (value: string) => {
-            watermarkText = value;
-          },
-        }),
-      okText: '确定',
-      cancelText: '取消',
-      onOk: async () => {
-        try {
-          setExportLoading(true);
-
-          const cleanedParams = {
-            // 过滤掉空值参数，剔除0, '', null, undefined / '',[]
-            ...omitBy(
-              queryModel.value,
-              (value) => !value || (isObject(value) && isEmpty(value)),
-            ),
-          };
-
-          const resp = await exportXxxxList(cleanedParams);
-
-          // 创建下载链接
-          const blob = new Blob([resp.data], {
-            type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-          });
-
-          saveAs(blob, `${dayjs().format('YYYYMMDDHHmmss')}.xlsx`);
-        } catch (err: any) {
-          Message.error(err?.message);
-        } finally {
-          setExportLoading(false);
-        }
-      },
-    });
   };
 
   const onUpdateRenderData = (data: {
@@ -290,7 +249,7 @@ export function provideSearchXxxx(
   // 同时注意，使用也要开启 allow-clear 属性，绑定 <a-input /> 的 clear 事件
   watch(
     // 对于fuzzyQueryModel只监听fuzzyKeys select
-    // 至于fuzzyWord 由 input 事件手动触发（输入框回车、点击查询按钮）
+    // 至于fuzzyText 由 input 事件手动触发（输入框回车、点击查询按钮）
     [queryModel, () => fuzzyQueryModel.value.fuzzyKeys],
     () => {
       // 重置分页
@@ -299,8 +258,14 @@ export function provideSearchXxxx(
       fetchData();
 
       // 将分页持久化到地址栏中，防止刷新丢失分页，影响用户体验
+      // 不可以使用router.push({ query: { ...route.query, current: 1, pageSize } })
+      // 因为会刷新整个页面，用户体验很糟糕
       const url = router.resolve({
-        query: { ...route.query, current: 1, pageSize: 20 },
+        query: {
+          ...route.query,
+          current: pagination.current,
+          pageSize: pagination.pageSize,
+        },
       }).href;
       window.history.pushState({}, '', url);
     },
@@ -320,31 +285,92 @@ export function provideSearchXxxx(
     { immediate: true },
   );
 
+  // 导出
+  // 条件与检索相同
+  const { loading: exportLoading, setLoading: setExportLoading } = useLoading();
+  const handleExportData = () => {
+    // 水印信息输入框的值
+    let watermarkText = '';
+
+    Modal.confirm({
+      title: '导出',
+      titleAlign: 'start',
+      content: () =>
+        h(Input, {
+          placeholder: '添加水印信息，缺省默认不设置',
+          onChange: (value: string) => {
+            watermarkText = value;
+          },
+        }),
+      okText: '确定',
+      cancelText: '取消',
+      onOk: async () => {
+        try {
+          setExportLoading(true);
+
+          const cleanedParams = {
+            // 过滤掉空值参数，剔除0, '', null, undefined / '',[]
+            ...omitBy(
+              queryModel.value,
+              (value) => !value || (isObject(value) && isEmpty(value)),
+            ),
+          };
+
+          const resp = await exportXxxxList(cleanedParams);
+
+          // 创建下载链接
+          const blob = new Blob([resp.data], {
+            type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+          });
+
+          saveAs(blob, `${dayjs().format('YYYYMMDDHHmmss')}.xlsx`);
+        } catch (err: any) {
+          Message.error(err?.message);
+        } finally {
+          setExportLoading(false);
+        }
+      },
+    });
+  };
+
   const returnState: SearchXxxxState = {
     loading,
+
+    // 分页
     pagination,
+
+    // 检索表单
     queryFormRef,
     queryModel,
+
+    // 模糊检索条件（多属性匹配）
     fuzzyKeys,
     fuzzyQueryModel,
     renderData,
 
+    // 检索
     fetchData,
-    handleResetQueryModel,
+
+    // 分页
     onPageChange,
     onPageSizeChange,
 
+    // 重置检索条件
+    handleResetQueryModel,
+
+    // 更新检索结果
     onUpdateRenderData,
 
+    // 导出
     exportLoading,
     handleExportData,
   };
 
-  provide(searchXxxxSymbol, returnState);
+  provide(symbol, returnState);
 
   return returnState;
 }
 
 export function useSearchXxxx(): SearchXxxxState {
-  return inject(searchXxxxSymbol) as SearchXxxxState;
+  return inject(symbol) as SearchXxxxState;
 }

@@ -165,16 +165,16 @@
       </template>
       <template #result="{ record }">
         <a-typography-text>
-          {{ $t(`account.loginResults.${record.result}`) }}
+          {{ $t(`account.loginResult.text.${record.result}`) }}
         </a-typography-text>
       </template>
       <template #bioResult="{ record }">
         <div class="flex items-center gap-2">
           <a-tag
             size="small"
-            :color="$t(`account.resultColors.${record.bioResult}`)"
+            :color="$t(`account.loginResult.color.${record.bioResult}`)"
           >
-            {{ $t(`account.loginResults.${record.bioResult}`) }}
+            {{ $t(`account.loginResult.text.${record.bioResult}`) }}
           </a-tag>
           <a-typography-text type="secondary">
             匹配度：{{ (record.bioConfidence || 0).toFixed(2) }}%
@@ -184,19 +184,19 @@
       <template #mfaResult="{ record }">
         <a-tag
           size="small"
-          :color="$t(`account.resultColors.${record.mfaResult}`)"
+          :color="$t(`account.loginResult.color.${record.mfaResult}`)"
         >
-          {{ $t(`account.loginResults.${record.mfaResult}`) }}
+          {{ $t(`account.loginResult.text.${record.mfaResult}`) }}
         </a-tag>
       </template>
       <template #sourceAgent="{ record }">
         <div class="flex items-center gap-2">
           <a-tag
             bordered
-            :color="$t(`account.agentColors.${record.sourceAgent}`)"
+            :color="$t(`sourceAgent.color.${record.sourceAgent}`)"
             class="!w-42px !justify-center"
           >
-            {{ $t(`account.sourceAgents.${record.sourceAgent}`) }}
+            {{ $t(`sourceAgent.text.${record.sourceAgent}`) }}
           </a-tag>
           <div class="flex flex-col">
             <a-typography-text type="secondary" class="text">{{

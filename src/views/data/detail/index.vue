@@ -1,9 +1,9 @@
 <script setup lang="ts">
   import { computed } from 'vue';
   import { provideSearchXxxx } from '@/views/data/search/composables/search';
-  import { provideUpdateXxxx } from '@/views/data/search/composables/update';
+  import { provideCreateUpdateXxxx } from '@/views/data/search/composables/create-update';
   import Breadcrumb from '@/components/breadcrumb/index.vue';
-  import UpdateXxxxPanel from '@/views/data/search/components/update-panel.vue';
+  import UpdateXxxxPanel from '@/views/data/search/components/create-update-panel.vue';
   import BasicInfo from './components/basic-info.vue';
 
   const props = defineProps<{
@@ -11,10 +11,11 @@
   }>();
 
   // 复用检索逻辑，传入 id 查询详情
+  // 较少API接口
   provideSearchXxxx(computed(() => ({ id: props.id })));
 
-  // 更新（单个）
-  provideUpdateXxxx();
+  // 更新（单个），逻辑复用，避免重复代码
+  provideCreateUpdateXxxx();
 </script>
 
 <template>

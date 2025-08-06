@@ -9,7 +9,7 @@ export default {
     locale: 'menu.account',
     icon: 'icon-user',
     requiresAuth: true,
-    order: 9,
+    order: 10,
   },
   children: [
     {
@@ -23,11 +23,11 @@ export default {
       },
     },
     {
-      path: 'info',
-      name: 'AccountInfo',
-      component: () => import('@/views/account/info/index.vue'),
+      path: 'login-log',
+      name: 'AccountLoginLog',
+      component: () => import('@/views/account/login-log/index.vue'),
       meta: {
-        locale: 'menu.account.info',
+        locale: 'menu.account.loginLog',
         requiresAuth: true,
         roles: ['*'],
       },

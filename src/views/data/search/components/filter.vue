@@ -1,4 +1,6 @@
 <script lang="ts" setup>
+  import { useI18n } from 'vue-i18n';
+  import { dayjs } from '@/utils/format';
   import { useSearchXxxx } from '../composables/search';
 
   const {
@@ -8,12 +10,6 @@
     fetchData,
     handleResetQueryModel,
   } = useSearchXxxx();
-
-  // 非业务逻辑，仅在页面显示，不写在 composable 中
-  // const fuzzyKeyOptions = fuzzyKeys.map((value) => ({
-  //   label: value,
-  //   value,
-  // }));
 
   const fuzzyKeyOptions = [
     {
@@ -25,6 +21,14 @@
       value: 'description',
     },
   ];
+
+  const { t } = useI18n();
+
+  // 预设时间范围快捷选择
+  const rangeShortcuts = [7, 15, 30, 90].map((day) => ({
+    label: t('dateRange.shortcuts', [day]),
+    value: () => [dayjs().toDate(), dayjs().subtract(day, 'day').toDate()],
+  }));
 </script>
 
 <template>
@@ -38,7 +42,7 @@
             allow-clear
             allow-create
             allow-search
-            placeholder="XXX"
+            placeholder="选择ID"
           />
         </a-form-item>
         <!-- 精确匹配 -->
@@ -49,6 +53,21 @@
             allow-clear
             allow-create
             allow-search
+            placeholder="选择标签"
+          />
+        </a-form-item>
+
+        <!-- 创建时间 -->
+        <a-form-item field="createdRange" label="创建时间" :rules="[]">
+          <a-range-picker
+            v-model="queryModel.createdRange"
+            show-time
+            :time-picker-props="{
+              defaultValue: ['00:00:00', '23:59:59'],
+            }"
+            :shortcuts="rangeShortcuts"
+            allow-clear
+            class="!w-full"
           />
         </a-form-item>
 
@@ -59,7 +78,7 @@
           content-class="flex-wrap gap-2"
         >
           <a-input-search
-            v-model="fuzzyQueryModel.fuzzyWord"
+            v-model="fuzzyQueryModel.fuzzyText"
             allow-clear
             placeholder="输入检索关键字"
             @press-enter="fetchData"

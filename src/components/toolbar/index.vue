@@ -83,17 +83,13 @@
           >
             {{ userStore.nickname || userStore.username }}
           </div>
-          <div v-if="userStore?.status" class="-ml-0.5 !text-10px text-text-2">
-            <icon-bulb />
-            {{ userStore.status }}
-          </div>
         </div>
       </div>
       <template #content>
         <div class="flex flex-col px-3 pt-1 gap-y-2">
           <a-typography-text v-if="userStore?.role" class="!text-sm">
             <icon-idcard />
-            {{ $t(`account.roles.${userStore.role}`) }}
+            {{ $t(`user.role.text.${userStore.role}`) }}
           </a-typography-text>
           <!-- 如果是roles -->
           <!-- <a-typography-text
@@ -102,7 +98,7 @@
           >
             <icon-idcard />
             {{
-              userStore.roles.map((role) => $t(`account.roles.${role}`)).join(
+              userStore.roles.map((role) => $t(`user.role.text.${role}`)).join(
                 ', ',
               )
             }}
@@ -165,7 +161,7 @@
   import { useRouter } from 'vue-router';
   import { useAppStore, useUserStore } from '@/store';
   import { isDevelopment } from '@/utils';
-  import { useFetchMessage } from '@/views/message/composables/fetch';
+  import { useSearchMessage } from '@/views/message/composables/search';
   import { useFeedback } from '@/components/feedback-panel/composables/feedback';
   import useLogout from '@/composables/logout';
 
@@ -204,7 +200,7 @@
   const { toggleFeedbackPanel } = useFeedback();
 
   // 消息
-  const { renderStats } = useFetchMessage();
+  const { renderStats } = useSearchMessage();
 
   // 全屏
   const { isFullscreen, toggle: toggleFullScreen } = useFullscreen();

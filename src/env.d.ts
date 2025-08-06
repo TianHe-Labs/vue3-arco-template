@@ -21,6 +21,10 @@ interface ImportMetaEnv {
   readonly VITE_APP_SLOGAN: string;
   readonly VITE_APP_SUB_SLOGAN: string;
 
+  // 开发代理配置
+  // 更多细节参见 config/utils/index.ts 中的 createProxy 函数
+
+  // 开发代理配置方式一：
   // https://cn.vitejs.dev/config/server-options.html#server-proxy
   // Vite Dev Server Proxy 环境变量配置，只用于 .env.development
   // 数组中每个子数组项会自动转换为一个开发服务器代理项，可根据需要添加多个子数组项（Proxy）
@@ -44,4 +48,13 @@ interface ImportMetaEnv {
   //   }
   // }
   readonly VITE_DEV_PROXY: string[][];
+
+  // 开发代理配置方式二：
+  // VITE_DEV_PROXY_API_PREFIX=/api
+  // VITE_DEV_PROXY_API_TARGET=http://127.0.0.1:3000/api
+  // VITE_DEV_PROXY_UPLOAD_PREFIX=/upload
+  // VITE_DEV_PROXY_UPLOAD_TARGET=http://127.0.0.1:3000/upload
+  // VITE_DEV_PROXY_XXX_PREFIX 和 VITE_DEV_PROXY_XXX_TARGET 要一一对应，
+  // 如果只有 VITE_DEV_PROXY_XXX_TARGET 没有对应的 VITE_DEV_PROXY_XXX_PREFIX，
+  // 则使用小写的代理名称作为前缀，例如：VITE_DEV_PROXY_API_TARGET -> /api
 }

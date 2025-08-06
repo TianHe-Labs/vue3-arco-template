@@ -16,23 +16,23 @@
   });
 
   // 事件响应
-  const handleSumbit = async () => {
+  // 提交
+  const handleSubmit = async () => {
     const errors = await passwordFormRef.value?.validate();
     if (errors && Object.keys(errors).length > 0) {
       return;
     }
     try {
-      const { data } = await updateUserPassword(passwordFormData);
-      if (data.username) {
-        Message.info('密码修改成功，请重新登录');
-        setTimeout(() => {
-          logout();
-        }, 600);
-      }
+      await updateUserPassword(passwordFormData);
+      Message.info('密码修改成功，请重新登录');
+      setTimeout(() => {
+        logout();
+      }, 600);
     } catch (err: any) {
       Message.error(err?.message);
     }
   };
+  // 重置
   const handleReset = async () => {
     await passwordFormRef.value?.resetFields();
   };
@@ -113,7 +113,7 @@
       />
     </a-form-item>
     <a-form-item row-class="mt-4" content-class="gap-4">
-      <a-button type="primary" @click="handleSumbit"> 提交修改 </a-button>
+      <a-button type="primary" @click="handleSubmit"> 提交 </a-button>
       <a-button type="secondary" @click="handleReset"> 重置 </a-button>
     </a-form-item>
   </a-form>

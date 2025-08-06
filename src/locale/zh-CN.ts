@@ -4,26 +4,39 @@ import localeOptions from './zh-CN/options';
 
 export default {
   // 使用 i18n 来保持页面中的统一
+
   // 仪表盘
   'menu.dashboard': '仪表盘',
   'menu.dashboard.overview': '概览',
+
+  // 预览
+  'menu.preview': '组件预览',
+  'menu.preview.index': '组件预览',
+
   // 数据检索
   'menu.data': '数据管理',
   'menu.data.search': '数据检索',
   'menu.data.detail': '数据详情',
+
   // 消息通知
   'menu.message': '消息通知',
   'menu.message.list': '消息列表',
-  // 用户管理
-  'menu.user': '用户管理',
-  'menu.user.list': '用户列表',
+
+  // 组织管理
+  'menu.management': '组织管理',
+  'menu.management.user': '人员管理',
+  'menu.management.org': '部门管理',
+
   // 账号中心
   'menu.account': '个人中心',
   'menu.account.setting': '账号设置',
-  'menu.account.info': '账号信息',
-  // 预览
-  'menu.preview': '组件预览',
-  'menu.preview.index': '组件预览',
+  'menu.account.loginLog': '登录日志',
+
+  // 分页
+  'pagination.total': '共 {0} 条',
+
+  // 日期范围
+  'dateRange.shortcuts': '近 {0} 天',
 
   ...localeErrors,
   ...localeOptions,

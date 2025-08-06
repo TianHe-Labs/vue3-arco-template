@@ -11,8 +11,13 @@ export interface XxxxModel {
   updatedAt: string | Date;
 }
 
+/**
+ * 查询列表
+ * 传入 id 参数时，其优先级最高，其余参数可以忽略，可以表示查询详情，此时返回单个数据
+ * 这样可以减少不必要的接口数量，同时让前端的相关逻辑也可以复用
+ */
 export interface QueryXxxxListReq extends Partial<XxxxModel> {
-  keyword?: string;
+  createdRange?: string[]; // 创建时间范围
 }
 export type QueryXxxxListRes = List<XxxxModel>;
 
@@ -27,50 +32,54 @@ export function queryXxxxList(params: QueryXxxxListReq & Pagination) {
   });
 }
 
-// 导出
+/**
+ * 导出，参数与查询列表相同，返回 blob 文件流
+ */
 export function exportXxxxList(data: QueryXxxxListReq) {
   return axios.post('/api/xxxx/export', data, {
     responseType: 'blob',
   });
 }
 
-// 创建（如果需要批量添加时，单个/批量二合一）
-export type CreateXxxxModel = Pick<XxxxModel, 'name' | 'description' | 'tags'>;
+/**
+ * 创建或更新表单模型
+ */
+export type CreateUpdateXxxxModel = Partial<
+  Pick<XxxxModel, 'id' | 'name' | 'description' | 'tags'>
+>;
 
-export type CreateXxxxReq = List<CreateXxxxModel>;
+/**
+ * 创建，单个（近似于更新，只是没有ID，页面逻辑上可以与更新复用）和批量
+ */
 
-// 返回创建失败的 CreateXxxxModel 保留显示给用户
-export type CreateXxxxRes = List<CreateXxxxModel>;
+export type CreateXxxxReq = List<CreateUpdateXxxxModel>;
+
+// 返回创建成功的数据列表
+export type CreateXxxxRes = List<CreateUpdateXxxxModel>;
 
 export function createXxxx(data: CreateXxxxReq) {
   return axios.post<CreateXxxxRes>('/api/xxxx/create', data);
 }
 
-// 更新
-export type UpdateXxxxReq = Pick<XxxxModel, 'id'> &
-  Partial<Pick<XxxxModel, 'id' | 'name' | 'description' | 'tags'>>;
-export type UpdateXxxxRes = XxxxModel;
+/**
+ * 更新
+ */
+export type UpdateXxxxReq = CreateUpdateXxxxModel;
+
+export type UpdateXxxxRes = Partial<XxxxModel>;
 
 export function updateXxxx(data: UpdateXxxxReq) {
   return axios.put<UpdateXxxxRes>('/api/xxxx/update', data);
 }
 
-// 创建/更新（如果不需要批量创建或者不支持批量创建，创建和更新接口可以合并）
-// 页面逻辑上，可以共用一个弹窗
-export type CreateOrUpdateXxxxReq = Partial<XxxxModel>;
-export type CreateOrUpdateXxxxRes = XxxxModel;
-
-export function createOrUpdateXxxx(data: CreateOrUpdateXxxxReq) {
-  return axios.post<CreateOrUpdateXxxxRes>('/api/xxxx/create-update', data);
-}
-
-// 删除 （单个/批量二合一）
-// 其他需要批量操作的，可以参考这个接口
+/**
+ * 删除，单个和批量，其他批量操作的，可以参考这个接口
+ */
 export interface DeleteXxxxReq {
   ids: XxxxModel['id'][];
 }
 export interface DeleteXxxxRes {
-  ids: XxxxModel['id'][]; // 删除成功的ID
+  ids: XxxxModel['id'][]; // 删除成功的IDs
 }
 
 export function deleteXxxx(data: DeleteXxxxReq) {

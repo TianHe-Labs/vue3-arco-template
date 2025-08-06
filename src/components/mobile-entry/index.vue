@@ -2,7 +2,7 @@
   import { inject } from 'vue';
   import { useRouter } from 'vue-router';
   import { useAppStore } from '@/store';
-  import { useFetchMessage } from '@/views/message/composables/fetch';
+  import { useSearchMessage } from '@/views/message/composables/search';
   import { useFeedback } from '@/components/feedback-panel/composables/feedback';
 
   const router = useRouter();
@@ -10,7 +10,7 @@
   const appStore = useAppStore();
 
   // 消息
-  const { renderStats } = useFetchMessage();
+  const { renderStats } = useSearchMessage();
 
   // 反馈
   const { toggleFeedbackPanel } = useFeedback();

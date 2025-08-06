@@ -4,12 +4,6 @@
   import Password from './components/password.vue';
 </script>
 
-<script lang="ts">
-  export default {
-    name: 'AccountSetting',
-  };
-</script>
-
 <template>
   <div class="h-full flex flex-col gap-4 p-4">
     <Breadcrumb :items="['menu.account', 'menu.account.setting']" />
@@ -34,6 +28,12 @@
     </a-card>
   </div>
 </template>
+
+<script lang="ts">
+  export default {
+    name: 'AccountSetting',
+  };
+</script>
 
 <style lang="less" scoped>
   :deep(.arco-tabs-content) {

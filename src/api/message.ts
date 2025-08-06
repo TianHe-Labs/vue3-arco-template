@@ -7,7 +7,9 @@ export type MessageType = 'notice' | 'alert';
 
 export const messageTypes: MessageType[] = ['notice', 'alert'] as const;
 
-// 消息模型
+/**
+ * 消息模型
+ */
 export interface MessageModel {
   id: string;
   title: string;
@@ -18,7 +20,9 @@ export interface MessageModel {
   updatedAt: string | Date; // 更新时间
 }
 
-// 获取消息列表，时间倒序，最新的在前
+/**
+ * 获取消息列表，时间倒序，最新的在前
+ */
 export interface QueryMessageListReq {
   types?: MessageType[]; // 消息类型，通知、告警
   unread?: boolean; // 是否过滤已读消息，即仅显示未读
@@ -40,7 +44,9 @@ export function queryMessageList(params: QueryMessageListReq & Pagination) {
   });
 }
 
-// 统计
+/**
+ * 统计
+ */
 export interface QueryMessageStatReq {
   unread?: boolean; // 是否只统计未读消息
 }
@@ -51,7 +57,9 @@ export function queryMessageStat(params: QueryMessageStatReq) {
   return axios.get<QueryMessageStatRes>('/api/message/stat', { params });
 }
 
-// 标记已读，单批量
+/**
+ * 标记已读，单个和批量
+ */
 export interface UpdateMessageReadAtReq {
   ids?: string[]; // 不传则全部标记
 }
@@ -63,7 +71,9 @@ export function updateMessageReadAt(data: UpdateMessageReadAtReq) {
   return axios.put<UpdateMessageReadAtRes>('/api/message/readAt/update', data);
 }
 
-// 删除消息，单批量
+/**
+ * 删除消息，单个和批量
+ */
 export interface DeleteMessageReq {
   ids?: string[]; // 不传则全部删除
 }

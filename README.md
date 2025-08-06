@@ -1,10 +1,8 @@
-# Vue3 Template on ArcoDesign & UnoCSS
-
-[English](README.md) | [中文](README.zh-CN.md)
+# Vue3 模板 - 基于 ArcoDesign 和 UnoCSS
 
 ## ArcoDesign
 
-- **Doc**: [Arco Design Vue](https://arco.design/vue/docs)
+- **文档**: [Arco Design Vue](https://arco.design/vue/docs)
 
 ## UnoCSS
 
@@ -15,39 +13,36 @@
 - **presetWebFonts**: [Web Fonts](https://unocss.dev/presets/web-fonts)
 
 - **presetIcons**: [Icons](https://unocss.dev/presets/icons), [Iconify](https://icon-sets.iconify.design/)
-
   ```html
-  <!-- example -->
-
+  <!-- 示例 -->
   <div class="i-solar:box-bold-duotone w-1em h-1em"></div>
   ```
 
-## Features
+## 特性
 
-- **User Authentication**: api/account, store/user
+- **用户认证**: api/account, store/user
 
-- **User Permission**: router/guard, composables/permission
+- **用户权限**: router/guard, composables/permission
 
-- **Rich icon library**: UnoCSS/Iconify
+- **丰富的图标库**: UnoCSS/Iconify
 
   ```html
-  <!-- example -->
-
+  <!-- 示例 -->
   <div class="i-solar:box-bold-duotone w-1em h-1em"></div>
   ```
 
-- **Responsive**: CSS(UnoCSS Variants), JS(@vueuse/core useBreakpoints, provide in App.vue)
+- **响应式设计**: CSS(UnoCSS Variants), JS(@vueuse/core useBreakpoints, provide in App.vue)
 
   ```js
   // App.vue
   const breakpoints = useBreakpoints(breakpointsTailwind);
   provide('breakpoints', breakpoints);
 
-  // child component
+  // 子组件
   const breakpoints = inject('breakpoints') as any;
   ```
 
-- **Theme Mode**: light mode & dark mode, combining Arco Design with UnoCSS ensures consistency
+- **主题模式**: 亮色模式和暗色模式，结合 Arco Design 和 UnoCSS 确保一致性
 
   ```html
   <!-- [light:]<class name> -->
@@ -58,108 +53,108 @@
   <div dark:text-primary></div>
   ```
 
-- **Instant On-demand Atomic CSS**: UnoCSS(Attributify supported)
+- **即时按需原子化 CSS**: UnoCSS(支持 Attributify)
 
-- **Mock Data**: mockjs
+- **模拟数据**: mockjs
 
-- **Auto Lint**: hucky, lint-staged, _code lint_(eslint, prettier, stylelint), _commit lint_(commitlint)
+- **自动代码检查**: hucky, lint-staged, _代码检查_(eslint, prettier, stylelint), _提交信息检查_(commitlint)
 
 - **CI/CD**: Github Actions
 
-## Folder Structure
+## 目录结构
 
-- **.github/workflows**
+- **.github/workflows**: GitHub Actions 配置
 
 - **.husky**: `pre-comment(lint-staged)`, `commit-msg`([Conventional Commits](https://www.conventionalcommits.org/zh-hans/v1.0.0/))
 
-- **config**: [Vite Config](https://cn.vitejs.dev/config/) (Current: Vite@^^5.2.13 installed)
+- **config**: [Vite 配置](https://cn.vitejs.dev/config/) (当前: Vite@^^5.2.13)
 
 - **src**
 
-  - **api**: queryX, createX, updateX, deleteX
+  - **api**: 查询、创建、更新、删除接口
 
     ```http
-    // queryX
+    // 查询
     GET/POST /api/X/list
     GET /api/X/detail/{id}
     ...
 
-    createX
+    // 创建
     POST /api/X/create, // body: {}
     ...
 
-    // updateX
+    // 更新
     PUT /api/X/update, // body: {}
     PUT /api/X/y/update // X.y body: {}
     ...
 
-    // deleteX
+    // 删除
     DELETE /api/X // body: { ids: [] }
     ...
     ```
 
-  - **assets**: static files, eg: `json`, `css`, `less`, `image`, `video`
+  - **assets**: 静态文件，如 `json`, `css`, `less`, `image`, `video`
 
-  - **components**: common components, inclues some global components(index.ts)
+  - **components**: 公共组件，包含全局组件(index.ts)
 
-  - **directives**: Vue3 directive, eg: `v-permission`
+  - **directives**: Vue3 指令，如 `v-permission`
 
-  - **composables**: common composables, eg: `chart-option`, `loading`, `logout`, `permission`
+  - **composables**: 公共组合式函数，如 `chart-option`, `loading`, `logout`, `permission`
 
-  - **layouts**: common layout components
+  - **layouts**: 公共布局组件
 
   - **locale**: `i18n`仅用于显示内容与实际数据的映射，不做系统级国际化
 
-  - **mock**: mock data in development
+  - **mock**: 开发环境模拟数据
 
-  - **plugins**: eg: `axios`, `emitter`
+  - **plugins**: 如 `axios`, `emitter`
 
-  - **router**: `routes` Route Config, `guard` Global Guard
+  - **router**: `routes` 分页面路由配置, `guard` 全局路由守卫
 
-  - **store**: global data store, eg: `app`(theme, ...), `tab-bar`(multi page), `user`(login, userinfo, ...), `oss`(ali oss sts)
+  - **store**: 全局数据存储，如 `app`(主题等), `tab-bar`(多页面), `user`(登录、用户信息等), `oss`(阿里云 OSS STS)
 
-  - **utils**: tool function, eg: `formatX`(preset dayjs), `hasX`, `isY`, `canZ`, `transformA`, `index`(Unclassifiable fragmentary functions & Unified entry for various types of functions)
+  - **utils**: 工具函数，如 `formatX`、`dayjs`(统一拓展插件), `hasX`, `isY`, `canZ`, `transformA`, `index`(未分类的零散函数 & 各类函数的统一入口)
 
-  - **views**: Vue3 view
+  - **views**: Vue3 视图组件
 
-  - **App.vue**: Vue3 entry
+  - **App.vue**: Vue3 入口
 
-  - **global.d.ts**: global type definition
+  - **global.d.ts**: 全局类型定义
 
-  - **env.d.ts**: env type defintion, eg: `VITE_APP_NAME`, `VITE_DEV_PROXY`
+  - **env.d.ts**: 环境变量类型定义，如 `VITE_APP_NAME`, `VITE_DEV_PROXY` 开发环境代理配置
 
-  - **main.ts**: entry
+  - **main.ts**: 入口文件
 
-  - **settings.json**: app settings (only accessible in development)
+  - **settings.json**: 应用设置（仅在开发环境可访问）
 
-- **.env**: common environment, .env.development only in development(_gitignore_), .env.production only in production(_gitignore_)
+- **.env**: 通用环境变量，.env.development 仅在开发环境(_gitignore_), .env.production 仅在生产环境(_gitignore_)
 
-- **eslint.config.js**: eslint config
+- **eslint.config.js**: ESLint 配置
 
-- **.gitignore**
+- **.gitignore**: Git 忽略配置
 
-- **.prettierignore**
+- **.prettierignore**: Prettier 忽略配置
 
-- **.prettierrc.js**: prettier config
+- **.prettierrc.js**: Prettier 配置
 
-- **.stylelintrc.js**: stylelint config
+- **.stylelintrc.js**: Stylelint 配置
 
-- **babel.config.js**: babel config
+- **babel.config.js**: Babel 配置
 
-- **commitlint.config.ts**: commitlint config (husky/commit-msg)
+- **commitlint.config.ts**: commitlint 配置 (husky/commit-msg)
 
-- **docker.nginx.template**
+- **docker.nginx.template**: Nginx 配置模板
 
-- **Dockerfile**
+- **Dockerfile**: Docker 构建文件
 
-- **index.html**: entry
+- **index.html**: 入口 HTML
 
-- **package.json**: package
+- **package.json**: 包管理配置
 
-- **package-lock.yaml**: pnpm
+- **package-lock.yaml**: pnpm 锁定文件
 
-- **tsconfig.json**: Typescript
+- **tsconfig.json**: TypeScript 配置
 
-- **uno.config.ts**: UnoCSS
+- **uno.config.ts**: UnoCSS 配置
 
-- **vercel.json**: Vercel config
+- **vercel.json**: Vercel 配置

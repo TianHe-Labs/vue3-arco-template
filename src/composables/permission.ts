@@ -1,6 +1,6 @@
 import { RouteLocationNormalized, RouteRecordRaw } from 'vue-router';
 import { useUserStore } from '@/store';
-import { USERROLE } from '@/store/modules/user/types.d';
+import { USERROLE } from '@/api/user';
 
 export default function usePermission() {
   const userStore = useUserStore();

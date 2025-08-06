@@ -6,7 +6,8 @@ import {
   updateUserToken as updateUserTokenApi,
 } from '@/api/account';
 import { camelCase, mapKeys } from 'lodash';
-import { USERROLE, UserState } from './types.d';
+import { USERROLE } from '@/api/user';
+import { UserState } from './types';
 
 const useUserStore = defineStore('user', {
   // 根据具体业务场景，可以扩展字段
@@ -15,10 +16,14 @@ const useUserStore = defineStore('user', {
     username: '',
     nickname: '',
 
+    orgId: undefined,
+    orgName: undefined,
+    org: undefined,
+
     role: undefined,
     // roles: [],
 
-    status: '',
+    status: undefined,
 
     email: 'admin@example.cn',
     phone: '17000000000',
@@ -72,8 +77,6 @@ const useUserStore = defineStore('user', {
         // 有时候前端的有些字段和后端接口不一致
         // 为了避免大面积修改变量，可以只在接口这里做一下映射处理
         const cleanedData = {
-          username: data?.account,
-          nickname: data?.name,
           role: USERROLE.ADMIN,
           // roles: [USERROLE.ADMIN, USERROLE.COMMON],
           ...data,

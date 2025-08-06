@@ -9,6 +9,7 @@ import './_servers/message';
 import './_servers/account';
 
 import './_servers/user';
+import './_servers/org';
 
 import './_servers/feedback';
 

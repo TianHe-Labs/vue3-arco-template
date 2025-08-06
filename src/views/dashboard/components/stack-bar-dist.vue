@@ -13,9 +13,33 @@
   import { ECharts } from 'echarts';
   import { omit, pick, sortBy } from 'lodash';
 
+  // 工具函数
+  const tooltipItemsHtmlString = (items: ToolTipFormatterParams[]) => {
+    return items
+      .map((el) => {
+        // 找到数据在value数组中的位置
+        const idx =
+          el.dimensionNames?.findIndex((itx) => itx === el.seriesName) || 0;
+        return `<div class="content-panel">
+            <p>
+              <span style="background-color: ${
+                el.color
+              }" class="tooltip-item-icon"></span>
+              <span>
+              ${el.seriesName}
+              </span>
+            </p>
+            <span class="tooltip-value">
+              ${Number((el.value as any[])?.[idx]).toLocaleString()}
+            </span>
+          </div>`;
+      })
+      .join('');
+  };
+
   const { t } = useI18n();
 
-  const { loading, setLoading } = useLoading(true);
+  const { loading, setLoading } = useLoading(false);
 
   // 请求参数
   const queryModel = reactive<QueryXxxxTrendReq>({
@@ -24,6 +48,27 @@
 
   // 原始数据
   const renderData = ref<QueryXxxxTrend[]>([]);
+
+  // 聚焦时刻
+  const currentFocusDataIndex = ref<number>(0);
+
+  const fetchData = async () => {
+    setLoading(true);
+    try {
+      const { data } = await queryXxxxTrend(queryModel);
+      // 重置变量避免造成影响
+      // 数据处理
+      // 防御性编程，避免
+      // (data.list || []) 接口返回结果不规范（如：null等）
+      currentFocusDataIndex.value = data.list?.length - 1 || 0;
+      renderData.value = sortBy(data.list || [], 'datetime');
+    } catch (err: any) {
+      Message.error(err?.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+  fetchData();
 
   /**
    * [
@@ -54,7 +99,28 @@
    *
    */
 
+  // 自定义颜色映射，确保图例、柱图、饼图颜色一致
+  // const colors = {
+  //   image: '#246EFF',
+  //   text: '#00B2FF',
+  //   audio: '#0E42D2',
+  //   video: '#81E2FF',
+  // };
+
   // 绘图数据
+  // 图例
+  // const renderLegendData = computed(() => {
+  //   return Object.keys(omit(renderData.value[0], ['datetime'])).map((item) => {
+  //     return {
+  //       name: item,
+  //       // itemStyle: {
+  //       //   color: colors[item as keyof typeof colors],
+  //       // },
+  //     };
+  //   });
+  // });
+
+  // 柱图数据
   const renderBarData = computed(() => {
     const dimensions = [
       'datetime',
@@ -64,7 +130,7 @@
       // 第一行是维度
       // 须确保 datetime 在第一列
       dimensions.map((item: string) =>
-        item === 'datetime' ? item : t(`types.${item}`),
+        item === 'datetime' ? item : t(`media.type.text.${item}`),
       ),
       ...renderData.value.reduce((acc, cur) => {
         // 剥离 score 字段
@@ -75,6 +141,7 @@
     ];
   });
 
+  // 线图数据
   const renderLineData = computed(() => {
     const dimensions = [
       'datetime',
@@ -84,7 +151,7 @@
       // 第一行是维度
       // 须确保 datetime 在第一列
       dimensions.map((item: string) =>
-        item === 'datetime' ? item : t(`types.${item}`),
+        item === 'datetime' ? item : t(`media.type.text.${item}`),
       ),
       ...renderData.value.reduce((acc, cur) => {
         // 剥离 score 字段
@@ -94,51 +161,6 @@
       }, [] as any[]),
     ];
   });
-
-  // 聚焦时刻
-  const currentFocusDataIndex = ref<number>(0);
-
-  const fetchData = async () => {
-    setLoading(true);
-    try {
-      const { data } = await queryXxxxTrend(queryModel);
-      // 重置变量避免造成影响
-      // 数据处理
-      // 防御性编程，避免
-      // (data.list || []) 接口返回结果不规范（如：null等）
-      currentFocusDataIndex.value = data.list?.length - 1 || 0;
-      renderData.value = sortBy(data.list || [], 'datetime');
-    } catch (err: any) {
-      Message.error(err?.message);
-    } finally {
-      setLoading(false);
-    }
-  };
-  fetchData();
-
-  // 工具函数
-  const tooltipItemsHtmlString = (items: ToolTipFormatterParams[]) => {
-    return items
-      .map((el) => {
-        // 找到数据在value数组中的位置
-        const idx =
-          el.dimensionNames?.findIndex((itx) => itx === el.seriesName) || 0;
-        return `<div class="content-panel">
-            <p>
-              <span style="background-color: ${
-                el.color
-              }" class="tooltip-item-icon"></span>
-              <span>
-              ${el.seriesName}
-              </span>
-            </p>
-            <span class="tooltip-value">
-              ${Number((el.value as any[])?.[idx]).toLocaleString()}
-            </span>
-          </div>`;
-      })
-      .join('');
-  };
 
   // 绘图
   // 堆叠柱状图/曲线/面积图分布示例
@@ -154,15 +176,6 @@
         right: 12,
         top: 24,
         bottom: 24,
-      },
-      legend: {
-        top: 'top',
-        left: 'left',
-        padding: [16, 0],
-        itemGap: 15,
-        textStyle: {
-          color: isDark ? 'rgb(246, 246, 246)' : 'rgb(29, 33, 41)',
-        },
       },
       // https://echarts.apache.org/zh/option.html#dataset
       dataset: [
@@ -200,6 +213,17 @@
         //   ],
         // },
       ],
+      // 只用于柱图和饼图，这俩数据之间共享，从而确保颜色一致
+      color: ['#246EFF', '#00B2FF', '#0E42D2', '#81E2FF'],
+      legend: {
+        top: 'top',
+        left: 'left',
+        padding: [16, 0],
+        itemGap: 15,
+        textStyle: {
+          color: isDark ? 'rgb(246, 246, 246)' : 'rgb(29, 33, 41)',
+        },
+      },
       xAxis: {
         show: true,
         type: 'category',
@@ -218,6 +242,19 @@
         axisLabel: {
           alignMinLabel: 'left',
           color: isDark ? 'rgb(246, 246, 246)' : 'rgb(29, 33, 41)',
+        },
+        axisPointer: {
+          show: true,
+          type: 'shadow', // 柱图用 shadow 更美观
+          lineStyle: {
+            width: 2,
+          },
+          handle: {
+            show: true,
+            size: 32,
+            margin: 46,
+            color: isDark ? '#ffffffe6' : '#1d2129',
+          },
         },
       },
       yAxis: [
@@ -262,7 +299,6 @@
         },
         className: 'echarts-tooltip-diy',
       },
-      color: ['#246EFF', '#00B2FF', '#0E42D2', '#81E2FF'],
       series: [
         ...(renderLineData.value?.[0] || [])
           .filter((itx: string) => itx !== 'datetime')
@@ -288,7 +324,10 @@
               lineStyle: {
                 width: 3,
               },
-              // color: isDark ? '#4A7FF7' : '#246EFF',
+              // 线条单独设置颜色，不占用 color 数组，确保柱图、饼图、图例颜色一致
+              // 否则，因为饼图数据只与柱图数据联动，线图不参与联动，
+              // 会导致颜色自动映射时错位，导致图例与饼图颜色不一致
+              color: isDark ? '#4A7FF7' : '#246EFF',
             };
           }),
         ...(renderBarData.value?.[0] || [])
@@ -296,7 +335,7 @@
           .map((item: string) => {
             return {
               name: item,
-              // stack: 'one', // 设置为一样的（任意）值堆表示堆叠
+              stack: 'one', // 设置为一样的（任意）值堆表示堆叠
               type: 'bar', // 'line'
               smooth: true,
               // 系列被安放到 dataset 的列上面
@@ -309,9 +348,17 @@
                 y: item,
               },
               yAxisIndex: 0,
+              barMaxWidth: 24,
+              // 柱图颜色映射，确保柱图、饼图、图例颜色一致
+              // itemStyle: {
+              //   color: (params: any) => {
+              //     // params.seriesName
+              //     console.log('params', params);
+              //     return colors[params.seriesName as keyof typeof colors];
+              //   },
+              // },
               emphasis: { focus: 'self' },
               // barWidth: 16,
-              // color: isDark ? '#4A7FF7' : '#246EFF',
             };
           }),
         {
@@ -326,6 +373,7 @@
             // 关联 formatter 中的 {b}
             itemName: 0, // 'datetime' 第 0 列 即为 datetime
             value: currentFocusDataIndex.value,
+            tooltip: currentFocusDataIndex.value,
           },
           left: 'left',
           right: '70%',
@@ -335,6 +383,14 @@
           emphasis: {
             focus: 'self',
           },
+          // 饼图颜色映射，确保柱图、饼图、图例颜色一致
+          // itemStyle: {
+          //   color: (params: any) => {
+          //     // params.name
+          //     console.log('params', params);
+          //     return colors[params.name as keyof typeof colors];
+          //   },
+          // },
           label: {
             alignTo: 'edge',
             formatter: `{name|{b}: {@${currentFocusDataIndex.value}}}\n {ratio|{d}%}`,
@@ -380,6 +436,7 @@
     };
   });
 
+  // 聚焦时刻 联动更新饼图数据
   const handleUpdateAxisPointer = (params: any) => {
     currentFocusDataIndex.value =
       params?.axesInfo?.[0]?.value + 1 || renderData.value.length - 1;
@@ -389,39 +446,40 @@
 
 <template>
   <!-- 堆叠柱图/曲线/面积图分布示例 -->
-  <a-spin :loading="loading">
-    <a-card
-      title="Xxxx分布"
-      :bordered="false"
-      :header-style="{ borderBottom: 'none', paddingBottom: 0 }"
-      :body-style="{ paddingTop: 0 }"
-      class="rounded"
-    >
-      <template #extra>
-        <!-- 时间 -->
-        <a-select
-          v-model="queryModel.timespan"
-          :bordered="false"
-          :options="[3, 7, 15, 30]"
-          allow-create
-          size="mini"
-          class="!w-76px !px-1 !text-right !text-primary"
-          @change="fetchData"
-        >
-          <!-- 选择框展示内容 -->
-          <template #label="{ data }">
-            <span>{{ $t('dateRange.shortcuts', [data.value]) }}</span>
-          </template>
-        </a-select>
-      </template>
+  <a-card
+    title="Xxxx分布"
+    :loading="loading"
+    :bordered="false"
+    :header-style="{ borderBottom: 'none', paddingBottom: 0 }"
+    :body-style="{ paddingTop: 0 }"
+    class="rounded"
+  >
+    <template #extra>
+      <!-- 时间 -->
+      <a-select
+        v-model="queryModel.timespan"
+        :bordered="false"
+        :options="[3, 7, 15, 30]"
+        allow-create
+        size="mini"
+        class="!w-76px !px-1 !text-right !text-primary"
+        @change="fetchData"
+      >
+        <!-- 选择框展示内容 -->
+        <template #label="{ data }">
+          <span>{{ $t('dateRange.shortcuts', [data.value]) }}</span>
+        </template>
+      </a-select>
+    </template>
 
-      <Chart
-        ref="chartRef"
-        autoresize
-        :option="chartOption"
-        style="height: 350px"
-        @updateAxisPointer="handleUpdateAxisPointer"
-      />
-    </a-card>
-  </a-spin>
+    堆叠柱图/曲线/面积图分布 与 饼图的联动 示例
+
+    <Chart
+      ref="chartRef"
+      autoresize
+      :option="chartOption"
+      style="height: 350px"
+      @updateAxisPointer="handleUpdateAxisPointer"
+    />
+  </a-card>
 </template>

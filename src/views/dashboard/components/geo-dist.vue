@@ -14,7 +14,7 @@
   import names from '@/assets/geo/names.json';
   import { sortBy } from 'lodash';
 
-  const { loading, setLoading } = useLoading(true);
+  const { loading, setLoading } = useLoading(false);
 
   // 请求参数
   const queryModel = reactive<QueryXxxxGeoDistReq>({
@@ -88,6 +88,9 @@
         {
           show: true,
           type: 'continuous',
+
+          bottom: 5,
+          right: 5,
           min: 0,
           max: Math.max(
             ...(renderData.value || []).map((item) => item.value),
@@ -105,7 +108,6 @@
           // nameMap: names, // 国家中英文映射关系，此处需要适配国际化问题
           top: 0,
           bottom: 0,
-          left: 0,
           // 特定区域样式
           regions: [],
           label: {},
@@ -137,8 +139,9 @@
           // 轨迹分布 颜色地图 分布
           name: 'pieDist',
           type: 'pie',
-          left: '60%',
-          radius: ['0%', '50%'],
+          top: '50%',
+          right: '75%',
+          radius: ['0%', '40%'],
           colorBy: 'data',
           emphasis: {
             focus: 'self',
@@ -184,37 +187,36 @@
 
 <template>
   <!-- 堆叠柱图/曲线/面积图分布示例 -->
-  <a-spin :loading="loading">
-    <a-card
-      title="Xxxx分布"
-      :bordered="false"
-      :header-style="{ borderBottom: 'none', paddingBottom: 0 }"
-      :body-style="{ paddingTop: 0 }"
-      class="rounded"
-    >
-      <template #extra>
-        <!-- 时间 -->
-        <a-select
-          v-model="queryModel.timespan"
-          :bordered="false"
-          :options="[3, 7, 15, 30]"
-          allow-create
-          size="mini"
-          class="!w-76px !px-1 !text-right !text-primary"
-          @change="fetchData"
-        >
-          <!-- 选择框展示内容 -->
-          <template #label="{ data }">
-            <span>{{ $t('dateRange.shortcuts', [data.value]) }}</span>
-          </template>
-        </a-select>
-      </template>
-      <Chart
-        ref="chartRef"
-        autoresize
-        :option="chartOption"
-        style="height: 500px"
-      />
-    </a-card>
-  </a-spin>
+  <a-card
+    title="Xxxx分布"
+    :bordered="false"
+    :header-style="{ borderBottom: 'none', paddingBottom: 0 }"
+    :body-style="{ paddingTop: 0 }"
+    class="rounded"
+  >
+    <template #extra>
+      <!-- 时间 -->
+      <a-select
+        v-model="queryModel.timespan"
+        :bordered="false"
+        :options="[3, 7, 15, 30]"
+        allow-create
+        size="mini"
+        class="!w-76px !px-1 !text-right !text-primary"
+        @change="fetchData"
+      >
+        <!-- 选择框展示内容 -->
+        <template #label="{ data }">
+          <span>{{ $t('dateRange.shortcuts', [data.value]) }}</span>
+        </template>
+      </a-select>
+    </template>
+    <Chart
+      ref="chartRef"
+      autoresize
+      :loading="loading"
+      :option="chartOption"
+      style="height: 500px"
+    />
+  </a-card>
 </template>

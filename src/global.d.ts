@@ -1,5 +1,6 @@
 import { CallbackDataParams } from 'echarts/types/dist/shared';
 
+// 图表的提示框格式化参数
 export interface ToolTipFormatterParams extends CallbackDataParams {
   axisDim: string;
   axisIndex: number;
@@ -9,6 +10,7 @@ export interface ToolTipFormatterParams extends CallbackDataParams {
   axisValueLabel: string;
 }
 
+// 分页
 export interface Pagination {
   current: number;
   pageSize: number;
@@ -21,7 +23,14 @@ export interface List<T> {
   list: T[];
 }
 
-interface SelectionState {
+// 表格的多选状态
+export interface SelectionState {
   visible: boolean;
   checked: string[];
+}
+
+// 检索插件的模糊匹配
+export interface FuzzyQueryModel {
+  fuzzyText: string;
+  fuzzyKeys: string[];
 }

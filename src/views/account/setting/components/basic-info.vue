@@ -15,12 +15,10 @@
 
   // 表单数据
   const basicInfoModel = reactive<UpdateUserInfoReq>({
-    username: userStore.username,
-    nickname: userStore.nickname,
-    phone: userStore.phone,
-    email: userStore.email,
-    org: userStore.org,
-    status: userStore.status,
+    username: userStore.username || '',
+    nickname: userStore.nickname || '',
+    phone: userStore.phone || '',
+    email: userStore.email || '',
   });
 
   // 响应函数
@@ -97,6 +95,26 @@
         placeholder="输入用户昵称"
       />
     </a-form-item>
+    <!-- 手机 -->
+    <a-form-item
+      field="phone"
+      label="手机号码"
+      :rules="[
+        {
+          validator: (phone: string, callback: any) => {
+            if (phone && !isPhone(phone)) {
+              callback('手机号码格式不正确');
+            }
+          },
+        },
+      ]"
+    >
+      <a-input
+        v-model="basicInfoModel.phone"
+        allow-clear
+        placeholder="输入手机号码，如178xxxxxxxx"
+      />
+    </a-form-item>
     <!-- 邮箱 -->
     <a-form-item
       field="email"
@@ -121,44 +139,8 @@
         placeholder="输入电子邮箱，如xxx@example.com"
       />
     </a-form-item>
-    <!-- 手机 -->
-    <a-form-item
-      field="phone"
-      label="手机号码"
-      :rules="[
-        {
-          validator: (phone: string, callback: any) => {
-            if (phone && !isPhone(phone)) {
-              callback('手机号码格式不正确');
-            }
-          },
-        },
-      ]"
-    >
-      <a-input
-        v-model="basicInfoModel.phone"
-        allow-clear
-        placeholder="输入手机号码，如178xxxxxxxx"
-      />
-    </a-form-item>
-    <!-- 部门 -->
-    <a-form-item field="org" label="所属部门">
-      <a-input
-        v-model="basicInfoModel.org"
-        allow-clear
-        placeholder="输入所属部门"
-      />
-    </a-form-item>
-    <!-- 状态 -->
-    <a-form-item field="status" label="当前状态">
-      <a-input
-        v-model="basicInfoModel.status"
-        allow-clear
-        placeholder="输入当前状态"
-      />
-    </a-form-item>
     <a-form-item row-class="mt-4" content-class="gap-4">
-      <a-button type="primary" @click="handleSubmit"> 提交修改 </a-button>
+      <a-button type="primary" @click="handleSubmit"> 提交 </a-button>
       <a-button type="secondary" @click="handleReset"> 重置 </a-button>
     </a-form-item>
   </a-form>

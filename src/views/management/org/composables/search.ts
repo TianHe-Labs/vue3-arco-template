@@ -1,63 +1,48 @@
-import { provide, inject, Ref, reactive, ref, watch, shallowRef } from 'vue';
-import {
-  FormInstance,
-  Message,
-  Modal,
-  PaginationProps,
-} from '@arco-design/web-vue';
+import { provide, inject, Ref, reactive, ref, watch, shallowRef, h } from 'vue';
+import { FormInstance, Message, PaginationProps } from '@arco-design/web-vue';
 import { useRoute, useRouter } from 'vue-router';
 import { isEmpty, isObject, omitBy, pick } from 'lodash';
 import useLoading from '@/composables/loading';
-import { queryUserList, UserModel, QueryUserListReq } from '@/api/user';
+import { queryOrgList, OrgModel, QueryOrgListReq } from '@/api/org';
+import { FuzzyQueryModel } from '@/global';
 
-interface FuzzyQueryModel {
-  fuzzyWord: string;
-  fuzzyKeys: string[];
-}
-
-interface SearchUserState {
+interface SearchOrgState {
   loading: Ref<boolean>;
   pagination: PaginationProps;
   queryFormRef: Ref<FormInstance>;
-  queryModel: Ref<QueryUserListReq>;
+  queryModel: Ref<QueryOrgListReq>;
   fuzzyKeys: string[];
   fuzzyQueryModel: Ref<FuzzyQueryModel>;
-  renderData: Ref<UserModel[]>;
-
+  renderData: Ref<OrgModel[]>;
   fetchData: (opts?: any) => Promise<void>;
   onPageChange: (current: number) => void;
   onPageSizeChange: (pageSize: number) => void;
   handleResetQueryModel: (keys?: string[]) => void;
-
   onUpdateRenderData: (data: {
     type: 'update' | 'create' | 'delete';
-    record?: UserModel;
-    records?: UserModel[];
-    ids?: UserModel['id'][];
+    record?: OrgModel;
+    records?: OrgModel[];
+    ids?: OrgModel['id'][];
   }) => void;
 }
 
-const symbol = Symbol('SEARCH-USER');
+const orgSymbol = Symbol('SEARCH-ORG');
 
 // 用于（指定属性的）全文关键词检索
-const fuzzyKeys = ['username', 'nickname', 'email', 'phone'];
+const fuzzyKeys = ['orgName', 'orgDescription', 'orgArea'];
+
 const resetFuzzyQueryModel = (): FuzzyQueryModel => {
   return {
-    fuzzyWord: '', // 匹配的具体值
+    fuzzyText: '', // 匹配的具体值
     fuzzyKeys, // 匹配哪些属性
   };
 };
 
 // 用于指定属性的精确筛选
-const resetQueryModel = (keys?: string[]): QueryUserListReq => {
+const resetQueryModel = (keys?: string[]): QueryOrgListReq => {
   const defaultModel = {
-    username: undefined,
-    nickname: undefined,
-    email: undefined,
-    phone: undefined,
-    role: undefined,
-    // roles: undefined,
-    org: undefined,
+    orgName: undefined,
+    orgDescription: undefined,
   };
 
   if (keys && keys.length) {
@@ -66,7 +51,10 @@ const resetQueryModel = (keys?: string[]): QueryUserListReq => {
   return defaultModel;
 };
 
-export function provideSearchUser(): SearchUserState {
+/**
+ * 检索和导出，请求参数是一致的，可以共用请求参数，所以合并在一起
+ */
+export function provideSearchOrg(): SearchOrgState {
   const { loading, setLoading } = useLoading();
 
   // 响应式
@@ -91,12 +79,13 @@ export function provideSearchUser(): SearchUserState {
   const queryFormRef = shallowRef<FormInstance>();
 
   // 精确筛选条件
-  const queryModel = ref<QueryUserListReq>(resetQueryModel());
+  const queryModel = ref<QueryOrgListReq>(resetQueryModel());
+
   // 全文检索条件
   const fuzzyQueryModel = ref<FuzzyQueryModel>(resetFuzzyQueryModel());
 
   // 检索结果
-  const renderData = ref<UserModel[]>([]);
+  const renderData = ref<OrgModel[]>([]);
 
   const fetchData = async (opts?: any) => {
     // 必要的表单校验
@@ -120,16 +109,16 @@ export function provideSearchUser(): SearchUserState {
         (value) => !value || (isObject(value) && isEmpty(value)),
       ),
       // 处理合并全文检索参数
-      ...(fuzzyQueryModel.value.fuzzyWord
+      ...(fuzzyQueryModel.value.fuzzyText
         ? fuzzyQueryModel.value.fuzzyKeys.reduce((obj: any, key) => {
-            obj[key] = [fuzzyQueryModel.value.fuzzyWord];
+            obj[key] = [fuzzyQueryModel.value.fuzzyText];
             return obj;
           }, {})
         : {}),
     };
 
     try {
-      const { data } = await queryUserList(cleanedParams);
+      const { data } = await queryOrgList(cleanedParams);
       renderData.value = data.list;
       pagination.total = data.total || 0;
     } catch (err: any) {
@@ -183,9 +172,9 @@ export function provideSearchUser(): SearchUserState {
   // 更新渲染数据，删除、新增、更新时使用，惰性请求
   const onUpdateRenderData = (data: {
     type: 'update' | 'create' | 'delete';
-    record?: UserModel;
-    records?: UserModel[];
-    ids?: UserModel['id'][];
+    record?: OrgModel;
+    records?: OrgModel[];
+    ids?: OrgModel['id'][];
   }) => {
     switch (data.type) {
       case 'update':
@@ -206,7 +195,7 @@ export function provideSearchUser(): SearchUserState {
           // 如果传入的是数组，则批量添加
           renderData.value.unshift(...data.records);
         } else {
-          renderData.value.unshift(data.record as UserModel);
+          renderData.value.unshift(data.record as OrgModel);
         }
         break;
       case 'delete':
@@ -231,7 +220,7 @@ export function provideSearchUser(): SearchUserState {
   // 同时注意，使用也要开启 allow-clear 属性，绑定 <a-input /> 的 clear 事件
   watch(
     // 对于fuzzyQueryModel只监听fuzzyKeys select
-    // 至于fuzzyWord 由 input 事件手动触发（输入框回车、点击查询按钮）
+    // 至于fuzzyText 由 input 事件手动触发（输入框回车、点击查询按钮）
     [queryModel, () => fuzzyQueryModel.value.fuzzyKeys],
     () => {
       // 重置分页
@@ -254,7 +243,7 @@ export function provideSearchUser(): SearchUserState {
     { deep: true },
   );
 
-  const returnState: SearchUserState = {
+  const returnState: SearchOrgState = {
     loading,
     pagination,
     queryFormRef,
@@ -271,11 +260,11 @@ export function provideSearchUser(): SearchUserState {
     onUpdateRenderData,
   };
 
-  provide(symbol, returnState);
+  provide(orgSymbol, returnState);
 
   return returnState;
 }
 
-export function useSearchUser(): SearchUserState {
-  return inject(symbol) as SearchUserState;
+export function useSearchOrg(): SearchOrgState {
+  return inject(orgSymbol) as SearchOrgState;
 }

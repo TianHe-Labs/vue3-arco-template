@@ -2,59 +2,84 @@ import Mock from 'mockjs';
 import qs from 'query-string';
 import setupMock, { successResponseWrap } from '@/plugins/setup-mock';
 import { MockRequest } from '@/mock/types.d';
-import { USERROLE } from '@/store/modules/user/types.d';
-
-const users = [
-  {
-    id: '15012312300',
-    username: 'admin',
-    password: 'nslab321',
-    nickname: '管理员',
-    role: USERROLE.ADMIN,
-    // roles: [USERROLE.ADMIN, USERROLE.COMMON],
-    email: 'ex@172.com',
-    phone: '19023232243',
-
-    org: '网络部',
-    status: '专注中',
-    avatar: '',
-    createdAt: '2023-01-10 12:10:00',
-    updatedAt: '2023-04-10 12:10:00',
-  },
-  {
-    id: '123243523233',
-    username: 'th363',
-    password: 'nslab321',
-    nickname: '飞翔的荷兰人',
-    role: USERROLE.COMMON,
-    email: 'th354@173.com',
-    phone: '13032322436',
-
-    org: '事业部',
-    status: '上班中',
-    avatar: '',
-    createdAt: '2023-01-10 12:10:00',
-    updatedAt: '2023-04-10 12:10:00',
-  },
-];
+import { USERROLE, USERSTATUS } from '@/api/user';
+import { enum2Arr, generateCsv } from '@/utils/transform';
 
 setupMock({
   setup() {
     // 用户检索
     Mock.mock(new RegExp('/api/user/search'), (req: MockRequest) => {
-      const { current = 1, pageSize = 20 } = qs.parse(req?.url as string);
-
-      const page = Number(current);
-      const size = Number(pageSize);
-
-      const list = users.slice((page - 1) * size, page * size);
+      const { current, pageSize } = qs.parseUrl(req.url).query;
+      const ps = Number(pageSize) || 20;
       return successResponseWrap({
-        total: 200,
-        list,
+        total: 21,
+        list: new Array(ps).fill(0).map((_, index) =>
+          Mock.mock({
+            id: index,
+            username: '@cword(3, 6)',
+            nickname: '@name',
+            role: Mock.Random.pick(enum2Arr(USERROLE)),
+            email: '@email',
+            phone:
+              '@pick(["13012345678", "13112345678", "13212345678", "13312345678", "13412345678", "13512345678", "13612345678", "13712345678", "13812345678", "13912345678"])',
+            orgId: '@id',
+            org: Mock.mock({
+              id: '@id',
+              orgName: '@cword(3, 6)',
+            }),
+            status: () => Mock.Random.pick(enum2Arr(USERSTATUS)),
+            avatar: '@image(100x100, #000, #fff, avatar)',
+            createdAt: '@datetime',
+            updatedAt: '@datetime',
+          }),
+        ),
       });
     });
-    // 创建更新
-    Mock.mock(new RegExp('/api/user/create-update'), (req: MockRequest) => {
+
+    // 导出
+    Mock.mock(new RegExp('/api/user/export'), () => {
+      const list = new Array(28).fill(0).map((_item, index) => {
+        return Mock.mock({
+          id: index,
+          username: '@cword(3, 6)',
+          nickname: '@name',
+          role: () => Mock.Random.pick(enum2Arr(USERROLE)),
+          email: '@email',
+          phone:
+            '@pick(["13012345678", "13112345678", "13212345678", "13312345678", "13412345678", "13512345678", "13612345678", "13712345678", "13812345678", "13912345678"])',
+          orgId: '@id',
+          org: Mock.mock({
+            id: '@id',
+            orgName: '@cword(3, 6)',
+          }),
+          status: () => Mock.Random.pick(enum2Arr(USERSTATUS)),
+          avatar: '@image(100x100, #000, #fff, avatar)',
+          createdAt: '@datetime',
+          updatedAt: '@datetime',
+        });
+      });
+
+      const content = generateCsv(list);
+      const contentType =
+        'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
+      const blob = new Blob([content], { type: contentType });
+      return successResponseWrap(blob);
+    });
+
+    // 创建（批量）
+    Mock.mock(new RegExp('/api/user/create'), (req: MockRequest) => {
+      const reqBody = JSON.parse(req?.body as string);
+      return successResponseWrap({
+        // 创建成功的用户列表
+        list: reqBody.list.map((item: any) => ({
+          id: Mock.mock('@id'), // 创建时需要生成一个ID
+          ...item,
+        })),
+      });
+    });
+
+    // 更新
+    Mock.mock(new RegExp('/api/user/update'), (req: MockRequest) => {
       const reqBody = JSON.parse(req?.body as string);
       return successResponseWrap({
         id: reqBody.username, // 创建时需要生成一个ID
@@ -63,11 +88,12 @@ setupMock({
         password: reqBody.username,
       });
     });
+
     // 删除
     Mock.mock(new RegExp('/api/user/delete'), (req: MockRequest) => {
       const { ids } = JSON.parse(req?.body as string);
       return successResponseWrap({
-        ids,
+        ids, // 删除成功的IDs
       });
     });
   },

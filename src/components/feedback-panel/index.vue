@@ -28,7 +28,7 @@
     'other',
   ].map((value) => ({
     value,
-    label: t(`feedback.options.${value}`),
+    label: t(`feedback.type.text.${value}`),
   }));
 </script>
 

@@ -3,19 +3,22 @@ import { Message, Modal } from '@arco-design/web-vue';
 import { SelectionState } from '@/global';
 import { deleteUser, UserModel } from '@/api/user';
 
-interface DeleteUserState {
+interface BatchOperateUserState {
   selectionState: SelectionState;
   toggleSelection: (visible?: boolean) => void;
-  handleConfirmDeleteUser: (
+  handleSubmitDeleteUser: (
     ids?: UserModel['id'][],
     callback?: any,
   ) => Promise<void>;
   handleBatchDeleteUser: (callback?: any) => Promise<void>;
 }
 
-const symbol = Symbol('DELETE-USER');
+const symbol = Symbol('BATCH-OPERATE-USER');
 
-export function provideDeleteUser() {
+/**
+ * 需要勾选来批量操作的，如删除等
+ */
+export function provideBatchOperateUser() {
   // 显示勾选（列表中 序号列 # / 勾选框 切换）
   const selectionState = reactive<SelectionState>({
     visible: false,
@@ -28,7 +31,7 @@ export function provideDeleteUser() {
   };
 
   // 删除用户 单个 或 批量
-  const handleConfirmDeleteUser = async (
+  const handleSubmitDeleteUser = async (
     ids?: UserModel['id'][],
     callback?: any,
   ) => {
@@ -41,26 +44,25 @@ export function provideDeleteUser() {
       title: '警告',
       titleAlign: 'start',
       content: '确认删除用户？',
-      modalClass: '!p-5',
       onOk: async () => {
         try {
           const { data } = await deleteUser({ ids });
-          if (data?.ids && data.ids?.length === ids?.length) {
-            // 直接在前端逻辑中移除已经被删除的用户，不再请求接口
-            callback?.({
-              type: 'delete',
-              ids: data?.ids,
-            });
-            Message.success(
-              `已删除${data?.ids?.length || ids?.length || 0}个用户`,
-            );
+          // 直接在前端逻辑中移除已经被删除的社交账号，不再请求接口
+          callback?.({
+            type: 'delete',
+            // data 返回是删除成功的ids
+            ids: data?.ids,
+          });
+
+          if (data && data.ids.length === ids.length) {
+            Message.success(`已删除${ids.length}个用户`);
           } else {
-            Message.warning(
-              `已删除${data.ids.length}个用户, ${
-                ids.length - data?.ids?.length
-              }个用户删除失败`,
+            Message.success(
+              `已删除${data?.ids?.length}个用户，${ids.length - (data?.ids?.length || 0)}个删除失败`,
             );
           }
+
+          // 隐藏勾选框
           toggleSelection(false);
         } catch (err: any) {
           Message.error(err?.message);
@@ -73,17 +75,17 @@ export function provideDeleteUser() {
   const handleBatchDeleteUser = async (callback?: any) => {
     if (selectionState.visible) {
       // 如果勾选框显示，则删除
-      await handleConfirmDeleteUser(selectionState.checked, callback);
+      await handleSubmitDeleteUser(selectionState.checked, callback);
     } else {
       // 如果勾选框隐藏，则显示
       toggleSelection(true);
     }
   };
 
-  const returnState: DeleteUserState = {
+  const returnState: BatchOperateUserState = {
     selectionState,
     toggleSelection,
-    handleConfirmDeleteUser,
+    handleSubmitDeleteUser,
     handleBatchDeleteUser,
   };
 
@@ -92,6 +94,6 @@ export function provideDeleteUser() {
   return returnState;
 }
 
-export function useDeleteUser() {
-  return inject(symbol) as DeleteUserState;
+export function useBatchOperateUser() {
+  return inject(symbol) as BatchOperateUserState;
 }

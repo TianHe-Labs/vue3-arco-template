@@ -37,10 +37,10 @@
           height: () => props.height || document.documentElement.clientHeight,
           width: () => props.width || document.documentElement.clientHeight,
         },
-        row: {
-          height: props.rowHeight || 30,
-          len: 500,
-        },
+        // row: {
+        //   height: props.rowHeight || 40,
+        //   len: 500,
+        // },
         col: {
           len: props.columns.length,
           width:
@@ -59,6 +59,24 @@
     }
 
     const data = {
+      // 冻结表头
+      freeze: 'A2',
+      // 合并单元格
+      merges: [],
+      // 样式
+      styles: [
+        {
+          bgcolor: '#f4f5f8',
+          textwrap: true,
+          color: '#900b09',
+          border: {
+            top: ['thin', '#0366d6'],
+            bottom: ['thin', '#0366d6'],
+            right: ['thin', '#0366d6'],
+            left: ['thin', '#0366d6'],
+          },
+        },
+      ],
       rows: {
         0: {
           cells: props.columns.reduce((acc: any, column, index) => {

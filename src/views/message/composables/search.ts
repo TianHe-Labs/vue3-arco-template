@@ -13,28 +13,33 @@ import {
   queryMessageStat,
   QueryMessageStatReq,
 } from '@/api/message';
+import { FuzzyQueryModel } from '@/global';
 
-interface FuzzyQueryModel {
-  fuzzyWord: string;
-  fuzzyKeys: string[];
-}
-
-interface FetchMessageState {
+interface SearchMessageState {
   loading: Ref<boolean>;
+
   pagination: PaginationProps;
-  queryPanelVisible: Ref<boolean>;
-  toggleQueryPanel: () => void;
+
+  // 检索表单
   queryFormRef: Ref<FormInstance | null>;
   queryModel: Ref<QueryMessageListReq>;
+
+  // 模糊检索条件（多属性匹配）
   fuzzyKeys: string[];
   fuzzyQueryModel: Ref<FuzzyQueryModel>;
+
+  // 统计
   renderStats: Ref<QueryMessageStatRes>;
   renderData: Ref<MessageModel[]>;
 
   fetchData: (opts?: any) => Promise<void>;
   fetchStats: (params?: QueryMessageStatReq) => Promise<void>;
+
+  // 分页
   onPageChange: (current: number) => void;
   onPageSizeChange: (pageSize: number) => void;
+
+  // 重置
   handleResetQueryModel: (keys?: string[]) => void;
 
   onUpdateRenderData: (data: {
@@ -43,13 +48,14 @@ interface FetchMessageState {
   }) => void;
 }
 
-const symbol = Symbol('FETCH-MESSAGE');
+const symbol = Symbol('SEARCH-MESSAGE');
 
 // 用于（指定属性的）全文关键词检索
 const fuzzyKeys = ['title', 'content'];
+
 const resetFuzzyQueryModel = (): FuzzyQueryModel => {
   return {
-    fuzzyWord: '', // 匹配的具体值
+    fuzzyText: '', // 匹配的具体值
     fuzzyKeys, // 匹配哪些属性
   };
 };
@@ -69,7 +75,7 @@ const resetQueryModel = (keys?: string[]): QueryMessageListReq => {
   return defaultModel;
 };
 
-export function provideFetchMessage(): FetchMessageState {
+export function provideSearchMessage(): SearchMessageState {
   const { loading, setLoading } = useLoading();
 
   // 响应式
@@ -89,14 +95,6 @@ export function provideFetchMessage(): FetchMessageState {
     hideOnSinglePage: true,
     bufferSize: 1,
   });
-
-  // 筛选条件面板
-  const queryPanelVisible = ref<boolean>(false);
-
-  // 切换筛选条件面板
-  const toggleQueryPanel = () => {
-    queryPanelVisible.value = !queryPanelVisible.value;
-  };
 
   // 表单实例
   const queryFormRef = shallowRef<FormInstance | null>(null);
@@ -141,9 +139,9 @@ export function provideFetchMessage(): FetchMessageState {
         (value, key) => !value || (isObject(value) && isEmpty(value)),
       ),
       // 处理合并全文检索参数
-      ...(fuzzyQueryModel.value.fuzzyWord
+      ...(fuzzyQueryModel.value.fuzzyText
         ? fuzzyQueryModel.value.fuzzyKeys.reduce((obj: any, key) => {
-            obj[key] = [fuzzyQueryModel.value.fuzzyWord];
+            obj[key] = [fuzzyQueryModel.value.fuzzyText];
             return obj;
           }, {})
         : {}),
@@ -249,7 +247,7 @@ export function provideFetchMessage(): FetchMessageState {
   // 否则在用户输入过程中（筛选参数的变量已随之变化）就触发检索请求，影响用户体验
   watch(
     // 对于fuzzyQueryModel只监听fuzzyKeys select
-    // 至于fuzzyWord 由 input 事件手动触发（输入框回车、点击查询按钮）
+    // 至于fuzzyText 由 input 事件手动触发（输入框回车、点击查询按钮）
     [queryModel, () => fuzzyQueryModel.value.fuzzyKeys],
     () => {
       // 重置分页
@@ -272,11 +270,9 @@ export function provideFetchMessage(): FetchMessageState {
     { deep: true },
   );
 
-  const returnState: FetchMessageState = {
+  const returnState: SearchMessageState = {
     loading,
     pagination,
-    queryPanelVisible,
-    toggleQueryPanel,
     queryFormRef,
     queryModel,
     fuzzyKeys,
@@ -298,6 +294,6 @@ export function provideFetchMessage(): FetchMessageState {
   return returnState;
 }
 
-export function useFetchMessage(): FetchMessageState {
-  return inject(symbol) as FetchMessageState;
+export function useSearchMessage(): SearchMessageState {
+  return inject(symbol) as SearchMessageState;
 }

@@ -1,4 +1,4 @@
-/* ==============breakpoint============ */
+/*********** breakpoint ***********/
 
 /* Extra small screen / phone */
 @screen-xs: 480px;
@@ -18,4 +18,44 @@
 /* Extra extra large screen / large desktop; */
 @screen-xxl: 1536px;
 
+// Arco Design 的设计变量
+// https://arco.design/vue/docs/token
+
+// 可以使用 Arco Design 提供的在线工具创建颜色体系
+// https://arco.design/themes/stores/manage
+
+/*********** color ***********/
+// 这两个颜色比较特殊，menu 和 layout sider 均使用这两个颜色
+// 如果修改这两个颜色，会同时影响 menu 和 layout sider 的颜色
+// @color-menu-light-bg: ffffff;
+// @color-menu-dark-bg: #232324;
+
+// 示例：定义新的颜色及体系
+// 需要同时提供亮色和暗色，每个颜色需要提供 10 个色阶
+// primary success danger warning
+// 示例：
+// @primary-1: rgb(var(--arcoblue-1));
+// @dark-primary-1: rgb(var(--arcoblue-1));
+// ...
+// @primary-10: rgb(var(--arcoblue-10));
+// @dark-primary-10: rgb(var(--arcoblue-10));
+
+/*********** layout ***********/
+// @layout-sider-background: var(--color-menu-dark-bg);
+// @layout-sider-background-light: var(--color-menu-light-bg);
+
+/*********** menu ***********/
 @menu-light-color-bg: transparent;
+@menu-dark-color-bg: transparent;
+
+/*********** tooltip ***********/
+// @color-tooltip-bg: rgb(var(--gray-10));
+// @dark-color-tooltip-bg: #373739;
+
+/*********** spin ***********/
+// @color-spin-layer-bg: rgba(255, 255, 255, 0.6);
+// @dark-color-spin-layer-bg: rgba(51, 51, 51, 0.6);
+
+/*********** menu ***********/
+// @color-menu-dark-hover: rgba(255, 255, 255, 0.04);
+// @dark-color-menu-dark-hover: var(--color-fill-2);

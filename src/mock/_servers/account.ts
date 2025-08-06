@@ -4,7 +4,8 @@ import setupMock, {
   failureResponseWrap,
 } from '@/plugins/setup-mock';
 import { MockRequest } from '@/mock/types.d';
-import { USERROLE } from '@/store/modules/user/types.d';
+import { USERROLE, USERSTATUS } from '@/api/user';
+import { omit } from 'lodash';
 
 const users = [
   {
@@ -15,7 +16,7 @@ const users = [
     role: USERROLE.ADMIN,
     // roles: [USERROLE.ADMIN, USERROLE.COMMON],
     org: '网络部',
-    status: '专注中...',
+    status: USERSTATUS.ACTIVE,
     accessToken:
       'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Im5pc3QifQ.95aGaCg7ovpUWSpoZdCoam6Mvr-vE374VjMfthTpKPo',
     refreshToken:
@@ -53,14 +54,9 @@ setupMock({
       const foundItem = users[0];
 
       if (foundItem) {
-        const { username, nickname, role, org, status } = foundItem;
-        return successResponseWrap({
-          username,
-          nickname,
-          role,
-          org,
-          status,
-        });
+        return successResponseWrap(
+          omit(foundItem, ['password', 'accessToken', 'refreshToken']),
+        );
       }
       return failureResponseWrap('用户名或密码错误');
     });

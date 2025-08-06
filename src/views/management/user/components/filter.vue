@@ -1,7 +1,7 @@
 <script lang="ts" setup>
   import { useI18n } from 'vue-i18n';
   import { enum2Arr } from '@/utils/transform';
-  import { USERROLE } from '@/store/modules/user/types.d';
+  import { USERROLE, USERSTATUS } from '@/api/user';
   import { useSearchUser } from '../composables/search';
 
   const {
@@ -11,13 +11,6 @@
     fetchData,
     handleResetQueryModel,
   } = useSearchUser();
-
-  const { t } = useI18n();
-
-  // const fuzzyKeyOptions = fuzzyKeys.map((value) => ({
-  //   label: value,
-  //   value,
-  // }));
 
   const fuzzyKeyOptions = [
     {
@@ -38,8 +31,15 @@
     },
   ];
 
+  const { t } = useI18n();
+  // 角色选项
   const roleOptions = enum2Arr(USERROLE).map((value) => ({
-    label: t(`account.roles.${value}`),
+    label: t(`user.role.text.${value}`),
+    value,
+  }));
+  // 状态选项
+  const statusOptions = enum2Arr(USERSTATUS).map((value) => ({
+    label: t(`user.status.text.${value.toLowerCase()}`),
     value,
   }));
 </script>
@@ -49,12 +49,31 @@
     <a-form ref="queryFormRef" :model="queryModel" auto-label-width>
       <div class="grid lg:grid-cols-2 xl:grid-cols-3 gap-x-4">
         <!-- 精确匹配 -->
+        <a-form-item field="status" label="账号状态" :rules="[]">
+          <a-radio-group
+            v-model="queryModel.status"
+            :options="statusOptions"
+            allow-clear
+            allow-search
+            placeholder="选择账号状态"
+          />
+        </a-form-item>
+        <!-- 精确匹配 -->
+        <a-form-item field="org" label="所属部门" :rules="[]">
+          <a-select
+            v-model="queryModel.orgId"
+            :options="[]"
+            allow-clear
+            allow-search
+            placeholder="选择所属部门"
+          />
+        </a-form-item>
+        <!-- 精确匹配 -->
         <a-form-item field="role" label="角色权限" :rules="[]">
           <a-select
             v-model="queryModel.role"
             :options="roleOptions"
             allow-clear
-            allow-create
             allow-search
             placeholder="选择角色权限"
           />
@@ -66,31 +85,20 @@
             :options="roleOptions"
             multiple
             allow-clear
-            allow-create
             allow-search
             placeholder="选择角色权限"
           />
         </a-form-item> -->
-        <!-- 精确匹配 -->
-        <a-form-item field="org" label="所属部门" :rules="[]">
-          <a-select
-            v-model="queryModel.org"
-            :options="['网络部', '事业部', '市场部']"
-            allow-clear
-            allow-create
-            allow-search
-            placeholder="选择所属部门"
-          />
-        </a-form-item>
 
         <!-- 指定属性的全文检索 -->
+        <!-- username, nickname, email, phone -->
         <a-form-item
           label="全文检索"
           class="lg:col-span-2 xl:col-span-3"
           content-class="flex-wrap gap-2"
         >
           <a-input-search
-            v-model="fuzzyQueryModel.fuzzyWord"
+            v-model="fuzzyQueryModel.fuzzyText"
             allow-clear
             placeholder="输入检索关键字"
             @press-enter="fetchData"

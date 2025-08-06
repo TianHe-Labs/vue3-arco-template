@@ -1,12 +1,22 @@
 import type { RouteRecordNormalized } from 'vue-router';
 import axios, { AxiosRequestConfig } from 'axios';
 import qs from 'query-string';
-import { UserState } from '@/store/modules/user/types.d';
+import { UserModel } from './user';
 import { List, Pagination } from '@/global';
+import { SOURCEAGENT } from './enum';
+
+/**
+ * 用户令牌信息
+ */
+export interface UserTokenModel {
+  accessToken: string;
+  refreshToken: string;
+}
 
 // 登录
-export type LoginReq = Pick<UserState, 'username' | 'password'>;
-export type LoginRes = Pick<UserState, 'accessToken' | 'refreshToken'>;
+export type LoginReq = Pick<UserModel, 'username' | 'password'>;
+
+export type LoginRes = UserTokenModel;
 
 export function login(data: LoginReq) {
   // 有时候前端的有些字段和后端接口不一致
@@ -16,22 +26,23 @@ export function login(data: LoginReq) {
 }
 
 // 刷新令牌
-export type UpdateRefreshTokenReq = Pick<UserState, 'refreshToken'>;
-export type UpdateRefreshTokenRes = Pick<UserState, 'accessToken'>;
+export type UpdateRefreshTokenReq = Pick<UserTokenModel, 'refreshToken'>;
+
+export type UpdateRefreshTokenRes = Pick<UserTokenModel, 'accessToken'>;
 
 export function updateUserToken(data: UpdateRefreshTokenReq) {
-  return axios.get<UpdateRefreshTokenRes>('/api/user/refresh', {
+  return axios.get<UpdateRefreshTokenRes>('/api/user/token/refresh', {
     headers: {
       Authorization: `Bearer ${data.refreshToken}`,
     },
   });
 }
 
-// 获取用户信息
+// 登录用户获取个人信息
 export type QueryUserInfoRes = Omit<
-  UserState,
+  UserModel,
   'password' | 'accessToken' | 'refreshToken'
-> & { [key: string]: any };
+>;
 
 export function queryUserInfo() {
   return axios.get<QueryUserInfoRes>('/api/user/info');
@@ -42,12 +53,12 @@ export function queryServerMenuList() {
   return axios.post<RouteRecordNormalized[]>('/api/user/menu');
 }
 
-// 更新用户信息（除照片、密码）
-export type UpdateUserInfoReq = Omit<
-  UserState,
-  'id' | 'password' | 'avatar' | 'accessToken' | 'refreshToken'
+// 登录用户更新个人信息（用户名、昵称、手机号、邮箱）
+export type UpdateUserInfoReq = Pick<
+  UserModel,
+  'username' | 'nickname' | 'phone' | 'email'
 >;
-export type UpdateUserInfoRes = Pick<UserState, 'username'>;
+export type UpdateUserInfoRes = Omit<UserModel, 'password'>;
 
 export function updateUserInfo(data: UpdateUserInfoReq) {
   // 有时候前端的有些字段和后端接口不一致
@@ -60,32 +71,31 @@ export function updateUserInfo(data: UpdateUserInfoReq) {
   return axios.put<UpdateUserInfoRes>('/api/user/info/update', cleanedData);
 }
 
-// 更新用户照片
-// 传输文件需要使用 FormData 类型
+// 登录用户更新个人照片，传输文件需要使用 FormData 类型
 export type UpdateUserAvatarReq = FormData;
-export type UpdateUserAvatarRes = Pick<UserState, 'avatar'>;
+export type UpdateUserAvatarRes = Pick<UserModel, 'avatar'>;
 
 export function updateUserAvatar(
   data: UpdateUserAvatarReq,
   config?: AxiosRequestConfig,
 ) {
-  return axios.put<UpdateUserAvatarRes>(
+  return axios.patch<UpdateUserAvatarRes>(
     '/api/user/avatar/update',
     data,
     config,
   );
 }
 
-// 更新用户密码
+// 登录用户更新个人密码
 export type UpdateUserPasswordReq = {
   current: string;
   new: string;
   confirm?: string; // confirm === new 前端检查即可
 };
-export type UpdateUserPasswordRes = Pick<UserState, 'username'>;
+export type UpdateUserPasswordRes = Pick<UserModel, 'id' | 'username'>;
 
 export function updateUserPassword(data: UpdateUserPasswordReq) {
-  return axios.post<UpdateUserPasswordRes>('/api/user/password/update', data);
+  return axios.patch<UpdateUserPasswordRes>('/api/user/password/update', data);
 }
 
 // 登录日志结果
@@ -95,37 +105,37 @@ export enum LOGINRESULT {
   FAULT = 'fault',
 }
 
-export enum LOGINAGENT {
-  WEB = 'web',
-  APP = 'app',
-  API = 'api',
-}
-
 // 登录日志模型
 export interface UserLoginLogModel {
   id: number;
-  userId: string;
+  userId: string; // 关联 UserModel.id
+
   result: LOGINRESULT;
+
   bioResult?: LOGINRESULT; // 保留字段，生物识别结果
-  bioMessage?: number; // 保留字段，生物识别结果可信度
+  bioConfidence?: number; // 保留字段，生物识别结果可信度
+
   mfaResult?: LOGINRESULT; // 保留字段，多因素认证结果
+
   statusCode: number;
   errorMessage: string;
-  sourceAgent: LOGINAGENT;
+
+  sourceAgent: SOURCEAGENT;
   sourceIp: string;
   sourceFp: string;
+
   createdAt: string;
 }
 
-// 获取登录日志
+// 登录用户获取个人登录日志
 export interface QueryUserLoginLogReq {
   dateRange?: string[];
 }
-export type QueryLoginLogRes = List<UserLoginLogModel>;
+export type QueryUserLoginLogRes = List<UserLoginLogModel>;
 
 export function queryUserLoginLog(params: QueryUserLoginLogReq & Pagination) {
   const { current, pageSize, ...data } = params;
-  return axios.post<QueryLoginLogRes>('/api/user/log/login', data, {
+  return axios.post<QueryUserLoginLogRes>('/api/user/log/login', data, {
     params: {
       current,
       pageSize,

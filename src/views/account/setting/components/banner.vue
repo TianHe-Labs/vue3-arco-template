@@ -14,11 +14,11 @@
   // 为了在 /api 中统一接口的管理
   // 而不是直接在上传组件的 action 属性中直接填写 path
   const customRequest = (option: RequestOption) => {
-    const { onProgress, onError, onSuccess, fileItem, name } = option;
+    const { onProgress, onError, onSuccess, fileItem } = option;
 
     // 要上传的文件
     const formData = new FormData();
-    formData.append(name as string, fileItem.file as Blob);
+    formData.append('avatar', fileItem.file as Blob);
 
     // https://axios-http.com/zh/docs/cancellation
     const controller = new AbortController();
@@ -132,17 +132,17 @@
     </a-upload>
 
     <a-descriptions :column="{ xs: 1, md: 2 }" :align="{ label: 'right' }">
-      <a-descriptions-item label="账号名称">
+      <a-descriptions-item label="用户名">
         {{ userStore.username }}
       </a-descriptions-item>
 
-      <a-descriptions-item label="账号昵称">
+      <a-descriptions-item label="用户昵称">
         {{ userStore.nickname }}
       </a-descriptions-item>
 
-      <a-descriptions-item label="账号角色">
-        <a-tag bordered :color="$t(`account.roleColors.${userStore.role}`)">
-          {{ $t(`account.roles.${userStore.role}`) }}</a-tag
+      <a-descriptions-item label="用户角色">
+        <a-tag bordered :color="$t(`user.role.color.${userStore.role}`)">
+          {{ $t(`user.role.text.${userStore.role}`) }}</a-tag
         >
       </a-descriptions-item>
 
@@ -153,15 +153,19 @@
             v-for="role in userStore.roles"
             :key="role"
             bordered
-            :color="$t(`account.roleColors.${role}`)"
+            :color="$t(`user.role.color.${role}`)"
           >
-            {{ $t(`account.roles.${role}`) }}
+            {{ $t(`user.role.text.${role}`) }}
           </a-tag>
         </div>
       </a-descriptions-item> -->
 
-      <a-descriptions-item label="账号状态">
-        {{ userStore.status }}
+      <a-descriptions-item label="用户状态">
+        <a-tag
+          :color="$t(`user.status.color.${userStore.status?.toLowerCase()}`)"
+        >
+          {{ $t(`user.status.text.${userStore.status?.toLowerCase()}`) }}
+        </a-tag>
       </a-descriptions-item>
 
       <a-descriptions-item label="电子邮箱">
