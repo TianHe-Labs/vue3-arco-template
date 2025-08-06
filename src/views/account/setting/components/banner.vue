@@ -90,6 +90,7 @@
       :file-list="fileList"
       :show-upload-button="true"
       :show-file-list="false"
+      accept="image/*"
       class="!inline-block"
       @change="onUploadChange"
       @success="onUploadSuccess"
