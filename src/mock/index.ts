@@ -1,17 +1,7 @@
 import Mock from 'mockjs';
 
-import './_servers/dashboard';
-
-import './_servers/xxxx';
-
-import './_servers/message';
-
-import './_servers/account';
-
-import './_servers/user';
-import './_servers/org';
-
-import './_servers/feedback';
+// 自动导入所有 mock server 文件
+import.meta.glob('./_servers/*.ts', { eager: true });
 
 Mock.setup({
   timeout: '600-1000',
