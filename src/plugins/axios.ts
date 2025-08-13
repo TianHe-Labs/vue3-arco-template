@@ -175,8 +175,9 @@ axios.interceptors.response.use(
     }
     /* else if (status === 404) {
       // 自动切换本地 mock
-      error.config.url = error.config.url?.replace('api', 'mock');
-      return axios.request(error.config);
+      const errorConfig = error.config as InternalAxiosRequestConfig;
+      errorConfig.url = errorConfig.url?.replace('api', 'mock');
+      return axios.request(errorConfig);
     } */
     return Promise.reject(new Error(message || t(status) || error.message));
   },
