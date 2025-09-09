@@ -366,6 +366,8 @@ export default {
 
 ### ECharts 使用
 
+Chart 全局组件在 src/components/index.ts 中配置引入
+
 ```vue
 <template>
   <Chart :option="chartOption" />
