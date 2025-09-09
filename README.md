@@ -15,6 +15,10 @@
 - 🔄 **状态管理**: Pinia 状态管理，支持持久化
 - 🌍 **~~国际化~~ 字面量映射**: ~~支持多语言切换~~ 使用 i18n 做字面量映射
 - 📦 **构建优化**: Vite 快速构建，支持按需加载
+- 🤖 **AI 辅助开发**: 提供完整的 AI 辅助开发上下文和规范
+- 🏗️ **标准化开发**: 统一的代码规范和最佳实践
+- 🔧 **组合式函数**: 业务逻辑复用和组件解耦
+- 📋 **CRUD 模板**: 完整的增删改查功能模板
 
 ## 🛠 技术栈
 
@@ -139,24 +143,40 @@ pnpm report
 ```vue
 <template>
   <!-- 使用 UnoCSS 原子类 -->
-  <div class="flex items-center gap-2 p-4">
-    <a-button type="primary">按钮</a-button>
+  <div class="flex items-center gap-2 p-4 bg-bg-1 border border-border-2">
+    <a-button type="primary" class="!px-3">按钮</a-button>
   </div>
 </template>
 
 <script lang="ts" setup>
-  // 使用组合式 API
+  // 1. 导入依赖
   import { ref, computed } from 'vue';
   import { useUserStore } from '@/store';
 
-  // 状态管理
+  // 2. 类型定义
+  interface Props {
+    title?: string;
+    showOperations?: boolean;
+  }
+
+  // 3. Props 和 Emits 定义
+  const props = withDefaults(defineProps<Props>(), {
+    showOperations: true,
+  });
+
+  // 4. 状态管理
   const userStore = useUserStore();
 
-  // 响应式数据
+  // 5. 响应式数据
   const count = ref(0);
 
-  // 计算属性
+  // 6. 计算属性
   const doubleCount = computed(() => count.value * 2);
+
+  // 7. 事件处理函数
+  const handleSubmit = () => {
+    // 处理逻辑
+  };
 </script>
 ```
 
@@ -164,11 +184,13 @@ pnpm report
 
 ```typescript
 // 接口定义 (src/api/account.ts)
-export interface LoginReq {
-  username: string;
-  password: string;
-}
+// 请求类型: [操作] + [实体] + Req
+export type LoginReq = Pick<UserModel, 'username' | 'password'>;
 
+// 响应类型: [操作] + [实体] + Res
+export type LoginRes = UserTokenModel;
+
+// 函数命名: [操作] + [实体]
 export function login(data: LoginReq) {
   return axios.post<LoginRes>('/api/user/login', data);
 }
@@ -179,20 +201,48 @@ export function login(data: LoginReq) {
 ```typescript
 // Store 定义
 const useUserStore = defineStore('user', {
-  state: () => ({
-    // 状态定义
+  // 1. 状态定义
+  state: (): UserState => ({
+    id: '',
+    username: '',
+    // ... 其他状态
   }),
 
+  // 2. 计算属性
   getters: {
-    // 计算属性
+    userInfo(state: UserState): UserState {
+      return { ...state };
+    },
   },
 
+  // 3. 异步操作
   actions: {
+    // 更新状态
+    setUserInfo(partial: Partial<UserState>) {
+      this.$patch(partial);
+    },
+
+    // 重置状态
+    resetUserInfo() {
+      this.$reset();
+    },
+
     // 异步操作
+    async login(loginData: LoginReq) {
+      try {
+        const { data } = await loginApi(loginData);
+        this.setUserInfo({ username: loginData.username, ...data });
+      } catch (error) {
+        this.resetUserInfo();
+        throw error;
+      }
+    },
   },
 
+  // 4. 持久化配置
   persist: {
-    // 持久化配置
+    key: '__th_ls_usr__',
+    pick: ['accessToken', 'refreshToken'],
   },
 });
 ```
@@ -202,10 +252,12 @@ const useUserStore = defineStore('user', {
 ### UnoCSS 原子类
 
 ```html
-<!-- 基础样式 -->
-<div class="flex items-center gap-2 p-4 bg-white rounded-lg shadow-md">
-  <span class="text-primary text-lg font-bold">标题</span>
-  <a-button type="primary">按钮</a-button>
+<!-- 基础样式 - 使用 ArcoDesign 设计规范 -->
+<div
+  class="flex items-center gap-2 p-4 bg-bg-1 border border-border-2 rounded-lg"
+>
+  <span class="text-text-1 text-lg font-bold">标题</span>
+  <a-button type="primary" class="!px-3">按钮</a-button>
 </div>
 
 <!-- 响应式设计 -->
@@ -213,10 +265,16 @@ const useUserStore = defineStore('user', {
   <!-- 内容 -->
 </div>
 
-<!-- 暗色模式 -->
-<div class="bg-white dark:bg-gray-800 text-black dark:text-white">
+<!-- 暗色模式 - 与 ArcoDesign 主题同步 -->
+<div class="bg-bg-1 text-text-1">
   <!-- 内容 -->
 </div>
+
+<!-- 颜色系统 -->
+<div class="bg-primary-6 text-white">主色</div>
+<div class="bg-success-6 text-white">成功色</div>
+<div class="bg-warning-6 text-white">警告色</div>
+<div class="bg-danger-6 text-white">危险色</div>
 ```
 
 ### 图标使用
@@ -224,7 +282,12 @@ const useUserStore = defineStore('user', {
 ```html
 <!-- Iconify 图标 -->
 <div class="i-solar:box-bold-duotone w-1em h-1em"></div>
-<div class="i-mdi:home text-2xl text-primary"></div>
+<div class="i-mdi:home text-2xl text-primary-6"></div>
+
+<!-- 在组件中使用 -->
+<template #icon>
+  <icon-plus />
+</template>
 ```
 
 ### 主题切换
@@ -482,30 +545,103 @@ vercel
 
 ## 📝 开发规范
 
-### 文件命名
+### 命名规范
 
-- 组件文件: PascalCase (如 `UserProfile.vue`)
-- 工具函数: camelCase (如 `formatDate.ts`)
-- 常量: UPPER_SNAKE_CASE (如 `API_ENDPOINTS`)
+#### 文件命名
+
+- **组件文件**: kebab-case (如 `create-update-panel.vue`, `user-profile.vue`)
+- **页面文件**: kebab-case (如 `login-log.vue`, `basic-info.vue`)
+- **工具函数**: camelCase (如 `formatDate.ts`, `useMenuTree.ts`)
+- **API接口文件**: camelCase (如 `account.ts`, `user.ts`)
+
+#### 变量命名
+
+- **变量/函数**: camelCase (如 `userStore`, `handleSubmit`, `fetchData`)
+- **常量**: UPPER_SNAKE_CASE (如 `API_ENDPOINTS`, `USERROLE`)
+- **接口/类型**: PascalCase + 描述性后缀 (如 `UserModel`, `LoginReq`, `QueryUserListRes`)
+- **组合式函数**: `use` + PascalCase (如 `useSearchXxxx`, `useCreateUpdateXxxx`)
 
 ### 组件开发
 
-- 优先使用组合式 API
-- 合理使用 TypeScript 类型
-- 使用 UnoCSS 原子类进行样式开发
-- 组件 props 使用 TypeScript 接口定义
+- **组合式API优先**: 使用 Vue 3 组合式 API 和 `<script setup>` 语法
+- **类型安全**: 为所有接口、组件 props、状态定义完整的 TypeScript 类型
+- **代码结构**: 按照既定模式组织代码 (导入依赖 → 类型定义 → Props定义 → 状态管理 → 响应式数据 → 计算属性 → 事件处理)
+- **样式开发**: 使用 UnoCSS 原子类，遵循 ArcoDesign 设计规范
 
 ### 状态管理
 
-- 使用 Pinia 进行状态管理
-- 合理使用持久化配置
-- 避免在组件中直接修改 store 状态
+- **Pinia**: 使用 Pinia 进行状态管理，替代 Vuex
+- **持久化**: 合理配置持久化，避免敏感信息泄露
+- **状态更新**: 通过 actions 更新状态，避免直接修改
+- **组合式函数**: 将复杂业务逻辑抽离到 `composables` 中
 
 ### API 接口
 
-- 统一使用 axios 发起请求
-- 定义完整的 TypeScript 类型
-- 使用统一的错误处理机制
+- **命名规范**: 请求类型 `[操作] + [实体] + Req`，响应类型 `[操作] + [实体] + Res`
+- **函数命名**: `[操作] + [实体]` (如 `login`, `queryUserList`, `createUser`)
+- **类型安全**: 使用 TypeScript 工具类型 (`Pick`, `Omit`, `Partial`)
+- **错误处理**: 统一使用项目错误处理机制
+
+### 业务模块开发
+
+- **参考模式**: 新业务模块参考 `src/views/data` 的目录结构和开发模式
+- **组合式函数**: 通过 `composables` 目录将业务逻辑抽离，实现跨页面复用
+- **组件复用**: 详情页面复用检索页面的组件和逻辑
+- **API复用**: 通过参数控制，一个接口支持多种场景
+
+### 性能优化
+
+- **懒加载**: 路由和组件使用懒加载，减少初始包大小
+- **按需导入**: 组件库和工具库按需导入
+- **缓存策略**: 合理使用 `computed` 和 `watch`，避免不必要的重复计算
+- **响应式优化**: 使用 `shallowRef` 管理组件实例
+
+### 错误处理
+
+- **统一处理**: 使用项目统一的错误处理机制
+- **用户友好**: 提供清晰的错误信息和恢复机制
+- **开发调试**: 在开发环境提供详细的调试信息
+
+## 🤖 AI 辅助开发
+
+本项目提供了完整的 AI 辅助开发上下文，详细文档请参考 [CLAUDE.md](./CLAUDE.md)。
+
+### 快速开发检查清单
+
+在开发新功能时，请确保：
+
+- [ ] 文件命名符合项目规范
+- [ ] 组件结构遵循既定模式
+- [ ] TypeScript 类型定义完整
+- [ ] 使用 UnoCSS 进行样式开发
+- [ ] 错误处理机制完善
+- [ ] 移动端适配考虑
+- [ ] 性能优化措施到位
+- [ ] 代码注释清晰
+
+### 常见开发场景
+
+#### 新增业务模块
+
+1. 复制 `src/views/data` 目录结构
+2. 修改文件命名和业务逻辑
+3. 创建对应的 API 接口
+4. 添加路由配置
+5. 更新国际化文本
+
+#### 新增组件
+
+1. 在 `src/components` 创建组件文件
+2. 使用 kebab-case 命名
+3. 定义完整的 TypeScript 类型
+4. 如需全局注册，在 `src/components/index.ts` 添加
+
+#### 新增 API 接口
+
+1. 在 `src/api` 创建接口文件
+2. 定义请求和响应类型
+3. 使用既定的命名规范
+4. 添加错误处理逻辑
 
 ## 🤝 贡献指南
 
