@@ -24,15 +24,16 @@ interface ImportMetaEnv {
   // 开发代理配置
   // 更多细节参见 config/utils/index.ts 中的 createProxy 函数
 
+  // .env.development 中配置，禁止将关键环境变量上传到代码仓库
+
   // 开发代理配置方式一：
+  // VITE_DEV_PROXY=[["/api", "http://127.0.0.1:3000/api"],["/media", "http://127.0.0.1:4000"]]
   // https://cn.vitejs.dev/config/server-options.html#server-proxy
   // Vite Dev Server Proxy 环境变量配置，只用于 .env.development
   // 数组中每个子数组项会自动转换为一个开发服务器代理项，可根据需要添加多个子数组项（Proxy）
   // 转换过程使用了 JSON 相关函数，因此数组中字符串须使用双引号
   // 转换过程进行了 Path Rewrite，因此须注意环境变量中配置的地址路径问题，否则会导致404
-  // 例如：
-  // [["/api", "http://127.0.0.1:3000/api"],["/media", "http://127.0.0.1:4000"]]
-  // 会自动转换为
+  // 例如上面的配置会自动转换为
   // proxy: {
   //   '/api': {
   //     target: 'http://127.0.0.1:3000/api',
