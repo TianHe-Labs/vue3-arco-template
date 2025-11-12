@@ -33,7 +33,7 @@
     "@arco-design/web-vue": "2.57.0",
     "@fingerprintjs/fingerprintjs": "^4.6.2",
     "@vueuse/core": "12.8.2",
-    "axios": "1.8.4",
+    "axios": "1.13.2",
     "crypto-js": "4.2.0",
     "dayjs": "1.11.13",
     "echarts": "5.6.0",
@@ -81,7 +81,7 @@
     "postcss-less": "6.0.0",
     "prettier": "3.4.2",
     "rollup-plugin-visualizer": "5.14.0",
-    "stylelint": "16.14.1",
+    "stylelint": "16.23.0",
     "stylelint-config-rational-order": "0.1.2",
     "stylelint-config-standard": "37.0.0",
     "stylelint-config-standard-less": "3.0.1",
@@ -98,7 +98,7 @@
     "vue-tsc": "2.2.8"
   },
   "engines": {
-    "node": ">=18.18.0"
+    "node": ">=20.19.5"
   },
   "resolutions": {
     "bin-wrapper": "npm:bin-wrapper-china",
